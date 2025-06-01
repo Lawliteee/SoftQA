@@ -5,26 +5,28 @@
 
 #include <QObject>
 #include <QMultiMap>
-#include <QSet>
+#include <error.h>
 
 class UDNode;
-class Error;
 class Pattern;
 class Mistake;
 
-enum DepRel {
+enum DepRel
+{
     Acl, Acl_Relcl, Advcl, Advcl_Relcl, Advmod, Advmod_Emph, Advmod_Lmod, Amod, Appos, Aux, Aux_Pass, Case, Cc, Cc_Preconj, Ccomp, Clf,
     Compound, Compound_Lvc, Compound_Prt, Compound_Redup, Compound_Svc, Conj, Cop, Csubj, Csubj_Outer, Csubj_Pass, Dep, Det, Det_Numgov,
     Det_Nummod, Det_Poss, Discourse, Dislocated, Expl, Expl_Impers, Expl_Pass, Expl_Pv, Fixed, Flat, Flat_Name, Goeswith, Iobj, List, Mark, Nmod,
     Nmod_Poss, Nmod_Tmod, Nsubj, Nsubj_Outer, Nsubj_Pass, Nummod, Nummod_Gov, Obj, Obl, Obl_Agent, Obl_Arg, Obl_Lmod, Obl_Tmod, Obl_Npmod,
-    Orphan, Parataxis, Punct, Reparandum, Root, Vocative, Xcomp
+    Orphan, Parataxis, Punct, Reparandum, Root, Vocative, Xcomp, Other
 };
 
-enum VerbMood {
-    None, Indicative, Imperative, Subjunctive
+enum VerbMood
+{
+    None, Ind, Imp, Subj
 };
 
-enum PosTag {
+enum PosTag
+{
     CC, CD, DT, EX, FW, IN, JJ, JJR, JJS, LS, MD, NN, NNS,
     NNP, NNPS, VB, VBD, VBG, VBN, VBP, VBZ, PRP, PRP_,WP,WP_ ,
     WRB, RB, RBR, RBS, RP, SYM, TO, UH, WDT, PDT, ANY

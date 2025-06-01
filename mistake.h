@@ -7,6 +7,7 @@ class Mistake
     QList<UDNode*> nodes ;// узлы c ошибкой
 public:
     Mistake();
+    Mistake(QString message);
     void createMessage(QString temp);   // метод, вставляет слово или id при необходимости в сообщение, на вход получает шаблон сообщения
     void addToMessage(QString str);      // добавляет строку к сообщению
 
@@ -16,7 +17,8 @@ public:
         if (message != other.message) return false;
         if (nodes.size() != other.nodes.size()) return false;
 
-        for (int i = 0; i < nodes.size(); ++i) {
+        for (int i = 0; i < nodes.size(); ++i)
+        {
             if (nodes[i] != other.nodes[i]) return false;
         }
 
@@ -27,7 +29,8 @@ public:
     {
         uint hash = qHash(key.message, seed);
 
-        for (const auto node : key.nodes) {
+        for (const auto node : key.nodes)
+        {
             hash ^= qHash(reinterpret_cast<quintptr>(node));
         }
 

@@ -1,11 +1,13 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-#include <Header.h>
+#include <QSet>
 
 class Error
 {
-    enum ErrorType {NoError, InputFile, OutputFile, IncorrectId, duplicateIds, IncorrectWord,
+    enum ErrorType
+    {
+        NoError, InputFile, OutputFile, IncorrectId, duplicateIds, IncorrectWord,
                      IncorrectHeadId, headIdNotFound, IncorrectDepRel, ExtraData, NoRoot,
                      MultipleRoots, IncorrectRootId, IncorrectMood, IncorrectTag, CycleInTree,
                      depNotConnected

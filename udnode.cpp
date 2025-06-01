@@ -1,6 +1,21 @@
 #include "udnode.h"
 
-UDNode::UDNode() {}
+UDNode::UDNode()
+    : id(0), lemma(""), upos(PosTag::NN), head(0),
+    depRel(DepRel::Other), mood(VerbMood::None),
+    children(), connectedToRoot(false)
+{}
+UDNode::UDNode(QString lem, PosTag up, VerbMood m)
+{
+    id = 0;
+    lemma = lem;
+    upos = up;
+    head = 0;
+    depRel = Other;
+    mood = m;
+    children = {};
+    connectedToRoot = false;
+}
 
 /*!
 * \brief Рекурсивная функция для выполнения всех проверок шаблона

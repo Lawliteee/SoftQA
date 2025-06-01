@@ -12,7 +12,15 @@ GrammarRule::GrammarRule() {}
 */
 bool GrammarRule::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
 {
-    mistakes.insert(Mistake());
     return true;
 };
 
+bool PersonNumberAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};
+
+bool NumberAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};

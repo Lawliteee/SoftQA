@@ -1,4 +1,5 @@
 QT = core
+QT += testlib  # ← Добавь эту строку
 
 CONFIG += c++17 cmdline
 
@@ -14,6 +15,7 @@ SOURCES += \
         mistake.cpp \
         pattern.cpp \
         reltypecheck.cpp \
+        tests.cpp \
         udnode.cpp
 
 # Default rules for deployment.
@@ -28,4 +30,5 @@ HEADERS += \
     mistake.h \
     pattern.h \
     reltypecheck.h \
+    tests.h \
     udnode.h

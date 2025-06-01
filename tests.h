@@ -15,6 +15,15 @@ private slots:
 
     void testNumberCheck();
     void testNumberCheck_data();
+
+    void testMainAuxAgreement();
+    void testMainAuxAgreement_data();
+
+    void testAuxAuxAgreement();
+    void testAuxAuxAgreement_data();
+
+    void testCreateNodesFromLines();
+    void testCreateNodesFromLines_data();
 };
 
 #endif // TESTS_H

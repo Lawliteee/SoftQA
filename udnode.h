@@ -18,7 +18,7 @@ class UDNode
     bool connectedToRoot ;                // достижимость до корня
 public:
     UDNode();
-    UDNode(QString lem, PosTag up, int h, DepRel dp, VerbMood m);
+    UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m);
     UDNode(QString lem, PosTag up, VerbMood m);
     void markRelatedDescendants();  // отмечает достижимость потомков до корня
     void checkPattern(const Pattern& pattern, const QMap<int, UDNode*>&nodes,  QSet<Mistake> &Mistakes);     // метод выполнения всех проверок шаблона
@@ -30,6 +30,14 @@ public:
     bool isFutureClause ();
     bool isPastClause ();
     bool isCountable();
+
+    //gets
+    int getId();
+    QString getlemma();
+    PosTag getUpos();
+    int getHead();
+    DepRel getDepRel();
+    VerbMood getMood();
 
 };
 

@@ -5,6 +5,7 @@ UDNode::UDNode()
     depRel(DepRel::Other), mood(VerbMood::None),
     children(), connectedToRoot(false)
 {}
+
 UDNode::UDNode(QString lem, PosTag up, VerbMood m)
 {
     id = 0;
@@ -15,6 +16,42 @@ UDNode::UDNode(QString lem, PosTag up, VerbMood m)
     mood = m;
     children = {};
     connectedToRoot = false;
+}
+
+UDNode::UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m)
+{
+    id = i;
+    lemma = lem;
+    upos = up;
+    head = h;
+    depRel = dp;
+    mood = m;
+    children = {};
+    connectedToRoot = false;
+}
+int UDNode::getId()
+{
+    return id;
+}
+QString UDNode::getlemma()
+{
+    return lemma;
+}
+PosTag UDNode::getUpos()
+{
+    return upos;
+}
+int UDNode::getHead()
+{
+    return head;
+}
+DepRel UDNode::getDepRel()
+{
+    return depRel;
+}
+VerbMood UDNode::getMood()
+{
+    return mood;
 }
 
 /*!

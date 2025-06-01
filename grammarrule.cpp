@@ -24,3 +24,13 @@ bool NumberAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake
 {
     return true;
 };
+
+bool MainAuxAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};
+
+bool AuxAuxAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};

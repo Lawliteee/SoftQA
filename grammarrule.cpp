@@ -34,3 +34,18 @@ bool AuxAuxAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake
 {
     return true;
 };
+
+bool PassiveAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};
+
+bool ComplexSentenceAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};
+
+bool ConditionalsAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+{
+    return true;
+};

@@ -18,6 +18,11 @@ UDNode::UDNode(QString lem, PosTag up, VerbMood m)
     connectedToRoot = false;
 }
 
+void UDNode::addChild(const UDNode* child)
+{
+    children.insert(const_cast<UDNode*>(child));
+}
+
 UDNode::UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m)
 {
     id = i;
@@ -29,27 +34,27 @@ UDNode::UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m)
     children = {};
     connectedToRoot = false;
 }
-int UDNode::getId()
+int UDNode::getId()const
 {
     return id;
 }
-QString UDNode::getlemma()
+QString UDNode::getlemma()const
 {
     return lemma;
 }
-PosTag UDNode::getUpos()
+PosTag UDNode::getUpos()const
 {
     return upos;
 }
-int UDNode::getHead()
+int UDNode::getHead()const
 {
     return head;
 }
-DepRel UDNode::getDepRel()
+DepRel UDNode::getDepRel()const
 {
     return depRel;
 }
-VerbMood UDNode::getMood()
+VerbMood UDNode::getMood()const
 {
     return mood;
 }

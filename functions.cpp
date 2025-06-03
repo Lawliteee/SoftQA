@@ -18,7 +18,7 @@ void createNodesFromLines(const QStringList& lines, QMap<int, UDNode*>&nodes, QS
 * \param [in,out]  errors- множество ошибок
 * \return узлы являются связанными в дерево
 */
-bool checkTreeConnectivity(UDNode* root, const QMap<int, UDNode*>& nodes, QSet<Error>&errors)
+bool checkTreeConnectivity(UDNode* root, QMap<int, UDNode*>& nodes, QSet<Error>&errors)
 {
     return true;
 }
@@ -31,7 +31,7 @@ bool checkTreeConnectivity(UDNode* root, const QMap<int, UDNode*>& nodes, QSet<E
 */
 UDNode* addChildren(QMap<int, UDNode*>& nodes, QSet<Error>& errors)
 {
-    UDNode* tree;
+    UDNode* tree = NULL;
     return tree;
 }
 

@@ -31,14 +31,19 @@ public:
     bool isPastClause ();
     bool isCountable();
 
+    void addChild(const UDNode*);
     //gets
-    int getId();
-    QString getlemma();
-    PosTag getUpos();
-    int getHead();
-    DepRel getDepRel();
-    VerbMood getMood();
+    int getId() const;
+    QString getlemma() const;
+    PosTag getUpos() const;
+    int getHead() const;
+    DepRel getDepRel() const;
+    VerbMood getMood() const;
+    void writeChildren(QSet<UDNode*>& ch)
+    {
+        ch = children;
+    }
+
 
 };
-
 #endif // UDNODE_H

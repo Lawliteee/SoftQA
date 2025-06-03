@@ -3,22 +3,28 @@
 
 #include <QSet>
 
+enum ErrorType
+{
+    NoError, InputFile, OutputFile, IncorrectId, duplicateIds, IncorrectWord,
+    IncorrectHeadId, headIdNotFound, IncorrectDepRel, ExtraData, NoRoot,
+    MultipleRoots, IncorrectRootId, IncorrectMood, IncorrectTag, CycleInTree,
+    depNotConnected
+};
+
 class Error
 {
-    enum ErrorType
-    {
-        NoError, InputFile, OutputFile, IncorrectId, duplicateIds, IncorrectWord,
-                     IncorrectHeadId, headIdNotFound, IncorrectDepRel, ExtraData, NoRoot,
-                     MultipleRoots, IncorrectRootId, IncorrectMood, IncorrectTag, CycleInTree,
-                     depNotConnected
-    };
     QSet <int> line;
     ErrorType type;
     QString message;
 public:
     Error();
-    Error(ErrorType t = NoError, const QSet<int>& l = QSet<int>()) : type(t), line(l) {}
-
+    //Error(ErrorType t = NoError, const QSet<int>& l = QSet<int>()) : type(t), line(l) {}
+    Error(QSet <int>&l,ErrorType t,QString s)
+    {
+        line = l;
+        type = t;
+        message = s;
+    };
     // Перегрузка оператора сравнения
     bool operator==(const Error& other) const
     {

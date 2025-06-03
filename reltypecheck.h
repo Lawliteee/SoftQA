@@ -29,6 +29,9 @@ class ChildChild : public RelTypeCheck
     QSet <PosTag> validTags;           // список допустимых тегов второго узла, может быть любой
 public:
     void getNodes(const UDNode* mainNode,UDNode* searchNode, const UDNode* parent) override;
+    void setRelatedRel(DepRel rel) { relatedRel = rel; }
+    void setValidWords(const QSet<QString>& words) { validWords = words; }
+    void setValidTags(const QSet<PosTag>& tags) { validTags = tags; }
 };
 
 #endif // RELTYPECHECK_H

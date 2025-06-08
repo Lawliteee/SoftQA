@@ -8,7 +8,7 @@ RelTypeCheck::RelTypeCheck() {}
 * \param [in] parent – родительский узел
 * \param [out] searchNode – найден второй узел
 */
-void ChildChild::getNodes(const UDNode* mainNode,UDNode* searchNode, const UDNode* parent)
+void ChildChild::getNodes(const UDNode* mainNode,UDNode** searchNode, const UDNode* parent)
 {
 
 };
@@ -19,7 +19,7 @@ void ChildChild::getNodes(const UDNode* mainNode,UDNode* searchNode, const UDNod
 * \param [in] parent – родительский узел
 * \param [out] searchNode – найден второй узел
 */
-void ParentChild:: getNodes(const UDNode* mainNode,UDNode* searchNode,const UDNode* parent)
+void ParentChild:: getNodes(const UDNode* mainNode,UDNode** searchNode,const UDNode* parent)
 {
 
 };

@@ -14,6 +14,33 @@ void Tests::testPersonNumberCheck()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 }
 
@@ -243,6 +270,33 @@ void Tests::testNumberCheck()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 };
 
@@ -433,6 +487,33 @@ void Tests::testMainAuxAgreement()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 
 }
@@ -588,6 +669,33 @@ void Tests::testAuxAuxAgreement()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 }
 
@@ -694,6 +802,33 @@ void Tests::testPassiveAgreement()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 }
 
@@ -742,6 +877,33 @@ void Tests::testComplexSentenceAgreement()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 }
 
@@ -797,6 +959,33 @@ void Tests::testConditionalsAgreement()
 
     // Сравнение полученных и ожидаемых ошибок
     QCOMPARE(agreement, expAgreement);
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
     QCOMPARE(mistakes, expMistakes);
 }
 void Tests::testConditionalsAgreement_data()
@@ -868,7 +1057,33 @@ void Tests::testCreateNodesFromLines()
         QCOMPARE(actual->getMood(), expected->getMood());
     }
 
-    // Проверка ошибок
+    // Подробное сравнение ошибок
+    if (actualErrors != expErrors)
+    {
+        qDebug() << "Discrepancy found in error:";
+
+        // Находим ошибки, которые есть в actualErrors, но нет в expErrors
+        QSet<Error> unexpectedErrors = actualErrors - expErrors;
+        if (!unexpectedErrors.isEmpty())
+        {
+            qDebug() << "Unexpected error found (" << unexpectedErrors.size() << "):";
+            for (const Error& error : unexpectedErrors)
+            {
+                qDebug() << "  -" << error.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expErrors, но нет в actualErrors
+        QSet<Error> missingErrors = expErrors - actualErrors;
+        if (!missingErrors.isEmpty())
+        {
+            qDebug() << "Missing expected errors (" << missingErrors.size() << "):";
+            for (const Error& error : missingErrors)
+            {
+                qDebug() << "  +" << error.getMessage();
+            }
+        }
+    }
     QCOMPARE(actualErrors, expErrors);
 
 }
@@ -1021,6 +1236,34 @@ void Tests::testCheckTreeConnectivity()
     bool actConnectivity = checkTreeConnectivity(inputRoot,inputNodes,actualErrors);
 
     QCOMPARE(actConnectivity,expConnectivity);
+
+    // Подробное сравнение ошибок
+    if (actualErrors != expErrors)
+    {
+        qDebug() << "Discrepancy found in error:";
+
+        // Находим ошибки, которые есть в actualErrors, но нет в expErrors
+        QSet<Error> unexpectedErrors = actualErrors - expErrors;
+        if (!unexpectedErrors.isEmpty())
+        {
+            qDebug() << "Unexpected error found (" << unexpectedErrors.size() << "):";
+            for (const Error& error : unexpectedErrors)
+            {
+                qDebug() << "  -" << error.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expErrors, но нет в actualErrors
+        QSet<Error> missingErrors = expErrors - actualErrors;
+        if (!missingErrors.isEmpty())
+        {
+            qDebug() << "Missing expected errors (" << missingErrors.size() << "):";
+            for (const Error& error : missingErrors)
+            {
+                qDebug() << "  +" << error.getMessage();
+            }
+        }
+    }
     QCOMPARE(actualErrors, expErrors);
 }
 
@@ -1089,7 +1332,37 @@ void Tests::testAddChildren()
     {
         QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
     }
+
+    // Подробное сравнение ошибок
+    if (actualErrors != expErrors)
+    {
+        qDebug() << "Discrepancy found in error:";
+
+        // Находим ошибки, которые есть в actualErrors, но нет в expErrors
+        QSet<Error> unexpectedErrors = actualErrors - expErrors;
+        if (!unexpectedErrors.isEmpty())
+        {
+            qDebug() << "Unexpected error found (" << unexpectedErrors.size() << "):";
+            for (const Error& error : unexpectedErrors)
+            {
+                qDebug() << "  -" << error.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expErrors, но нет в actualErrors
+        QSet<Error> missingErrors = expErrors - actualErrors;
+        if (!missingErrors.isEmpty())
+        {
+            qDebug() << "Missing expected errors (" << missingErrors.size() << "):";
+            for (const Error& error : missingErrors)
+            {
+                qDebug() << "  +" << error.getMessage();
+            }
+        }
+    }
     QCOMPARE(actualErrors, expErrors);
+
+    // сравнение детей
     for (auto it = inputNodes.begin(); it != inputNodes.end(); ++it)
     {
         QSet <UDNode*> tmp;
@@ -1139,7 +1412,7 @@ void Tests::testGetNodesChild()
     QFETCH(const UDNode*, parent);
 
     UDNode* actNode = NULL;
-    rel->getNodes(mainNode,actNode,parent);
+    rel->getNodes(mainNode,&actNode,parent);
 
     if (actNode != NULL)
     {
@@ -1172,31 +1445,167 @@ void Tests::testGetNodesChild_data()
     QTest::newRow("Test 1: two children") << rel << static_cast<const UDNode*>(node1_0) << node1_1<< static_cast<const UDNode*>(node1_2);
 }
 
-/*void Tests::testMatchesPattern()
+void Tests::testMatchesPattern()
 {
-    typedef QMap<int, UDNode*> NodeMap;
-    QFETCH(NodeMap, inputNodes);
-    QFETCH(int, nodeId);
-    //QFETCH(Pattern*, pat);
+    qDebug() << "Test data before fail:";
+    QFETCH(const UDNode*, inputNode);
+    QFETCH(Pattern*, pat);
+    QFETCH(Pattern*, expPat);
     QFETCH(bool, expMatch);
 
+    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
+    QSet<const UDNode*> actualUsedChildren;
+    bool actualMatch = pat->matchesPattern(inputNode, actualUsedChildren);
+
+    QCOMPARE(actualMatch, expMatch);
+
+    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
+    QStringList mismatchErrors;
+    pat->compareMatches(expPat, mismatchErrors, "root");
+    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
+
+    if (!mismatchErrors.isEmpty())
+    {
+        QString errorReport = "Pattern structure mismatch details:\n";
+        errorReport += "================================\n";
+        errorReport += mismatchErrors.join("\n--------------------------------\n");
+        errorReport += "\n================================\n";
+        QFAIL(qPrintable(errorReport));
+    }
 
 }
 
 void Tests::testMatchesPattern_data()
 {
-    QTest::addColumn<QMap<int, UDNode*>>("inputNodes");
-    QTest::addColumn<int>("nodeId");
+
+    QTest::addColumn<const UDNode*>("inputNode");
     QTest::addColumn<Pattern*>("pat");
+    QTest::addColumn<Pattern*>("expPat");
     QTest::addColumn<bool>("expMatch");
 
-    QMap<int, UDNode*> tree;
+
     //Тест №1. Узел без детей.
-    Pattern* pattern1 = new Pattern({},{});
-    tree.clear();
+    QMap<int, UDNode*> tree1;
     UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
-    tree.insert(1,node1_0);
-    QTest::newRow("Test 1: Alone word") << tree << 0 << pattern1 << true;
+    tree1.insert(1,node1_0);
+    Pattern* pattern1 = new Pattern({},{});
+    Pattern* pattern1s = new Pattern({},{});
+    pattern1s->setMatch(node1_0);
+
+    QTest::newRow("Test 1: One word, Any pattern") <<static_cast<const UDNode*>(node1_0) << pattern1 << pattern1s << true;
+
+}
+
+void Tests::testCheckPattern()
+{
+    QFETCH(const UDNode*, inputNode);
+    QFETCH(Pattern*, pat);
+    QFETCH(QSet<Mistake>, expMistakes);
+
+    QSet<Mistake> mistakes;
+
+    inputNode->checkPattern(pat,mistakes);
+
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
+    QCOMPARE(mistakes, expMistakes);
+
+}
+void Tests::testCheckPattern_data()
+{
+    QTest::addColumn<const UDNode*>("inputNode");
+    QTest::addColumn<Pattern*>("pat");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+
+    QSet<Mistake> mistakes;
+
+    //Тест 1
+    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
+    Pattern* pattern1 = new Pattern({},{});
+    mistakes.clear();
+    QTest::newRow("Test 1: no checks") <<static_cast<const UDNode*>(node1_0) << pattern1 << mistakes;
+
+}
 
 
-}*/
+void Tests::testCheckAllPatterns()
+{
+    typedef QMap<int, UDNode*> NodeMap;
+    QFETCH(NodeMap, inputNodes);
+    QFETCH(QSet<Pattern*>, pats);
+    QFETCH(QSet<Mistake>, expMistakes);
+
+    QSet<Mistake> mistakes;
+
+    checkAllPatterns(inputNodes, pats, mistakes);
+
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
+    QCOMPARE(mistakes, expMistakes);
+}
+
+void Tests::testCheckAllPatterns_data()
+{
+    QTest::addColumn<QMap<int, UDNode*>>("inputNodes");
+    QTest::addColumn<QSet<Pattern*>>("pats");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+
+    QSet<Mistake> mistakes;
+    QSet<Pattern*> pats;
+    QMap<int,UDNode*> tree;
+    //Тест 1
+    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
+    Pattern* pattern1 = new Pattern({},{});
+    mistakes.clear();
+    QTest::newRow("Test 1: no checks") << tree <<pats <<mistakes;
+}

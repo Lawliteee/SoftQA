@@ -32,6 +32,12 @@ public:
         children.insert(relation, childPattern);
     }
     bool matchesPattern(const UDNode* node, QSet<const UDNode*>& usedChildren);
+    void compareMatches(const Pattern* expected, QStringList& errors, const QString& path = "root") const;
+
+    void setMatch(UDNode* match)
+    {
+        currentMatch = match;
+    }
 };
 
 

@@ -20,6 +20,9 @@ enum DepRel
     Orphan, Parataxis, Punct, Reparandum, Root, Vocative, Xcomp, Other
 };
 
+QString depRelToString(DepRel rel);
+
+
 enum VerbMood
 {
     None, Ind, Imp, Subj
@@ -64,6 +67,6 @@ UDNode* addChildren(QMap<int, UDNode*>& nodes, QSet<Error>& errors);
 * \param [in] patterns – шаблоны правил
 * \param [in,out] mistakes – ошибки согласования
 */
-void CheckAllPatterns(const QMap<int, UDNode*>& nodes, const QSet<Pattern> & patterns, QSet<Mistake> &mistakes);
+void checkAllPatterns(const QMap<int, UDNode*>& nodes, const QSet<Pattern*> & patterns, QSet<Mistake> &mistakes);
 
 

@@ -65,7 +65,7 @@ VerbMood UDNode::getMood()const
 * \param [in] nodes – ассоциативный контейнер связей по идентификатору
 * \param [in,out] mistakes – ошибки согласования
 */
-void UDNode::checkPattern(const Pattern& pattern, const QMap<int, UDNode*>&nodes,  QSet<Mistake> &Mistakes)
+void UDNode::checkPattern(const Pattern* pattern,  QSet<Mistake> &Mistakes) const
 {
 
 };

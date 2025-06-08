@@ -11,6 +11,10 @@ public:
     void createMessage(QString temp);   // метод, вставляет слово или id при необходимости в сообщение, на вход получает шаблон сообщения
     void addToMessage(QString str);      // добавляет строку к сообщению
 
+    QString getMessage() const
+    {
+        return message;
+    }
     // Для работы с QSet
     bool operator==(const Mistake& other) const
     {

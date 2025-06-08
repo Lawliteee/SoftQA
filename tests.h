@@ -2,7 +2,7 @@
 #define TESTS_H
 
 #include <QObject>
-#include <reltypecheck.h>
+#include <pattern.h>
 #include <QtTest/QtTest>
 
 class Tests : public QObject
@@ -43,17 +43,17 @@ private slots:
     void testGetNodesChild();
     void testGetNodesChild_data();
 
-    // void testGetNodesParent();
+    //void testGetNodesParent();
     // void testGetNodesParent_data();
 
-    //void testMatchesPattern();
-    //void testMatchesPattern_data();
+    void testMatchesPattern();
+    void testMatchesPattern_data();
 
-    // void testCheckPattern();
-    // void testCheckPattern_data();
+    void testCheckPattern();
+    void testCheckPattern_data();
 
-    // void testCheckAllPatterns();
-    // void testCheckAllPatterns_data();
+    void testCheckAllPatterns();
+    void testCheckAllPatterns_data();
 };
 
 #endif // TESTS_H

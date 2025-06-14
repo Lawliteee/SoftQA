@@ -1750,7 +1750,7 @@ void Tests::testComplexSentenceAgreement_data()
     node2_6->addChild(node2_9);
 
     QTest::newRow("Test 2: Future main + past dep (relative clause)")
-        << static_cast<const UDNode*>(node2_6) << static_cast<const UDNode*>(node2_0)
+        << static_cast<const UDNode*>(node2_3) << static_cast<const UDNode*>(node2_0)
         << true << emptyMistakes << false << "";
 
     // ==============================================
@@ -2079,8 +2079,8 @@ void Tests::testComplexSentenceAgreement_data()
     node16_8->addChild(node16_9);
     node16_8->addChild(node16_10);
 
-    mistakeSet.insert(mistake);
-    QTest::newRow("Test 16: Future + future with 'when' - error")
+    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    QTest::newRow("Test 16: Future + future with 'when' - mistake")
         << static_cast<const UDNode*>(node16_4) << static_cast<const UDNode*>(node16_0)
         << false << mistakeSet << false << "";
     mistakeSet.clear();
@@ -2105,8 +2105,8 @@ void Tests::testComplexSentenceAgreement_data()
     node17_4->addChild(node17_7);
     node17_7->addChild(node17_8);
 
-    mistakeSet.insert(mistake);
-    QTest::newRow("Test 17: Future + past with 'when' - error")
+    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    QTest::newRow("Test 17: Future + past with 'when' - mistake")
         << static_cast<const UDNode*>(node17_4) << static_cast<const UDNode*>(node17_0)
         << false << mistakeSet << false << "";
     mistakeSet.clear();
@@ -2157,8 +2157,8 @@ void Tests::testComplexSentenceAgreement_data()
     node19_2->addChild(node19_5);
     node19_2->addChild(node19_6);
 
-    mistakeSet.insert(mistake);
-    QTest::newRow("Test 19: Past + future with 'because' - error")
+    mistakeSet.insert(Mistake("Если главное предложение стоит впрошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    QTest::newRow("Test 19: Past + future with 'because' - mistake")
         << static_cast<const UDNode*>(node19_2) << static_cast<const UDNode*>(node19_0)
         << false << mistakeSet << false << "";
     mistakeSet.clear();
@@ -2177,8 +2177,8 @@ void Tests::testComplexSentenceAgreement_data()
     node20_2->addChild(node20_4);
     node20_2->addChild(node20_5);
 
-    mistakeSet.insert(mistake);
-    QTest::newRow("Test 20: Past + present with 'because' - error")
+    mistakeSet.insert(Mistake("Если главное предложение стоит впрошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    QTest::newRow("Test 20: Past + present with 'because' - mistake")
         << static_cast<const UDNode*>(node20_2) << static_cast<const UDNode*>(node20_0)
         << false << mistakeSet << false << "";
     mistakeSet.clear();
@@ -2212,42 +2212,59 @@ void Tests::testConditionalsAgreement()
     QFETCH(const UDNode*, inputNode2);
     QFETCH(bool, expAgreement);
     QFETCH(QSet<Mistake>, expMistakes);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
 
     QSet<Mistake> mistakes;
-    ConditionalsAgreement gRule;
+    ComplexSentenceAgreement gRule;
+    bool agreement = false;
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
 
-    bool agreement = gRule.check(inputNode1,inputNode2,mistakes);
-
-    // Сравнение полученных и ожидаемых ошибок
-    QCOMPARE(agreement, expAgreement);
-    // Подробное сравнение ошибок
-    if (mistakes != expMistakes)
-    {
-        qDebug() << "Discrepancy found in mistakes:";
-
-        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
-        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-        if (!unexpectedMistakes.isEmpty())
-        {
-            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-            for (const Mistake& mistake : unexpectedMistakes)
-            {
-                qDebug() << "  -" << mistake.getMessage();
-            }
-        }
-
-        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
-        QSet<Mistake> missingMistakes = expMistakes - mistakes;
-        if (!missingMistakes.isEmpty())
-        {
-            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-            for (const Mistake& mistake : missingMistakes)
-            {
-                qDebug() << "  +" << mistake.getMessage();
-            }
-        }
+    try {
+        agreement = gRule.check(inputNode1, inputNode2, mistakes);
     }
-    QCOMPARE(mistakes, expMistakes);
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException) {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        // Сравнение результата
+        QCOMPARE(agreement, expAgreement);
+
+        // Подробное сравнение ошибок
+        if (mistakes != expMistakes) {
+            qDebug() << "Discrepancy found in mistakes:";
+
+            QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+            if (!unexpectedMistakes.isEmpty()) {
+                qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+                for (const Mistake& mistake : unexpectedMistakes) {
+                    qDebug() << "  -" << mistake.getMessage();
+                }
+            }
+
+            QSet<Mistake> missingMistakes = expMistakes - mistakes;
+            if (!missingMistakes.isEmpty()) {
+                qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+                for (const Mistake& mistake : missingMistakes) {
+                    qDebug() << "  +" << mistake.getMessage();
+                }
+            }
+        }
+        QCOMPARE(mistakes, expMistakes);
+    }
 }
 void Tests::testConditionalsAgreement_data()
 {
@@ -2257,29 +2274,165 @@ void Tests::testConditionalsAgreement_data()
     QTest::addColumn<const UDNode*>("inputNode2");
     QTest::addColumn<bool>("expAgreement");
     QTest::addColumn<QSet<Mistake>>("expMistakes");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
 
     QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
-    QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
+    QSet<Mistake> mistakeSet2nd;         // Множество ошибок для 2-го типа условных
+    QSet<Mistake> mistakeSet3rd;         // Множество ошибок для 3-го типа условных
 
-    // Тест №1. Нет ошибки,  второй тип,  придаточная часть в Past simple
+    // Сообщения об ошибках
+    mistakeSet2nd.insert(Mistake("придаточная часть несогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1. "));
+    mistakeSet3rd.insert(Mistake("придаточная часть несогласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3. "));
+
+    /* Тесты для 2-го типа условных предложений */
+
+    // Тест №1. Нет ошибки, второй тип, придаточная часть в Past Simple
     UDNode* node1_0 = new UDNode(7,"travel",VB,0,Root,Subj);
     UDNode* node1_1 = new UDNode(3,"had",VBD,7,Advcl,None);
     node1_0->addChild(node1_1);
     const UDNode* node1_2 = new UDNode(6,"would",MD,7,Aux,Ind);
     node1_0->addChild(node1_2);
-    QTest::newRow("Test 1: No mistake 2nd Conditionals") << static_cast<const UDNode*>(node1_1) << static_cast<const UDNode*>(node1_0) << true << emptyMistakes;
+    QTest::newRow("Test 1: No mistake 2nd Conditional, Past Simple")
+        << static_cast<const UDNode*>(node1_1) << static_cast<const UDNode*>(node1_0)
+        << true << emptyMistakes << false << "";
 
-    // Тест №2-3. Есть ошибка,  второй тип,  придаточная часть не в Past Simple
+    // Тест №2. Нет ошибки, второй тип, придаточная часть в Past Continuous
     UDNode* node2_0 = new UDNode(7,"go",VB,0,Root,Subj);
-    UDNode* node2_1 = new UDNode(4,"playing",VBG,7,Advcl,None);
+    UDNode* node2_1 = new UDNode(4,"were",VBD,7,Advcl,None);
+    UDNode* node2_2 = new UDNode(5,"shining",VBG,4,Advcl,None);
+    node2_1->addChild(node2_2);
     node2_0->addChild(node2_1);
-    const UDNode* node2_2 = new UDNode(6,"would",MD,7,Aux,Ind);
-    node2_0->addChild(node2_2);
+    const UDNode* node2_3 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node2_0->addChild(node2_3);
+    QTest::newRow("Test 2: No mistake 2nd Conditional, Past Continuous")
+        << static_cast<const UDNode*>(node2_1) << static_cast<const UDNode*>(node2_0)
+        << true << emptyMistakes << false << "";
 
-    mistakeSet.clear();
-    mistakeSet.insert(Mistake("придаточная частьнесогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1. "));
-    QTest::newRow("Test 2: Mistake 2nd Conditionals, Past Continuous") << static_cast<const UDNode*>(node2_1) << static_cast<const UDNode*>(node2_0) << false << mistakeSet;
-}
+    // Тест №3. Нет ошибки, второй тип, придаточная часть в Past Perfect
+    UDNode* node3_0 = new UDNode(7,"be",VB,0,Root,Subj);
+    UDNode* node3_1 = new UDNode(3,"had",VBD,7,Advcl,None);
+    UDNode* node3_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
+    node3_1->addChild(node3_2);
+    node3_0->addChild(node3_1);
+    const UDNode* node3_3 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node3_0->addChild(node3_3);
+    QTest::newRow("Test 3: No mistake 2nd Conditional, Past Perfect")
+        << static_cast<const UDNode*>(node3_1) << static_cast<const UDNode*>(node3_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №4. Есть ошибка, второй тип, придаточная часть в Present Simple
+    UDNode* node4_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    UDNode* node4_1 = new UDNode(3,"have",VBP,7,Advcl,None);
+    node4_0->addChild(node4_1);
+    const UDNode* node4_2 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node4_0->addChild(node4_2);
+    QTest::newRow("Test 4: Mistake 2nd Conditional, Present Simple")
+        << static_cast<const UDNode*>(node4_1) << static_cast<const UDNode*>(node4_0)
+        << false << mistakeSet2nd << false << "";
+
+    // Тест №5. Есть ошибка, второй тип, придаточная часть в Future Simple
+    UDNode* node5_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    UDNode* node5_1 = new UDNode(4,"will",MD,7,Advcl,None);
+    node5_0->addChild(node5_1);
+    const UDNode* node5_2 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node5_0->addChild(node5_2);
+    QTest::newRow("Test 5: Mistake 2nd Conditional, Future Simple")
+        << static_cast<const UDNode*>(node5_1) << static_cast<const UDNode*>(node5_0)
+        << false << mistakeSet2nd << false << "";
+
+    /* Тесты для 3-го типа условных предложений */
+
+    // Тест №6. Нет ошибки, третий тип, придаточная часть в Past Perfect
+    UDNode* node6_0 = new UDNode(12,"passed",VBN,0,Root,Subj);
+    UDNode* node6_1 = new UDNode(3,"had",VBD,12,Advcl,None);
+    UDNode* node6_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
+    node6_1->addChild(node6_2);
+    node6_0->addChild(node6_1);
+    const UDNode* node6_3 = new UDNode(5,"would",MD,12,Aux,Ind);
+    node6_0->addChild(node6_3);
+    const UDNode* node6_4 = new UDNode(6,"have",VB,12,Aux,None);
+    node6_0->addChild(node6_4);
+    QTest::newRow("Test 6: No mistake 3rd Conditional, Past Perfect")
+        << static_cast<const UDNode*>(node6_1) << static_cast<const UDNode*>(node6_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №7. Нет ошибки, третий тип, придаточная часть в Past Simple
+    UDNode* node7_0 = new UDNode(10,"ordered",VBN,0,Root,Subj);
+    UDNode* node7_1 = new UDNode(3,"liked",VBD,10,Advcl,None);
+    node7_0->addChild(node7_1);
+    const UDNode* node7_2 = new UDNode(6,"would",MD,10,Aux,Ind);
+    node7_0->addChild(node7_2);
+    const UDNode* node7_3 = new UDNode(7,"have",VB,10,Aux,None);
+    node7_0->addChild(node7_3);
+    QTest::newRow("Test 7: No mistake 3rd Conditional, Past Simple")
+        << static_cast<const UDNode*>(node7_1) << static_cast<const UDNode*>(node7_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №8. Нет ошибки, третий тип, придаточная часть в Past Continuous
+    UDNode* node8_0 = new UDNode(10,"stayed",VBN,0,Root,Subj);
+    UDNode* node8_1 = new UDNode(4,"had",VBD,10,Advcl,None);
+    UDNode* node8_2 = new UDNode(5,"been",VBN,4,Aux,None);
+    UDNode* node8_3 = new UDNode(6,"raining",VBG,5,Advcl,None);
+    node8_1->addChild(node8_2);
+    node8_2->addChild(node8_3);
+    node8_0->addChild(node8_1);
+    const UDNode* node8_4 = new UDNode(8,"would",MD,10,Aux,Ind);
+    node8_0->addChild(node8_4);
+    const UDNode* node8_5 = new UDNode(9,"have",VB,10,Aux,None);
+    node8_0->addChild(node8_5);
+    QTest::newRow("Test 8: No mistake 3rd Conditional, Past Continuous")
+        << static_cast<const UDNode*>(node8_1) << static_cast<const UDNode*>(node8_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №9. Есть ошибка, третий тип, придаточная часть в Future Simple
+    UDNode* node9_0 = new UDNode(12,"come",VBN,0,Root,Subj);
+    UDNode* node9_1 = new UDNode(4,"will",MD,12,Advcl,None);
+    node9_0->addChild(node9_1);
+    const UDNode* node9_2 = new UDNode(8,"would",MD,12,Aux,Ind);
+    node9_0->addChild(node9_2);
+    const UDNode* node9_3 = new UDNode(9,"have",VB,12,Aux,None);
+    node9_0->addChild(node9_3);
+    QTest::newRow("Test 9: Mistake 3rd Conditional, Future Simple")
+        << static_cast<const UDNode*>(node9_1) << static_cast<const UDNode*>(node9_0)
+        << false << mistakeSet3rd << false << "";
+
+    // Тест №10. Есть ошибка, третий тип, придаточная часть в Present Perfect
+    UDNode* node10_0 = new UDNode(12,"joined",VBN,0,Root,Subj);
+    UDNode* node10_1 = new UDNode(3,"has",VBZ,12,Advcl,None);
+    UDNode* node10_2 = new UDNode(4,"finished",VBN,3,Advcl,None);
+    node10_1->addChild(node10_2);
+    node10_0->addChild(node10_1);
+    const UDNode* node10_3 = new UDNode(7,"would",MD,12,Aux,Ind);
+    node10_0->addChild(node10_3);
+    const UDNode* node10_4 = new UDNode(8,"have",VB,12,Aux,None);
+    node10_0->addChild(node10_4);
+    QTest::newRow("Test 10: Mistake 3rd Conditional, Present Perfect")
+        << static_cast<const UDNode*>(node10_1) << static_cast<const UDNode*>(node10_0)
+        << false << mistakeSet3rd << false << "";
+
+    /* Тесты на ошибочные вызовы */
+
+    // Тест №11. Ошибочный вызов, в главной части не conditionals 2/3
+    UDNode* node11_0 = new UDNode(5,"met",VBD,0,Root,Subj);
+    UDNode* node11_1 = new UDNode(3,"man",NN,5,Obj,None);
+    node11_0->addChild(node11_1);
+    QTest::newRow("Test 11: Wrong call, not conditionals 2/3")
+        << static_cast<const UDNode*>(node11_1) << static_cast<const UDNode*>(node11_0)
+        << true << emptyMistakes << true << "Invalid main clause";
+
+    // Тест №12. Ошибочный вызов, нулевой указатель depVerb
+    UDNode* node12_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    QTest::newRow("Test 12: Nullptr depVerb")
+        << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(node12_0)
+        << true << emptyMistakes << true << "node pointer is null";
+
+    // Тест №13. Ошибочный вызов, нулевой указатель mainVerb
+    UDNode* node13_0 = new UDNode(3,"had",VBD,7,Advcl,None);
+    QTest::newRow("Test 13: Nullptr mainVerb")
+        << static_cast<const UDNode*>(node13_0) << static_cast<const UDNode*>(nullptr)
+        << true << emptyMistakes << true << "node pointer is null";
+    }
 
 void Tests::testCreateNodesFromLines()
 {
@@ -2483,6 +2636,243 @@ void Tests::testCreateNodesFromLines_data() {
     addPosTagTest(PosTag::PDT, "PDT");  // Предопределитель
     addPosTagTest(PosTag::ANY, "ANY");  // Любой тег (специальный случай)
 
+    // Тест 104: Пробелы в качестве разделителей
+    {
+        QStringList lines104;
+        lines104 << "1 does VBZ 0 root -";
+
+        QMap<int, UDNode*> nodes104;
+        nodes104.insert(1, new UDNode(1, "does", VBZ, 0, Root, None));
+
+        QTest::newRow("Test 104: Spaces as separators")
+            << lines104 << nodes104 << QSet<Error>();
+    }
+
+    // Тест 105: Табуляция в качестве разделителей
+    {
+        QStringList lines105;
+        lines105 << "1\tdoes\tVBZ\t0\troot\t-";
+
+        QMap<int, UDNode*> nodes105;
+        nodes105.insert(1, new UDNode(1, "does", VBZ, 0, Root, None));
+
+        QTest::newRow("Test 105: Tabs as separators")
+            << lines105 << nodes105 << QSet<Error>();
+    }
+
+    // Тест 106: Пробелы и табуляция в качестве разделителей
+    {
+        QStringList lines106;
+        lines106 << "1 does\tVBZ 0\troot -";
+
+        QMap<int, UDNode*> nodes106;
+        nodes106.insert(1, new UDNode(1, "does", VBZ, 0, Root, None));
+
+        QTest::newRow("Test 106: Mixed spaces and tabs")
+            << lines106 << nodes106 << QSet<Error>();
+    }
+
+    // Тест 107: Неверный идентификатор
+    {
+        QStringList lines107;
+        lines107 << "-1 does VBZ 0 root -";
+
+        QMap<int, UDNode*> nodes107;
+
+        QSet<Error> errors107;
+        QSet<int> errLines107; errLines107 << 0;
+        errors107.insert(Error(errLines107, IncorrectId, "Неверный идентификатор слова: -1"));
+
+        QTest::newRow("Test 107: Invalid word ID")
+            << lines107 << nodes107 << errors107;
+    }
+
+    // Тест 108: Неверное написание слова
+    {
+        QStringList lines108;
+        lines108 << "1 %;$ VBZ 0 root -";
+
+        QMap<int, UDNode*> nodes108;
+
+        QSet<Error> errors108;
+        QSet<int> errLines108; errLines108 << 0;
+        errors108.insert(Error(errLines108, IncorrectWord, "Неверное написание слова: %;$"));
+
+        QTest::newRow("Test 108: Invalid word spelling")
+            << lines108 << nodes108 << errors108;
+    }
+
+    // Тест 109: Неверный POS-тег части
+    {
+        QStringList lines109;
+        lines109 << "1 does v 0 root -";
+
+        QMap<int, UDNode*> nodes109;
+
+        QSet<Error> errors109;
+        QSet<int> errLines109; errLines109 << 0;
+        errors109.insert(Error(errLines109, IncorrectTag, "Неверный тег части речи: v"));
+
+        QTest::newRow("Test 109: Invalid POS tag")
+            << lines109 << nodes109 << errors109;
+    }
+
+    // Тест 110: Неверный идентификатор определяющего слова
+    {
+        QStringList lines110;
+        lines110 << "1 does VBZ ph root -";
+
+        QMap<int, UDNode*> nodes110;
+
+        QSet<Error> errors110;
+        QSet<int> errLines110; errLines110 << 0;
+        errors110.insert(Error(errLines110, IncorrectHeadId, "Неверный идентификатор определяющего слова: ph"));
+
+        QTest::newRow("Test 110: Invalid head ID")
+            << lines110 << nodes110 << errors110;
+    }
+
+    // Тест 111: Неверный тип связи
+    {
+        QStringList lines111;
+        lines111 << "1 does VBZ 0 qwe -";
+
+        QMap<int, UDNode*> nodes111;
+
+        QSet<Error> errors111;
+        QSet<int> errLines111; errLines111 << 0;
+        errors111.insert(Error(errLines111, IncorrectDepRel, "Неверный тип связи: qwe"));
+
+        QTest::newRow("Test 111: Invalid dependency relation")
+            << lines111 << nodes111 << errors111;
+    }
+
+    // Тест 112: Неверное наклонение
+    {
+        QStringList lines112;
+        lines112 << "1 does VBZ 0 root zxc";
+
+        QMap<int, UDNode*> nodes112;
+
+        QSet<Error> errors112;
+        QSet<int> errLines112; errLines112 << 0;
+        errors112.insert(Error(errLines112, IncorrectMood, "Неверное наклонение: zxc"));
+
+        QTest::newRow("Test 112: Invalid mood")
+            << lines112 << nodes112 << errors112;
+    }
+
+    // Тест 113: Посторонние символы после данных
+    {
+        QStringList lines113;
+        lines113 << "1 does VBZ 0 root- asd";
+
+        QMap<int, UDNode*> nodes113;
+
+        QSet<Error> errors113;
+        QSet<int> errLines113; errLines113 << 0;
+        errors113.insert(Error(errLines113, ExtraData, "Посторонние символы после данных: asd"));
+
+        QTest::newRow("Test 113: Extra data after fields")
+            << lines113 << nodes113 << errors113;
+    }
+
+    // Тест 114: Несколько ошибок
+    {
+        QStringList lines114;
+        lines114 << "-1 ^#& ^$ -2 qwe ---";
+
+        QMap<int, UDNode*> nodes114;
+
+        QSet<Error> errors114;
+        QSet<int> errLines114; errLines114 << 0;
+        errors114.insert(Error(errLines114, IncorrectId, "Неверный идентификатор слова: -1"));
+        errors114.insert(Error(errLines114, IncorrectWord, "Неверное написание слова: ^#&"));
+        errors114.insert(Error(errLines114, IncorrectTag, "Неверный тег части речи: ^$"));
+        errors114.insert(Error(errLines114, IncorrectHeadId, "Неверный идентификатор определяющего слова: -2"));
+        errors114.insert(Error(errLines114, IncorrectDepRel, "Неверный тип связи: qwe"));
+        errors114.insert(Error(errLines114, IncorrectMood, "Неверное наклонение: ---"));
+
+        QTest::newRow("Test 114: Multiple errors")
+            << lines114 << nodes114 << errors114;
+    }
+
+    // Тест 115: Недостаточно данных
+    {
+        QStringList lines115;
+        lines115 << "-1";
+
+        QMap<int, UDNode*> nodes115;
+
+        QSet<Error> errors115;
+        QSet<int> errLines115; errLines115 << 0;
+        errors115.insert(Error(errLines115, IncorrectMood, "Недостаточно данных для создания узла"));
+
+        QTest::newRow("Test 115: Not enough data")
+            << lines115 << nodes115 << errors115;
+    }
+
+    // Тест 116: Идентификатор определяющего слова равен текущему
+    {
+        QStringList lines116;
+        lines116 << "1 runs 1 root";
+
+        QMap<int, UDNode*> nodes116;
+
+        QSet<Error> errors116;
+        QSet<int> errLines116; errLines116 << 0;
+        errors116.insert(Error(errLines116, CycleInTree, "Идентификатор определяющего слова совпадает с идентификатором текущего слова: 1"));
+
+        QTest::newRow("Test 116: Head ID equals current ID")
+            << lines116 << nodes116 << errors116;
+    }
+
+    // Тест 117: Несколько слов
+    {
+        QStringList lines117;
+        lines117 << "1 he PRP 2 nsubj -" << "2 does VBZ 0 root -";
+
+        QMap<int, UDNode*> nodes117;
+        nodes117.insert(1, new UDNode(1, "he", PRP, 2, Nsubj, None));
+        nodes117.insert(2, new UDNode(2, "does", VBZ, 0, Root, None));
+
+        QTest::newRow("Test 117: Multiple words")
+            << lines117 << nodes117 << QSet<Error>();
+    }
+
+    // Тест 118: Ошибка не в первом слове
+    {
+        QStringList lines118;
+        lines118 << "1 he PRP 2 nsubj -" << "-2 does VBZ 0 root -";
+
+        QMap<int, UDNode*> nodes118;
+        nodes118.insert(1, new UDNode(1, "he", PRP, 2, Nsubj, None));
+
+        QSet<Error> errors118;
+        QSet<int> errLines118; errLines118 << 1;
+        errors118.insert(Error(errLines118, IncorrectId, "Неверный идентификатор слова: -2"));
+
+        QTest::newRow("Test 118: Error in non-first word")
+            << lines118 << nodes118 << errors118;
+    }
+
+    // Тест 119: Недостаточно данных, строка в середине
+    {
+        QStringList lines119;
+        lines119 << "1 he PRP 2 nsubj -" << "2" << "3 this DT 2 obj -";
+
+        QMap<int, UDNode*> nodes119;
+        nodes119.insert(1, new UDNode(1, "he", PRP, 2, Nsubj, None));
+        nodes119.insert(3, new UDNode(3, "this", DT, 2, Obj, None));
+
+        QSet<Error> errors119;
+        QSet<int> errLines119; errLines119 << 1;
+        errors119.insert(Error(errLines119, IncorrectMood, "Недостаточно данных для создания узла"));
+
+        QTest::newRow("Test 119: Incomplete line in the middle")
+            << lines119 << nodes119 << errors119;
+    }
+
 }
 
 void Tests::testCheckTreeConnectivity()
@@ -2492,10 +2882,35 @@ void Tests::testCheckTreeConnectivity()
     typedef QMap<int, UDNode*> NodeMap;
     QFETCH(NodeMap, inputNodes);
     QFETCH(QSet<Error>, expErrors);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
 
+    bool actConnectivity = false;
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
     QSet<Error> actualErrors;
-    bool actConnectivity = checkTreeConnectivity(inputRoot,inputNodes,actualErrors);
+    try {
+        actConnectivity = checkTreeConnectivity(inputRoot,inputNodes,actualErrors);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
 
+
+    // Проверка исключений
+    if (expectException) {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+    }
+
+    // сравнение результата
     QCOMPARE(actConnectivity,expConnectivity);
 
     // Подробное сравнение ошибок
@@ -2534,42 +2949,172 @@ void Tests::testCheckTreeConnectivity_data()
     QTest::addColumn<UDNode*>("inputRoot");
     QTest::addColumn<QMap<int, UDNode*>>("inputNodes");
     QTest::addColumn<QSet<Error>>("expErrors");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
 
     QMap<int, UDNode*> tree;
     QSet<Error> eErrors;
     QSet<int> lines;
-    // Тест 1 одно слово
-    tree.clear();
-    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
-    tree.insert(1,node1_0);
-    eErrors.clear();
-    QTest::newRow("Test 1: Alone word") << true<<node1_0<<tree<<eErrors;
 
-    // Тест 3 Минимальный цикл
-    tree.clear();
-    UDNode* node3_0 = new UDNode(1,"Stars",NNS,2,Nsubj,None);
-    UDNode* node3_1 = new UDNode(2,"twinkle",VBP,0,Root,None);
-    UDNode* node3_2 = new UDNode(3,"hide",NN,2,Obj,None);
-    UDNode* node3_3 = new UDNode(4,"but",CC,5,Conj,None);
-    UDNode* node3_4 = new UDNode(5,"clouds",NNS,4,Conj,None);
-    node3_1->addChild(node3_0);
-    node3_1->addChild(node3_2);
-    node3_3->addChild(node3_4);
-    node3_4->addChild(node3_3);
+    // Тест 1: Одно слово
+    {
+        tree.clear();
+        UDNode* node1_0 = new UDNode(1, "Hello", UH, 0, Root, None);
+        tree.insert(1, node1_0);
+        eErrors.clear();
 
-    tree.insert(0,node3_0);
-    tree.insert(1,node3_1);
-    tree.insert(2,node3_2);
-    tree.insert(3,node3_3);
-    tree.insert(4,node3_4);
+        QTest::newRow("Test 1: Alone word")
+            << true << node1_0 << tree << eErrors << false << "";
+    }
 
-    eErrors.clear();
-    lines.clear();
-    lines.insert(4);
-    lines.insert(5);
-    eErrors.insert(Error(lines,CycleInTree,"Ошибка об отсутствии связи с корнем(but, clouds)"));
+    // Тест 2: Обычное дерево
+    {
+        tree.clear();
+        UDNode* node2_0 = new UDNode(1, "A", DT, 2, Det, None);
+        UDNode* node2_1 = new UDNode(2, "quick", JJ, 4, Amod, None);
+        UDNode* node2_2 = new UDNode(3, "brown", JJ, 4, Amod, None);
+        UDNode* node2_3 = new UDNode(4, "fox", NN, 5, Nsubj, None);
+        UDNode* node2_4 = new UDNode(5, "jumps", VBZ, 0, Root, None);
 
-    QTest::newRow("Test 3: Min cycle") << true<<node1_0<<tree<<eErrors;
+        node2_4->addChild(node2_3);
+        node2_3->addChild(node2_2);
+        node2_3->addChild(node2_1);
+        node2_3->addChild(node2_0);
+
+        tree.insert(1, node2_0);
+        tree.insert(2, node2_1);
+        tree.insert(3, node2_2);
+        tree.insert(4, node2_3);
+        tree.insert(5, node2_4);
+        eErrors.clear();
+
+        QTest::newRow("Test 2: Normal tree")
+            << true << node2_4 << tree << eErrors<< false << "";
+    }
+
+    // Тест 3: Несколько ветвей из корня
+    {
+        tree.clear();
+        UDNode* node3_0 = new UDNode(1, "Spring", NN, 2, Nsubj, None);
+        UDNode* node3_1 = new UDNode(2, "brings", VBZ, 0, Root, None);
+        UDNode* node3_2 = new UDNode(3, "rain", NN, 2, Obj, None);
+        UDNode* node3_3 = new UDNode(4, "and", CC, 5, Cc, None);
+        UDNode* node3_4 = new UDNode(5, "flowers", NNS, 3, Conj, None);
+
+        node3_1->addChild(node3_0);
+        node3_1->addChild(node3_2);
+        node3_2->addChild(node3_4);
+        node3_4->addChild(node3_3);
+
+        tree.insert(1, node3_0);
+        tree.insert(2, node3_1);
+        tree.insert(3, node3_2);
+        tree.insert(4, node3_3);
+        tree.insert(5, node3_4);
+        eErrors.clear();
+
+        QTest::newRow("Test 3: Multiple branches from root")
+            << true << node3_1 << tree << eErrors<< false << "";
+    }
+
+    // Тест 4: Минимальный цикл
+    {
+        tree.clear();
+        UDNode* node4_0 = new UDNode(1, "Stars", NNS, 2, Nsubj, None);
+        UDNode* node4_1 = new UDNode(2, "twinkle", VBP, 0, Root, None);
+        UDNode* node4_2 = new UDNode(3, "hide", NN, 2, Obj, None);
+        UDNode* node4_3 = new UDNode(4, "but", CC, 5, Conj, None);
+        UDNode* node4_4 = new UDNode(5, "clouds", NNS, 4, Conj, None);
+
+        node4_1->addChild(node4_0);
+        node4_1->addChild(node4_2);
+        node4_3->addChild(node4_4);
+        node4_4->addChild(node4_3); // Создаем цикл
+
+        tree.insert(1, node4_0);
+        tree.insert(2, node4_1);
+        tree.insert(3, node4_2);
+        tree.insert(4, node4_3);
+        tree.insert(5, node4_4);
+
+        eErrors.clear();
+        lines.clear();
+        lines.insert(4);
+        lines.insert(5);
+        eErrors.insert(Error(lines, CycleInTree, "Ошибка об отсутствии связи с корнем(but, clouds)"));
+
+        QTest::newRow("Test 4: Minimal cycle")
+            << false << node4_1 << tree << eErrors<< false << "";
+    }
+
+    // Тест 5: Несколько циклов
+    {
+        tree.clear();
+        UDNode* node5_0 = new UDNode(1, "The", DT, 2, Det, None);
+        UDNode* node5_1 = new UDNode(2, "wind", NN, 3, Nsubj, None);
+        UDNode* node5_2 = new UDNode(3, "blows", VBZ, 0, Root, None);
+        UDNode* node5_3 = new UDNode(4, "leaves", NNS, 5, Nsubj, None);
+        UDNode* node5_4 = new UDNode(5, "fall", VBP, 4, Conj, None);
+        UDNode* node5_5 = new UDNode(6, "sun", NN, 7, Nsubj, None);
+        UDNode* node5_6 = new UDNode(7, "rises", VBZ, 6, Conj, None);
+
+        node5_2->addChild(node5_1);
+        node5_1->addChild(node5_0);
+        node5_4->addChild(node5_3);
+        node5_3->addChild(node5_4);
+        node5_6->addChild(node5_5);
+        node5_5->addChild(node5_6); // Создаем циклы
+
+        tree.insert(1, node5_0);
+        tree.insert(2, node5_1);
+        tree.insert(3, node5_2);
+        tree.insert(4, node5_3);
+        tree.insert(5, node5_4);
+        tree.insert(6, node5_5);
+        tree.insert(7, node5_6);
+
+        eErrors.clear();
+        lines.clear();
+        lines.insert(4);
+        lines.insert(5);
+        lines.insert(6);
+        lines.insert(7);
+        eErrors.insert(Error(lines, CycleInTree, "Ошибка об отсутствии связи с корнем (leaves, fall, sun, rises)"));
+
+        QTest::newRow("Test 5: Multiple cycles")
+            << false << node5_2 << tree << eErrors<< false << "";
+    }
+
+    // Тест 6: Неверно задан корень
+    {
+        tree.clear();
+        UDNode* node6_0 = new UDNode(1, "The", DT, 2, Det, None);
+        UDNode* node6_1 = new UDNode(2, "wind", NN, 3, Nsubj, None);
+        UDNode* node6_2 = new UDNode(3, "blows", VBZ, 0, Root, None);
+        UDNode* node6_3 = new UDNode(4, "leaves", NNS, 5, Nsubj, None);
+        UDNode* node6_4 = new UDNode(5, "fall", VBP, 3, Conj, None);
+        UDNode* node6_5 = new UDNode(6, "sun", NN, 7, Nsubj, None);
+        UDNode* node6_6 = new UDNode(7, "rises", VBZ, 5, Conj, None);
+
+        node6_2->addChild(node6_1);
+        node6_1->addChild(node6_0);
+        node6_4->addChild(node6_3);
+        node6_6->addChild(node6_5);
+        node6_4->addChild(node6_6);
+
+        tree.insert(1, node6_0);
+        tree.insert(2, node6_1);
+        tree.insert(3, node6_2);
+        tree.insert(4, node6_3);
+        tree.insert(5, node6_4);
+        tree.insert(6, node6_5);
+        tree.insert(7, node6_6);
+
+        eErrors.clear();
+
+        QTest::newRow("Test 6: Incorrect root")
+            << false << node6_4 << tree << eErrors<< false << "Invalid root";
+    }
 }
 
 void Tests::testAddChildren()
@@ -2646,23 +3191,276 @@ void Tests::testAddChildren_data()
     QSet<UDNode*> tmpChildren;
     QSet<Error> eErrors;
     QSet<int> lines;
-    // Тест 1 одно слово
-    tree.clear();
-    UDNode* node1_0 = new UDNode(1,"the",DT,3,Det,None);
-    UDNode* node1_1 = new UDNode(2,"angry",JJ,3,Amod,None);
-    UDNode* node1_2 = new UDNode(3,"dog",NN,0,Root,None);
-    tmpChildren.clear();
-    eChildren.insert(1,tmpChildren);
-    eChildren.insert(2,tmpChildren);
-    tmpChildren.insert(node1_0);
-    tmpChildren.insert(node1_1);
-    eChildren.insert(3,tmpChildren);
 
-    tree.insert(1,node1_0);
-    tree.insert(2,node1_0);
-    tree.insert(3,node1_0);
-    eErrors.clear();
-    QTest::newRow("Test 1: Alone word") << tree << node1_2 << eChildren << eErrors;
+    // Тест 1: Слова зависят от корня
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node1_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node1_1 = new UDNode(2, "angry", JJ, 3, Amod, None);
+        UDNode* node1_2 = new UDNode(3, "dog", NN, 0, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node1_0, node1_1}));
+
+        tree.insert(1, node1_0);
+        tree.insert(2, node1_1);
+        tree.insert(3, node1_2);
+
+        QTest::newRow("Test 1: Words depend on root")
+            << tree << node1_2 << eChildren << eErrors;
+    }
+
+    // Тест 2: У зависимых слов корня есть зависимые слова
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node2_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node2_1 = new UDNode(2, "angry", JJ, 3, Amod, None);
+        UDNode* node2_2 = new UDNode(3, "dog", NN, 4, Nsubj, None);
+        UDNode* node2_3 = new UDNode(4, "barks", VBZ, 0, Root, Ind);
+        UDNode* node2_4 = new UDNode(5, "loudly", RB, 4, Advmod, None);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node2_0, node2_1}));
+        eChildren.insert(4, QSet<UDNode*>({node2_2, node2_4}));
+        eChildren.insert(5, QSet<UDNode*>());
+
+        tree.insert(1, node2_0);
+        tree.insert(2, node2_1);
+        tree.insert(3, node2_2);
+        tree.insert(4, node2_3);
+        tree.insert(5, node2_4);
+
+        QTest::newRow("Test 2: Root's dependents have dependents")
+            << tree << node2_3 << eChildren << eErrors;
+    }
+
+    // Тест 3: Есть цикл
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node3_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node3_1 = new UDNode(2, "angry", JJ, 3, Amod, None);
+        UDNode* node3_2 = new UDNode(3, "dog", NN, 0, Root, Ind);
+        UDNode* node3_3 = new UDNode(4, "a", DT, 5, Det, None);
+        UDNode* node3_4 = new UDNode(5, "cat", NN, 4, Nsubj, None);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node3_0, node3_1}));
+        eChildren.insert(4, QSet<UDNode*>({node3_4}));
+        eChildren.insert(5, QSet<UDNode*>({node3_3})); // Цикл
+
+        tree.insert(1, node3_0);
+        tree.insert(2, node3_1);
+        tree.insert(3, node3_2);
+        tree.insert(4, node3_3);
+        tree.insert(5, node3_4);
+
+        lines.clear();
+        lines.insert(4);
+        lines.insert(5);
+        eErrors.insert(Error(lines, CycleInTree, "Обнаружен цикл между узлами 4 и 5"));
+
+        QTest::newRow("Test 3: Cycle exists")
+            << tree << node3_2 << eChildren << eErrors;
+    }
+
+    // Тест 4: У одного слова много зависимых слов
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node4_0 = new UDNode(3, "has", VBZ, 6, Aux, None);
+        UDNode* node4_1 = new UDNode(2, "might", MD, 6, Aux, None);
+        UDNode* node4_2 = new UDNode(4, "never", RB, 6, Advmod, None);
+        UDNode* node4_3 = new UDNode(5, "been", VBN, 6, Aux, None);
+        UDNode* node4_4 = new UDNode(1, "she", PRP, 6, Nsubj, None);
+        UDNode* node4_5 = new UDNode(8, "quietly", RB, 6, Advmod, None);
+        UDNode* node4_6 = new UDNode(7, "here", RB, 6, Advmod, None);
+        UDNode* node4_7 = new UDNode(6, "running", VBG, 0, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>());
+        eChildren.insert(4, QSet<UDNode*>());
+        eChildren.insert(5, QSet<UDNode*>());
+        eChildren.insert(6, QSet<UDNode*>({node4_0, node4_1, node4_2, node4_3, node4_4, node4_5, node4_6}));
+        eChildren.insert(7, QSet<UDNode*>());
+        eChildren.insert(8, QSet<UDNode*>());
+
+        tree.insert(1, node4_0);
+        tree.insert(2, node4_1);
+        tree.insert(3, node4_2);
+        tree.insert(4, node4_3);
+        tree.insert(5, node4_4);
+        tree.insert(6, node4_5);
+        tree.insert(7, node4_6);
+        tree.insert(8, node4_7);
+
+        QTest::newRow("Test 4: One word has many dependents")
+            << tree << node4_7 << eChildren << eErrors;
+    }
+
+    // Тест 5: В дереве нет корня
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node5_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node5_1 = new UDNode(2, "angry", JJ, 3, Amod, None);
+        UDNode* node5_2 = new UDNode(3, "dog", NN, 1, Nsubj, None);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>({node5_2}));
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node5_0, node5_1}));
+
+        tree.insert(1, node5_0);
+        tree.insert(2, node5_1);
+        tree.insert(3, node5_2);
+
+        lines.clear();
+        eErrors.insert(Error(lines, NoRoot, "В дереве отсутствует корневой узел (head=0)"));
+
+        QTest::newRow("Test 5: No root in tree")
+            << tree << static_cast<UDNode*>(nullptr) << eChildren << eErrors;
+    }
+
+    // Тест 6: Несовпадение между идентификатором 0 и типом связи
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node6_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node6_1 = new UDNode(2, "angry", JJ, 0, Amod, None);
+        UDNode* node6_2 = new UDNode(3, "dog", NN, 0, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node6_0}));
+
+        tree.insert(1, node6_0);
+        tree.insert(2, node6_1);
+        tree.insert(3, node6_2);
+
+        lines.clear();
+        lines.insert(2);
+        eErrors.insert(Error(lines, IncorrectRootId, "Несовпадение между head=0 и типом связи 'amod' у слова с ID=2"));
+
+        QTest::newRow("Test 6: Mismatch between head=0 and deprel")
+            << tree << node6_2 << eChildren << eErrors;
+    }
+
+    // Тест 7: В дереве несколько корней
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node7_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node7_1 = new UDNode(2, "angry", JJ, 0, Root, None);
+        UDNode* node7_2 = new UDNode(3, "dog", NN, 0, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node7_0}));
+
+        tree.insert(1, node7_0);
+        tree.insert(2, node7_1);
+        tree.insert(3, node7_2);
+
+        lines.clear();
+        lines.insert(2);
+        lines.insert(3);
+        eErrors.insert(Error(lines, MultipleRoots, "Обнаружено несколько корней (ID: 2, 3)"));
+
+        QTest::newRow("Test 7: Multiple roots in tree")
+            << tree << node7_2 << eChildren << eErrors;
+    }
+
+    // Тест 8: У слова не существует заданный идентификатор определяющего слова
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node8_0 = new UDNode(1, "the", DT, 3, Det, None);
+        UDNode* node8_1 = new UDNode(2, "angry", JJ, 4, Amod, None);
+        UDNode* node8_2 = new UDNode(3, "dog", NN, 0, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node8_0}));
+
+        tree.insert(1, node8_0);
+        tree.insert(2, node8_1);
+        tree.insert(3, node8_2);
+
+        lines.clear();
+        lines.insert(2);
+        eErrors.insert(Error(lines, headIdNotFound, "Не найден head с ID=4 для слова с ID=2"));
+
+        QTest::newRow("Test 8: Non-existent head ID")
+            << tree << node8_2 << eChildren << eErrors;
+    }
+
+    // Тест 9: Несколько ошибок
+    {
+        tree.clear();
+        eChildren.clear();
+        eErrors.clear();
+
+        UDNode* node9_0 = new UDNode(1, "the", DT, 0, Det, None);
+        UDNode* node9_1 = new UDNode(2, "angry", JJ, 4, Amod, None);
+        UDNode* node9_2 = new UDNode(3, "dog", NN, 3, Root, Ind);
+
+        // Ожидаемые дети
+        eChildren.insert(1, QSet<UDNode*>());
+        eChildren.insert(2, QSet<UDNode*>());
+        eChildren.insert(3, QSet<UDNode*>({node9_2})); // Цикл
+
+        tree.insert(1, node9_0);
+        tree.insert(2, node9_1);
+        tree.insert(3, node9_2);
+
+        lines.clear();
+        lines.insert(1);
+        eErrors.insert(Error(lines, IncorrectRootId, "Несовпадение между head=0 и типом связи 'det' у слова с ID=1"));
+
+        lines.clear();
+        lines.insert(2);
+        eErrors.insert(Error(lines, headIdNotFound, "Не найден head с ID=4 для слова с ID=2"));
+
+        lines.clear();
+        lines.insert(3);
+        eErrors.insert(Error(lines, CycleInTree, "Обнаружен цикл у узла с ID=3"));
+
+        lines.clear();
+        eErrors.insert(Error(lines, NoRoot, "В дереве отсутствует корневой узел (head=0)"));
+
+        QTest::newRow("Test 9: Multiple errors")
+            << tree << static_cast<UDNode*>(nullptr) << eChildren << eErrors;
+    }
 }
 
 void Tests::testGetNodesChild()
@@ -2692,18 +3490,105 @@ void Tests::testGetNodesChild_data()
     QTest::addColumn<UDNode*>("expSearchNode");
     QTest::addColumn<const UDNode*>("parent");
 
-    ChildChild* rel = new ChildChild;
-    // Тест №1.  У родителя всего 2 ребенка
-    rel->setValidWords({});
-    rel->setValidTags({});
-    rel->setRelatedRel(Other);
-    UDNode* node1_0 = new UDNode(1,"she",PRP,3,Nsubj,None);
-    UDNode* node1_1 = new UDNode(2,"is",VBZ,3,Aux,None);
-    UDNode* node1_2 = new UDNode(3,"singing",VBG,0,Root,None);
-    node1_2->addChild(node1_0);
-    node1_2->addChild(node1_1);
+    // Общие узлы для тестов 1-6
+    UDNode* nodeShe = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* nodeIs = new UDNode(2, "is", VBZ, 3, Aux, None);
+    UDNode* nodeSinging = new UDNode(3, "singing", VBG, 0, Root, None);
+    nodeSinging->addChild(nodeShe);
+    nodeSinging->addChild(nodeIs);
 
-    QTest::newRow("Test 1: two children") << rel << static_cast<const UDNode*>(node1_0) << node1_1<< static_cast<const UDNode*>(node1_2);
+    // Узлы для теста 7
+    UDNode* nodeI = new UDNode(1, "I", PRP, 2, Nsubj, None);
+    UDNode* nodeHave = new UDNode(2, "have", VBP, 4, Aux, None);
+    UDNode* nodeBeen = new UDNode(3, "been", VBN, 4, Aux, None);
+    UDNode* nodeWaiting = new UDNode(4, "waiting", VBG, 0, Root, None);
+    nodeWaiting->addChild(nodeI);
+    nodeWaiting->addChild(nodeHave);
+    nodeWaiting->addChild(nodeBeen);
+
+    // Тест 1: У родителя всего 2 ребенка (без фильтров)
+    {
+        ChildChild* rel1 = new ChildChild;
+        rel1->setValidWords({});
+        rel1->setValidTags({});
+        rel1->setRelatedRel(Other);
+
+        QTest::newRow("Test 1: Two children, no filters")
+            << rel1 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 2: Указан тег VBZ
+    {
+        ChildChild* rel2 = new ChildChild;
+        rel2->setValidWords({});
+        rel2->setValidTags({VBZ});
+        rel2->setRelatedRel(Other);
+
+        QTest::newRow("Test 2: Filter by tag VBZ")
+            << rel2 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 3: Указано слово "is"
+    {
+        ChildChild* rel3 = new ChildChild;
+        rel3->setValidWords({"is"});
+        rel3->setValidTags({});
+        rel3->setRelatedRel(Other);
+
+        QTest::newRow("Test 3: Filter by word 'is'")
+            << rel3 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 4: Указано слово "is" и тег VBZ
+    {
+        ChildChild* rel4 = new ChildChild;
+        rel4->setValidWords({"is"});
+        rel4->setValidTags({VBZ});
+        rel4->setRelatedRel(Other);
+
+        QTest::newRow("Test 4: Filter by word 'is' and tag VBZ")
+            << rel4 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 5: Указано несколько слов и тегов
+    {
+        ChildChild* rel5 = new ChildChild;
+        rel5->setValidWords({"am", "is", "are"});
+        rel5->setValidTags({VB, VBZ, VBP});
+        rel5->setRelatedRel(Other);
+
+        QTest::newRow("Test 5: Multiple words and tags")
+            << rel5 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 6: Указана связь aux
+    {
+        ChildChild* rel6 = new ChildChild;
+        rel6->setValidWords({"am", "is", "are"});
+        rel6->setValidTags({VB, VBZ, VBP});
+        rel6->setRelatedRel(Aux);
+
+        QTest::newRow("Test 6: Filter by depRel aux")
+            << rel6 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging);
+    }
+
+    // Тест 7: Несколько детей у родителя с одной связью
+    {
+        ChildChild* rel7 = new ChildChild;
+        rel7->setValidWords({"been"});
+        rel7->setValidTags({VBN});
+        rel7->setRelatedRel(Aux);
+
+        QTest::newRow("Test 7: Multiple children with one matching relation")
+            << rel7 << static_cast<const UDNode*>(nodeHave) << nodeBeen
+            << static_cast<const UDNode*>(nodeWaiting);
+    }
 }
 
 void Tests::testMatchesPattern()

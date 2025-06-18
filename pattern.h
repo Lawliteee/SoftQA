@@ -31,9 +31,13 @@ public:
     {
         children.insert(relation, childPattern);
     }
+    void addСheck(RelTypeCheck* r)
+    {
+        checks.insert(r);
+    }
     bool matchesPattern(const UDNode* node, QSet<const UDNode*>& usedChildren);
     void compareMatches(const Pattern* expected, QStringList& errors, const QString& path = "root") const;
-
+    QStringList getUncalledChecks(const QString& path) const;
     void setMatch(UDNode* match)
     {
         currentMatch = match;

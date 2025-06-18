@@ -43,8 +43,8 @@ private slots:
     void testGetNodesChild();
     void testGetNodesChild_data();
 
-    //void testGetNodesParent();
-    // void testGetNodesParent_data();
+    void testGetNodesParent();
+    void testGetNodesParent_data();
 
     void testMatchesPattern();
     void testMatchesPattern_data();

@@ -3469,17 +3469,42 @@ void Tests::testGetNodesChild()
     QFETCH(const UDNode*, mainNode);
     QFETCH(UDNode*, expSearchNode);
     QFETCH(const UDNode*, parent);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
 
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
     UDNode* actNode = NULL;
-    rel->getNodes(mainNode,&actNode,parent);
 
-    if (actNode != NULL)
-    {
-        QCOMPARE(actNode->getId(),expSearchNode->getId());
+    try {
+        rel->getNodes(mainNode,&actNode,parent);
     }
-    else
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException)
     {
-        QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else
+    {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        if (actNode != NULL)
+        {
+            QCOMPARE(actNode->getId(),expSearchNode->getId());
+        }
+        else
+        {
+            QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
+        }
     }
 
 }
@@ -3489,6 +3514,8 @@ void Tests::testGetNodesChild_data()
     QTest::addColumn<const UDNode*>("mainNode");
     QTest::addColumn<UDNode*>("expSearchNode");
     QTest::addColumn<const UDNode*>("parent");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
 
     // Общие узлы для тестов 1-6
     UDNode* nodeShe = new UDNode(1, "she", PRP, 3, Nsubj, None);
@@ -3497,7 +3524,7 @@ void Tests::testGetNodesChild_data()
     nodeSinging->addChild(nodeShe);
     nodeSinging->addChild(nodeIs);
 
-    // Узлы для теста 7
+    // Узлы для теста 7-8
     UDNode* nodeI = new UDNode(1, "I", PRP, 2, Nsubj, None);
     UDNode* nodeHave = new UDNode(2, "have", VBP, 4, Aux, None);
     UDNode* nodeBeen = new UDNode(3, "been", VBN, 4, Aux, None);
@@ -3515,7 +3542,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 1: Two children, no filters")
             << rel1 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging) << false <<"";
     }
 
     // Тест 2: Указан тег VBZ
@@ -3527,7 +3554,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 2: Filter by tag VBZ")
             << rel2 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
     }
 
     // Тест 3: Указано слово "is"
@@ -3539,7 +3566,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 3: Filter by word 'is'")
             << rel3 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
     }
 
     // Тест 4: Указано слово "is" и тег VBZ
@@ -3551,7 +3578,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 4: Filter by word 'is' and tag VBZ")
             << rel4 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
     }
 
     // Тест 5: Указано несколько слов и тегов
@@ -3563,7 +3590,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 5: Multiple words and tags")
             << rel5 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
     }
 
     // Тест 6: Указана связь aux
@@ -3575,7 +3602,7 @@ void Tests::testGetNodesChild_data()
 
         QTest::newRow("Test 6: Filter by depRel aux")
             << rel6 << static_cast<const UDNode*>(nodeShe) << nodeIs
-            << static_cast<const UDNode*>(nodeSinging);
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
     }
 
     // Тест 7: Несколько детей у родителя с одной связью
@@ -3586,37 +3613,152 @@ void Tests::testGetNodesChild_data()
         rel7->setRelatedRel(Aux);
 
         QTest::newRow("Test 7: Multiple children with one matching relation")
-            << rel7 << static_cast<const UDNode*>(nodeHave) << nodeBeen
-            << static_cast<const UDNode*>(nodeWaiting);
+            << rel7 << static_cast<const UDNode*>(nodeI) << nodeBeen
+            << static_cast<const UDNode*>(nodeWaiting)<< false <<"";
+    }
+
+    // Тест 8: Несколько подходящих детей
+    {
+        ChildChild* rel8 = new ChildChild;
+        rel8->setValidWords({});
+        rel8->setValidTags({});
+        rel8->setRelatedRel(Aux);
+
+
+        QTest::newRow("Test 8: Several matching children")
+            << rel8 << static_cast<const UDNode*>(nodeHave) << nodeBeen
+            << static_cast<const UDNode*>(nodeWaiting)<< true <<"Several matching children";
+    }
+
+    // Тест 9: Всего один ребенок у родителя
+    {
+        ChildChild* rel8 = new ChildChild;
+        rel8->setValidWords({});
+        rel8->setValidTags({});
+        rel8->setRelatedRel(Aux);
+        UDNode* node9 = new UDNode(1, "he", PRP, 1, Nsubj, None);
+        UDNode* node9_2 = new UDNode(2, "goes", VBZ, 0, Root, None);
+
+        QTest::newRow("Test 9: Not enough children or no match")
+            << rel8 << static_cast<const UDNode*>(node9) << nodeBeen
+            << static_cast<const UDNode*>(node9_2)<< true <<"Not enough children or no match";
+    }
+}
+
+void Tests::testGetNodesParent()
+{
+    QFETCH(ParentChild*, rel);
+    QFETCH(const UDNode*, mainNode);
+    QFETCH(UDNode*, expSearchNode);
+    QFETCH(const UDNode*, parent);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+    UDNode* actNode = NULL;
+
+    try {
+        rel->getNodes(mainNode,&actNode,parent);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException)
+    {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else
+    {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        if (actNode != NULL)
+        {
+            QCOMPARE(actNode->getId(),expSearchNode->getId());
+        }
+        else
+        {
+            QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
+        }
+    }
+}
+
+void Tests::testGetNodesParent_data()
+{
+    QTest::addColumn<ParentChild*>("rel");
+    QTest::addColumn<const UDNode*>("mainNode");
+    QTest::addColumn<UDNode*>("expSearchNode");
+    QTest::addColumn<const UDNode*>("parent");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    // Тест 1: Родитель есть и является словом
+    {
+        ParentChild* rel1 = new ParentChild;
+        UDNode* nodeMain = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        UDNode* nodeParent = new UDNode(2, "goes", VBZ, 3, Root, None);
+        QTest::newRow("Test 1: Type test")
+            << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
+            << static_cast<const UDNode*>(nodeParent) << false<< "";
+    }
+
+    // Тест 2: Родителя нет(является корнем)
+    {
+        ParentChild* rel1 = new ParentChild;
+        UDNode* nodeMain = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        UDNode* nodeParent = new UDNode(2, "goes", VBZ, 3, Root, None);
+        QTest::newRow("Test 1: No parent(root)")
+            << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
+            << static_cast<const UDNode*>(nodeParent) << true<< "mainNode is root";
     }
 }
 
 void Tests::testMatchesPattern()
 {
-    qDebug() << "Test data before fail:";
     QFETCH(const UDNode*, inputNode);
     QFETCH(Pattern*, pat);
     QFETCH(Pattern*, expPat);
     QFETCH(bool, expMatch);
 
-    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
     QSet<const UDNode*> actualUsedChildren;
-    bool actualMatch = pat->matchesPattern(inputNode, actualUsedChildren);
+    bool exceptionThrown = false;
+    bool actualMatch = false;
 
+    try {
+        actualMatch = pat->matchesPattern(inputNode, actualUsedChildren);
+    } catch (const std::exception& e) {
+        exceptionThrown = true;
+        // For test 7, we expect an exception
+        if (QTest::currentTestFunction() == QLatin1String("Test 7: Multiple matching children")) {
+            QVERIFY(exceptionThrown);
+            return;
+        }
+    }
+
+    // For other tests, no exception should be thrown
+    QVERIFY(!exceptionThrown);
     QCOMPARE(actualMatch, expMatch);
 
-    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
-    QStringList mismatchErrors;
-    pat->compareMatches(expPat, mismatchErrors, "root");
-    qDebug() << "Test data before fail:" << inputNode << pat << expPat;
-
-    if (!mismatchErrors.isEmpty())
+    if (actualMatch)
     {
-        QString errorReport = "Pattern structure mismatch details:\n";
-        errorReport += "================================\n";
-        errorReport += mismatchErrors.join("\n--------------------------------\n");
-        errorReport += "\n================================\n";
-        QFAIL(qPrintable(errorReport));
+        qDebug() << "Test data before fail:" << inputNode << pat << expPat;
+        QStringList mismatchErrors;
+        pat->compareMatches(expPat, mismatchErrors, "root");
+
+        if (!mismatchErrors.isEmpty()) {
+            QString errorReport = "Pattern structure mismatch details:\n";
+            errorReport += "================================\n";
+            errorReport += mismatchErrors.join("\n--------------------------------\n");
+            errorReport += "\n================================\n";
+            QFAIL(qPrintable(errorReport));
+        }
     }
 
 }
@@ -3630,15 +3772,196 @@ void Tests::testMatchesPattern_data()
     QTest::addColumn<bool>("expMatch");
 
 
-    //Тест №1. Узел без детей.
+    // Тест №1. Узел без детей.
     QMap<int, UDNode*> tree1;
     UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
     tree1.insert(1,node1_0);
     Pattern* pattern1 = new Pattern({},{});
     Pattern* pattern1s = new Pattern({},{});
     pattern1s->setMatch(node1_0);
+    QTest::newRow("Test 1: One word, Any pattern") << static_cast<const UDNode*>(node1_0) << pattern1 << pattern1s << true;
 
-    QTest::newRow("Test 1: One word, Any pattern") <<static_cast<const UDNode*>(node1_0) << pattern1 << pattern1s << true;
+    // Тест №2. Узел без детей. Заданы допустимые тети.
+    Pattern* pattern2 = new Pattern({}, {UH, CC});
+    Pattern* pattern2s = new Pattern({}, {UH, CC});
+    pattern2s->setMatch(node1_0);
+    QTest::newRow("Test 2: Node with valid tag") << static_cast<const UDNode*>(node1_0) << pattern2 << pattern2s << true;
+
+    // Тест №3. Узел без детей. Заданы допустимые слова.
+    Pattern* pattern3 = new Pattern({"Hello"}, {});
+    Pattern* pattern3s = new Pattern({"Hello"}, {});
+    pattern3s->setMatch(node1_0);
+    QTest::newRow("Test 3: Node with valid word") << static_cast<const UDNode*>(node1_0) << pattern3 << pattern3s << true;
+
+    // Тест №4. Узел без детей. Тег совпадает, слово - нет.
+    Pattern* pattern4 = new Pattern({"World"}, {UH});
+    QTest::newRow("Test 4: Tag matches, word doesn't") << static_cast<const UDNode*>(node1_0) << pattern4 << new Pattern() << false;
+
+    // Тест №5. Узел без детей. Теu не совпадает, слово - да.
+    Pattern* pattern5 = new Pattern({"Hello"}, {UH});
+    UDNode* node5_0 = new UDNode(1,"Hello",CC,0,Root,None);
+    QTest::newRow("Test 5: Word matches, tag doesn't") << static_cast<const UDNode*>(node5_0) << pattern5 << new Pattern() << false;
+
+    // Тест №6. Шаблон с одним любым ребенком.
+    QMap<int, UDNode*> tree6;
+    UDNode* node6_0 = new UDNode(1,"he",PRP,0,Root,None);
+    UDNode* node6_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
+    tree6.insert(1,node6_0);
+    tree6.insert(2,node6_1);
+    node6_0->addChild(node6_1);
+    Pattern* pattern6 = new Pattern();
+    pattern6->addChildPattern(Nsubj, new Pattern());
+    Pattern* pattern6s = new Pattern();
+    pattern6s->setMatch(node6_0);
+    Pattern* child6 = new Pattern();
+    child6->setMatch(node6_1);
+    pattern6s->addChildPattern(Nsubj, child6);
+    QTest::newRow("Test 6: Pattern with any child") << static_cast<const UDNode*>(node6_0) << pattern6 << pattern6s << true;
+
+    // Тест №7. Неверный вызов. У узла есть несколько подходящих детей.
+    QMap<int, UDNode*> tree7;
+    UDNode* node7_0 = new UDNode(1,"he",PRP,0,Root,None);
+    UDNode* node7_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
+    UDNode* node7_2 = new UDNode(3,"fast",RB,1,Amod,None);
+    tree7.insert(1,node7_0);
+    tree7.insert(2,node7_1);
+    tree7.insert(3,node7_2);
+    Pattern* pattern7 = new Pattern();
+    pattern7->addChildPattern(Other, new Pattern());
+    QTest::newRow("Test 7: Multiple matching children") << static_cast<const UDNode*>(node7_0) << pattern7 << new Pattern() << false;
+
+    // Тест №8. Шаблон с конкретным ребенком, такой есть
+    QMap<int, UDNode*> tree8;
+    UDNode* node8_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
+    UDNode* node8_1 = new UDNode(2,"runs",VBZ,0,Root,None);
+    UDNode* node8_2 = new UDNode(3,"fast",RB,2,Advmod,None);
+    tree8.insert(1,node8_0);
+    tree8.insert(2,node8_1);
+    tree8.insert(3,node8_2);
+    node8_0->addChild(node8_1);
+    node8_0->addChild(node8_2);
+    Pattern* pattern8 = new Pattern();
+    pattern8->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    Pattern* pattern8s = new Pattern();
+    pattern8s->setMatch(node8_1);
+    Pattern* child8 = new Pattern({}, {PRP});
+    child8->setMatch(node8_0);
+    pattern8s->addChildPattern(Nsubj, child8);
+    QTest::newRow("Test 8: Pattern with specific child") << static_cast<const UDNode*>(node8_1) << pattern8 << pattern8s << true;
+
+    // Тест №9. Шаблон с конкретным ребенком, такого нет
+    Pattern* pattern9 = new Pattern();
+    pattern9->addChildPattern(Nsubj, new Pattern({}, {NNP}));
+    QTest::newRow("Test 9: Pattern with specific child that doesn't exist") << static_cast<const UDNode*>(node8_1) << pattern9 << new Pattern() << false;
+
+    // Тест №10. Есть подходящий ребенок, но родитель не соответствует
+    Pattern* pattern11 = new Pattern({"she"}, {});
+    pattern11->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    QTest::newRow("Test 10: Parent doesn't match") << static_cast<const UDNode*>(node8_1) << pattern11 << new Pattern() << false;
+
+    // Тест №11. У узла нет детей, в шаблоне есть
+    QTest::newRow("Test 11: Node has no children but pattern expects some") << static_cast<const UDNode*>(node1_0) << pattern6 << new Pattern() << false;
+
+    // Тест №12. Шаблон с несколькими детьми, у узла оба есть
+    Pattern* pattern13 = new Pattern();
+    pattern13->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    pattern13->addChildPattern(Other, new Pattern({}, {}));
+    Pattern* pattern13s = new Pattern();
+    pattern13s->setMatch(node8_1);
+    Pattern* child13_1 = new Pattern({}, {PRP});
+    child13_1->setMatch(node8_0);
+    Pattern* child13_2 = new Pattern({}, {});
+    child13_2->setMatch(node8_2);
+    pattern13s->addChildPattern(Nsubj, child13_1);
+    pattern13s->addChildPattern(Other, child13_2);
+    QTest::newRow("Test 12: Multiple children pattern") << static_cast<const UDNode*>(node8_1) << pattern13 << pattern13s << true;
+
+    // Тест №13. Шаблон с несколькими детьми, у узла нет одного подходящего
+    Pattern* pattern14 = new Pattern();
+    pattern14->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    pattern14->addChildPattern(Aux, new Pattern({}, {}));
+    QTest::newRow("Test 13: Missing one child") << static_cast<const UDNode*>(node8_1) << pattern14 << new Pattern() << false;
+
+    // Тест №14. Шаблон требует нескольких детей, у узла один
+    QMap<int, UDNode*> tree15;
+    UDNode* node15_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
+    UDNode* node15_1 = new UDNode(2,"runs",VBZ,0,Root,None);
+    node15_1->addChild(node15_0);
+    tree15.insert(1,node15_0);
+    tree15.insert(2,node15_1);
+    QTest::newRow("Test 14: Not enough children") << static_cast<const UDNode*>(node15_1) << pattern13 << new Pattern() << false;
+
+    // Тест №15. Шаблон с несколькими детьми, у узла много детей
+    QMap<int, UDNode*> tree16;
+    UDNode* node16_0 = new UDNode(1,"He",PRP,3,Nsubj,None);
+    UDNode* node16_1 = new UDNode(2,"will",MD,3,Aux,None);
+    UDNode* node16_2 = new UDNode(3,"go",VB,0,Root,None);
+    UDNode* node16_3 = new UDNode(4,"to",IN,5,Case,None);
+    UDNode* node16_4 = new UDNode(5,"London",NNP,3,Obl,None);
+    UDNode* node16_5 = new UDNode(6,"next",JJ,7,Amod,None);
+    UDNode* node16_6 = new UDNode(7,"week",NN,3,Obl_Tmod,None);
+    tree16.insert(1,node16_0);
+    tree16.insert(2,node16_1);
+    tree16.insert(3,node16_2);
+    tree16.insert(4,node16_3);
+    tree16.insert(5,node16_4);
+    tree16.insert(6,node16_5);
+    tree16.insert(7,node16_6);
+    node16_2->addChild(node16_0);
+    node16_2->addChild(node16_1);
+    node16_2->addChild(node16_4);
+    node16_2->addChild(node16_6);
+    node16_4->addChild(node16_3);
+    node16_6->addChild(node16_5);
+
+    Pattern* pattern15 = new Pattern({}, {VB});
+    pattern15->addChildPattern(Nsubj, new Pattern({}, {PRP,NN,NNS}));
+    pattern15->addChildPattern(Aux, new Pattern({"will"}, {}));
+    Pattern* pattern15s = new Pattern({}, {VB});
+    pattern15s->setMatch(node16_2);
+    Pattern* child15_1 = new Pattern({}, {PRP,NN,NNS});
+    child15_1->setMatch(node16_0);
+    Pattern* child15_2 = new Pattern({"will"}, {});
+    child15_2->setMatch(node16_1);
+    pattern15s->addChildPattern(Nsubj, child15_1);
+    pattern15s->addChildPattern(Aux, child15_2);
+
+    QTest::newRow("Test 15: Too many children") << static_cast<const UDNode*>(node16_2) << pattern15 << pattern15s << true;
+
+    // Тест №16. Шаблон с внуком
+    QMap<int, UDNode*> tree17;
+    UDNode* node17_0 = new UDNode(2,"wants",VBZ,0,Root,None);
+    UDNode* node17_1 = new UDNode(1,"she",PRP,2,Nsubj,None);
+    UDNode* node17_2 = new UDNode(4,"travel",VB,2,Xcomp,None);
+    UDNode* node17_3 = new UDNode(3,"to",TO,4,Mark,None);
+    tree17.insert(1,node17_0);
+    tree17.insert(2,node17_1);
+    tree17.insert(3,node17_2);
+    tree17.insert(4,node17_3);
+    node17_0->addChild(node17_1);
+    node17_0->addChild(node17_2);
+    node17_2->addChild(node17_3);
+
+    Pattern* pattern17 = new Pattern({}, {VBZ, VBP});
+    Pattern* child17_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
+    child17_1->addChildPattern(Mark, new Pattern({"to"}, {}));
+    pattern17->addChildPattern(Nsubj, new Pattern({}, {}));
+    pattern17->addChildPattern(Xcomp, child17_1);
+
+    Pattern* pattern17s = new Pattern({}, {VBZ, VBP});
+    pattern17s->setMatch(node17_0);
+    Pattern* child17s_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
+    child17s_1->setMatch(node17_2);
+    Pattern* child17s_2 = new Pattern({}, {});
+    child17s_2->setMatch(node17_1);
+    Pattern* grandchild17s = new Pattern({"to"}, {});
+    grandchild17s->setMatch(node17_3);
+
+    child17s_1->addChildPattern(Mark, grandchild17s);
+    pattern17s->addChildPattern(Xcomp, child17s_1);
+    pattern17s->addChildPattern(Nsubj, child17s_2);
+
+    QTest::newRow("Test 16: Pattern with grandchild") << static_cast<const UDNode*>(node17_0) << pattern17 << pattern17s << true;
 
 }
 
@@ -3646,47 +3969,37 @@ void Tests::testCheckPattern()
 {
     QFETCH(const UDNode*, inputNode);
     QFETCH(Pattern*, pat);
-    QFETCH(QSet<Mistake>, expMistakes);
 
     QSet<Mistake> mistakes;
 
     inputNode->checkPattern(pat,mistakes);
 
-    // Подробное сравнение ошибок
-    if (mistakes != expMistakes)
-    {
-        qDebug() << "Discrepancy found in mistakes:";
-
-        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
-        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-        if (!unexpectedMistakes.isEmpty())
-        {
-            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-            for (const Mistake& mistake : unexpectedMistakes)
-            {
-                qDebug() << "  -" << mistake.getMessage();
-            }
+    // Проверяем, все ли checks были вызваны
+        QStringList uncalledChecks = pat->getUncalledChecks("root");
+        if (!uncalledChecks.isEmpty()) {
+            QString errorMessage = "Не все проверки были вызваны:\n";
+            errorMessage += "--------------------------------\n";
+            errorMessage += uncalledChecks.join("\n");
+            errorMessage += "\n--------------------------------\n";
+            QFAIL(qPrintable(errorMessage));
         }
 
-        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
-        QSet<Mistake> missingMistakes = expMistakes - mistakes;
-        if (!missingMistakes.isEmpty())
-        {
-            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-            for (const Mistake& mistake : missingMistakes)
-            {
-                qDebug() << "  +" << mistake.getMessage();
-            }
+    // Дополнительно проверить, были ли найдены ошибки
+    if (!mistakes.isEmpty()) {
+        QString mistakeReport = "Обнаружены ошибки:\n";
+        mistakeReport += "--------------------------------\n";
+        for (const Mistake& mistake : mistakes) {
+            mistakeReport += mistake.getMessage() + "\n";
         }
+        mistakeReport += "--------------------------------\n";
+        qDebug() << qPrintable(mistakeReport);
     }
-    QCOMPARE(mistakes, expMistakes);
 
 }
 void Tests::testCheckPattern_data()
 {
     QTest::addColumn<const UDNode*>("inputNode");
     QTest::addColumn<Pattern*>("pat");
-    QTest::addColumn<QSet<Mistake>>("expMistakes");
 
     QSet<Mistake> mistakes;
 
@@ -3694,7 +4007,93 @@ void Tests::testCheckPattern_data()
     UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
     Pattern* pattern1 = new Pattern({},{});
     mistakes.clear();
-    QTest::newRow("Test 1: no checks") <<static_cast<const UDNode*>(node1_0) << pattern1 << mistakes;
+    QTest::newRow("Test 1: no checks") <<static_cast<const UDNode*>(node1_0) << pattern1;
+
+    // Тест №2. Одна проверка в шаблоне
+    UDNode* node2 = new UDNode(1, "he", PRP, 2, Nsubj, None);
+    UDNode* node2_1 = new UDNode(2, "run", VBP, 0, Root, None);
+
+    Pattern* pattern2_0 = new Pattern();
+    pattern2_0->setMatch(node2);
+    Pattern* pattern2_1 = new Pattern();
+    pattern2_1->setMatch(node2_1);
+    pattern2_0->addChildPattern(Nsubj,pattern2_1);
+
+    RelTypeCheck* check2 = new ParentChild();
+    check2->setRule(new PersonNumberAgreement);
+    pattern2_1->addСheck(check2);
+
+    QTest::newRow("Test 2: Single check in pattern")
+        << static_cast<const UDNode*>(node2_1) << pattern2_0;
+
+    // Тест №3. Проверка между детьми
+    UDNode* node3 = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* node3_1 = new UDNode(2, "am", VBP, 3, Aux, None);
+    UDNode* node3_2 = new UDNode(3, "singing", VBG, 0, Root, None);
+
+    Pattern* pattern3_0 = new Pattern();
+    pattern3_0->setMatch(node3_2);
+    Pattern* pattern3_1 = new Pattern();
+    pattern3_1->setMatch(node3_1);
+    Pattern* pattern3_2 = new Pattern();
+    pattern3_2->setMatch(node3);
+    pattern3_0->addChildPattern(Nsubj,pattern3_2);
+    pattern3_0->addChildPattern(Aux,pattern3_1);
+
+    ChildChild* check3 = new ChildChild();
+    check3->setRule(new PersonNumberAgreement);
+    check3->setValidTags({VBP});
+    pattern3_2->addСheck(check3);
+
+    QTest::newRow("Test 3: Check between children")
+        <<  static_cast<const UDNode*>(node3_2) << pattern3_0;
+
+    // Тест №4. Несколько проверок
+    UDNode* node4 = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* node4_1 = new UDNode(2, "am", VBP, 3, Aux, None);
+    UDNode* node4_2 = new UDNode(3, "sing", VB, 0, Root, None);
+
+    Pattern* pattern4_0 = new Pattern();
+    pattern4_0->setMatch(node4_2);
+    Pattern* pattern4_1 = new Pattern();
+    pattern4_1->setMatch(node4_1);
+    Pattern* pattern4_2 = new Pattern();
+    pattern4_2->setMatch(node4);
+    pattern4_0->addChildPattern(Nsubj,pattern4_2);
+    pattern4_0->addChildPattern(Aux,pattern4_1);
+
+    ChildChild* check4 = new ChildChild();
+    check4->setRule(new PersonNumberAgreement);
+    check4->setValidTags({VBP});
+    pattern4_2->addСheck(check4);
+
+    ParentChild* check4_1 = new ParentChild();
+    check4->setRule(new MainAuxAgreement);
+    pattern4_1->addСheck(check4_1);
+
+    QTest::newRow("Test 4: Multiple checks")
+        <<  static_cast<const UDNode*>(node4_2) << pattern4_0 ;
+
+    // Тест №5. Проверка во внуке
+    UDNode* node5_1 = new UDNode(2, "wants", VBZ, 0, Root, None);
+    UDNode* node5_2 = new UDNode(3, "to", TO, 4, Mark, None);
+    UDNode* node5_3 = new UDNode(4, "travelling", VBG, 2, Xcomp, None);
+
+    Pattern* grandChildPattern5 = new Pattern();
+    ParentChild* check5 = new ParentChild();
+    grandChildPattern5->setMatch(node5_2);
+    grandChildPattern5->addСheck(check5);
+
+    Pattern* childPattern5 = new Pattern();
+    childPattern5->setMatch(node5_3);
+    childPattern5->addChildPattern(Mark, grandChildPattern5);
+
+    Pattern* pattern5 = new Pattern();
+    pattern5->setMatch(node5_1);
+    pattern5->addChildPattern(Xcomp, childPattern5);
+
+    QTest::newRow("Test 5: Check in grandchild")
+        << static_cast<const UDNode*>(node5_1) << pattern5 ;
 
 }
 

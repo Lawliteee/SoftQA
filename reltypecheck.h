@@ -8,8 +8,22 @@ class RelTypeCheck
 protected:
     GrammarRule* rule;                    // Правило для проверки
     QString message;
+    bool checkCalled = false;
 public:
     RelTypeCheck();
+    void callCheck(const UDNode* node1, const UDNode* node2, QSet <Mistake> & m)
+    {
+        checkCalled = true;
+        rule->check(node1,node2,m);
+    }
+    bool isCalled()const
+    {
+        return checkCalled;
+    }
+    void setRule(GrammarRule* r)
+    {
+        rule = r;
+    }
     virtual void getNodes(const UDNode* mainNode,UDNode** searchNode, const UDNode* parent)
     {
         return;

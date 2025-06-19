@@ -11,6 +11,9 @@ class UDNode;
 class Pattern;
 class Mistake;
 
+
+void getPatterns(QSet <Pattern*> & s);
+
 enum DepRel
 {
     Acl, Acl_Relcl, Advcl, Advcl_Relcl, Advmod, Advmod_Emph, Advmod_Lmod, Amod, Appos, Aux, Aux_Pass, Case, Cc, Cc_Preconj, Ccomp, Clf,

@@ -4145,12 +4145,352 @@ void Tests::testCheckAllPatterns_data()
     QTest::addColumn<QSet<Pattern*>>("pats");
     QTest::addColumn<QSet<Mistake>>("expMistakes");
 
-    QSet<Mistake> mistakes;
+    QSet<Mistake> noMistakes;
     QSet<Pattern*> pats;
+    getPatterns(pats);
     QMap<int,UDNode*> tree;
-    //Тест 1
-    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
-    Pattern* pattern1 = new Pattern({},{});
-    mistakes.clear();
-    QTest::newRow("Test 1: no checks") << tree <<pats <<mistakes;
+
+    // Тест 1: Дерево из одного слова
+        {
+            QMap<int, UDNode*> tree1;
+            tree1.insert(1, new UDNode(1, "Hello", UH, 0, Root, None));
+            QTest::newRow("Test 1: Single word tree") << tree1 << pats << noMistakes;
+        }
+
+        // Тест 2: Несколько шаблонов с ошибками
+        {
+            QMap<int, UDNode*> tree2;
+            UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+            UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+            UDNode* waiting = new UDNode(3, "waiting", VBG, 0, Root, None);
+            UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
+            UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
+            UDNode* stop = new UDNode(6, "stop", VB, 3, Advcl, None);
+
+            waiting->addChild(she);
+            waiting->addChild(will);
+            waiting->addChild(stop);
+            stop->addChild(until);
+            stop->addChild(rain);
+
+            tree2.insert(1, she);
+            tree2.insert(2, will);
+            tree2.insert(3, waiting);
+            tree2.insert(4, until);
+            tree2.insert(5, rain);
+            tree2.insert(6, stop);
+
+            QSet<Mistake> expectedMistakes;
+            expectedMistakes.insert(Mistake("Глагол 'waiting' не согласован с глаголом 'will'. После will требуется начальная форма глагола"));
+            expectedMistakes.insert(Mistake("Глагол 'stop' не согласован с подлежащим 'rain'. Глагол должен быть в форме 3-го лица единственного числа"));
+
+            QTest::newRow("Test 2: Multiple patterns with mistakes") << tree2 << pats << expectedMistakes;
+        }
+
+    // Тест 3: Несколько шаблонов без ошибок
+    {
+            QMap<int, UDNode*> tree3;
+            UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+            UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+            UDNode* wait = new UDNode(3, "wait", VB, 0, Root, None);
+            UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
+            UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
+            UDNode* stops = new UDNode(6, "stops", VBZ, 3, Advcl, None);
+
+            wait->addChild(she);
+            wait->addChild(will);
+            wait->addChild(stops);
+            stops->addChild(until);
+            stops->addChild(rain);
+
+            tree3.insert(1, she);
+            tree3.insert(2, will);
+            tree3.insert(3, wait);
+            tree3.insert(4, until);
+            tree3.insert(5, rain);
+            tree3.insert(6, stops);
+
+            QTest::newRow("Test 3: Multiple patterns without mistakes") << tree3 << pats << noMistakes;
+    }
+
+    // Тест 4: Present Simple
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 2, Nsubj, None);
+        UDNode* write = new UDNode(2, "write", VBP, 0, Root, None);
+        UDNode* letters = new UDNode(3, "letters", NNS, 2, Obj, None);
+        UDNode* every = new UDNode(4, "every", DT, 5, Det, None);
+        UDNode* day = new UDNode(5, "day", NN, 2, Obl_Tmod, None);
+
+        write->addChild(she);
+        write->addChild(letters);
+        write->addChild(day);
+        day->addChild(every);
+
+        tree.insert(1, she);
+        tree.insert(2, write);
+        tree.insert(3, letters);
+        tree.insert(4, every);
+        tree.insert(5, day);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол 'write' несогласован с подлежащим 'She'. Должен быть в форме 3-го лица единственного числа"));
+
+        QTest::newRow("Present Simple errors") << tree << pats << mistakes;
+    }
+
+    // Тест 5: Past Simple
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* they = new UDNode(1, "They", PRP, 3, Nsubj, None);
+        UDNode* was = new UDNode(2, "was", VBD, 3, Cop, None);
+        UDNode* happy = new UDNode(3, "happy", JJ, 0, Root, None);
+        UDNode* yesterday = new UDNode(4, "yesterday", NN, 3, Obl_Tmod, None);
+
+        happy->addChild(they);
+        happy->addChild(was);
+        happy->addChild(yesterday);
+
+        tree.insert(1, they);
+        tree.insert(2, was);
+        tree.insert(3, happy);
+        tree.insert(4, yesterday);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол 'was' несогласован с подлежащим 'They'. Должна быть форма множественного числа 'were'"));
+
+        QTest::newRow("Past Simple errors") << tree << pats << mistakes;
+    }
+
+    // Тест 6: Числительные и существительные (3 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* i = new UDNode(1, "I", PRP, 2, Nsubj, None);
+        UDNode* has = new UDNode(2, "has", VBZ, 0, Root, None);
+        UDNode* three = new UDNode(3, "three", CD, 4, Nummod, None);
+        UDNode* book = new UDNode(4, "book", NN, 2, Obj, None);
+
+        has->addChild(i);
+        has->addChild(book);
+        book->addChild(three);
+
+        tree.insert(1, i);
+        tree.insert(2, has);
+        tree.insert(3, three);
+        tree.insert(4, book);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Существительное 'book' несогласовано с числительным 'three'. Должно быть во множественном числе"));
+        mistakes.insert(Mistake("Глагол 'has' несогласован с подлежащим 'I'. Должна быть начальная форма"));
+
+        QTest::newRow("Numeral-noun agreement errors") << tree << pats << mistakes;
+    }
+
+    // Тест 7: Квантификаторы (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* there = new UDNode(1, "There", EX, 2, Expl, None);
+        UDNode* is = new UDNode(2, "is", VBZ, 0, Root, None);
+        UDNode* many = new UDNode(3, "many", JJ, 4, Amod, None);
+        UDNode* book = new UDNode(4, "book", NN, 2, Nsubj, None);
+        UDNode* in = new UDNode(5, "in", IN, 7, Case, None);
+        UDNode* a = new UDNode(6, "a", DT, 7, Det, None);
+        UDNode* rooms = new UDNode(7, "rooms", NNS, 4, Nmod, None);
+
+        is->addChild(there);
+        is->addChild(book);
+        book->addChild(rooms);
+        book->addChild(many);
+        rooms->addChild(in);
+        rooms->addChild(a);
+
+        tree.insert(1, there);
+        tree.insert(2, is);
+        tree.insert(3, many);
+        tree.insert(4, book);
+        tree.insert(5, in);
+        tree.insert(6, a);
+        tree.insert(7, rooms);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("квантификатор 'many' некорректно использован, исчесляемое существительное 'book' в единственном числе не может сочетаться с квантификатором."));
+        mistakes.insert(Mistake("артикль 'a' употреблен с существительным 'rooms' множественного числа. Требуется артикль the или нулевой артикль."));
+
+        QTest::newRow("Quantifier errors") << tree << pats << mistakes;
+    }
+
+
+
+    // Тест 8: Вспомогательные глаголы (3 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* does = new UDNode(1, "Do", VBP, 3, Aux, None);
+        UDNode* she = new UDNode(2, "she", PRP, 3, Nsubj, None);
+        UDNode* likes = new UDNode(3, "likes", VBZ, 0, Root, None);
+        UDNode* ice = new UDNode(4, "ice", NN, 5, Compound, None);
+        UDNode* cream = new UDNode(5, "cream", NN, 3, Obj, None);
+
+        likes->addChild(does);
+        likes->addChild(she);
+        likes->addChild(cream);
+        cream->addChild(ice);
+
+        tree.insert(1, does);
+        tree.insert(2, she);
+        tree.insert(3, likes);
+        tree.insert(4, ice);
+        tree.insert(5, cream);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол 'likes' после 'Do' должен быть в форме 3-го лица единственного числа."));
+        mistakes.insert(Mistake("всмогательный глагол ‘do’ несогласован с подлежащим she. Требуется форма 3-го лица единственного числа."));
+        QTest::newRow("Auxiliary verbs errors") << tree << pats << mistakes;
+    }
+
+    // Тест 9: Present Perfect (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+        UDNode* have = new UDNode(2, "have", VBP, 3, Aux, None);
+        UDNode* finished = new UDNode(3, "finished", VBN, 0, Root, None);
+        UDNode* work = new UDNode(4, "work", NN, 3, Obj, None);
+
+        finished->addChild(she);
+        finished->addChild(have);
+        finished->addChild(work);
+
+        tree.insert(1, she);
+        tree.insert(2, have);
+        tree.insert(3, finished);
+        tree.insert(4, work);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Вспомогательный глагол 'have' несогласован с подлежащим 'She'. Требуется форма 3-го лица единственного числа 'has'"));
+
+        QTest::newRow("Present Perfect errors") << tree << pats << mistakes;
+    }
+
+    // Тест 10: Future
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* he = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+        UDNode* goes = new UDNode(3, "goes", VBZ, 0, Root, None);
+        UDNode* to = new UDNode(4, "to", IN, 5, Case, None);
+        UDNode* school = new UDNode(5, "school", NN, 3, Obl, None);
+
+        goes->addChild(he);
+        goes->addChild(will);
+        goes->addChild(school);
+        school->addChild(to);
+
+        tree.insert(1, he);
+        tree.insert(2, will);
+        tree.insert(3, goes);
+        tree.insert(4, to);
+        tree.insert(5, school);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол 'goes' после 'will' должен быть в начальной форме 'go'"));
+
+        QTest::newRow("Future tense errors") << tree << pats << mistakes;
+    }
+
+    // Тест 11: Passive Voice
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* the = new UDNode(1, "The", DT, 2, Det, None);
+        UDNode* book = new UDNode(2, "book", NN, 4, Nsubj_Pass, None);
+        UDNode* were = new UDNode(3, "were", VBD, 4, Aux_Pass, None);
+        UDNode* write = new UDNode(4, "write", VB, 0, Root, None);
+
+        write->addChild(book);
+        write->addChild(were);
+        book->addChild(the);
+
+        tree.insert(1, the);
+        tree.insert(2, book);
+        tree.insert(3, were);
+        tree.insert(4, write);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Вспомогательный глагол 'were' несогласован с подлежащим 'book'. Требуется форма единственного числа 'was'"));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+
+        QTest::newRow("Passive voice errors") << tree << pats << mistakes;
+    }
+
+    // Тест 12: Условные предложения (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* iff = new UDNode(1, "If", IN, 4, Mark, None);
+        UDNode* i = new UDNode(2, "I", PRP, 4, Nsubj, None);
+        UDNode* will = new UDNode(3, "will", MD, 4, Aux, None);
+        UDNode* have = new UDNode(4, "have", VB, 7, Advcl, None);
+        UDNode* time = new UDNode(5, "time", NN, 4, Obj, None);
+        UDNode* I = new UDNode(6, "I", PRP, 8, Nsubj, None);
+        UDNode* ill = new UDNode(7, "'ll", MD, 8, Aux, None);
+        UDNode* help = new UDNode(8, "help", VB, 0, Root, None);
+        UDNode* you = new UDNode(9, "you", PRP, 8, Obj, None);
+
+        have->addChild(iff);
+        have->addChild(i);
+        have->addChild(will);
+        have->addChild(time);
+        help->addChild(I);
+        help->addChild(ill);
+        help->addChild(have);
+        help->addChild(you);
+
+        tree.insert(1, iff);
+        tree.insert(2, i);
+        tree.insert(3, will);
+        tree.insert(4, have);
+        tree.insert(5, time);
+        tree.insert(6, I);
+        tree.insert(7, ill);
+        tree.insert(8, help);
+        tree.insert(9, you);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("В условном предложении после 'If' не должно быть 'will'. Используйте Present Simple"));
+
+        QTest::newRow("Conditional sentences errors") << tree << pats << mistakes;
+    }
+
+    // Тест 13: Согласование времен в Past
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+        UDNode* was = new UDNode(2, "was", VBD, 3, Aux, None);
+        UDNode* cooking = new UDNode(3, "cooking", VBG, 0, Root, None);
+        UDNode* dinner = new UDNode(4, "dinner", NN, 3, Obj, None);
+        UDNode* while_ = new UDNode(5, "while", IN, 7, Mark, None);
+        UDNode* he = new UDNode(6, "he", PRP, 7, Nsubj, None);
+        UDNode* watches = new UDNode(7, "watches", VBZ, 3, Advcl, None);
+        UDNode* tv = new UDNode(8, "TV", NN, 7, Obj, None);
+
+        cooking->addChild(she);
+        cooking->addChild(was);
+        cooking->addChild(dinner);
+        cooking->addChild(watches);
+        watches->addChild(while_);
+        watches->addChild(he);
+        watches->addChild(tv);
+
+        tree.insert(1, she);
+        tree.insert(2, was);
+        tree.insert(3, cooking);
+        tree.insert(4, dinner);
+        tree.insert(5, while_);
+        tree.insert(6, he);
+        tree.insert(7, watches);
+        tree.insert(8, tv);
+
+        QSet<Mistake> mistakes;
+        // Добавляем возможные ошибки:
+        mistakes.insert(Mistake("придаточная часть несогласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах. "));
+
+        QTest::newRow("Past Continuous + Past Simple with errors") << tree << pats << mistakes;
+    }
 }

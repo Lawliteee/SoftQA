@@ -45,8 +45,4 @@ public:
 };
 
 
-
-
-
-
 #endif // PATTERN_H

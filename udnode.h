@@ -17,6 +17,7 @@ class UDNode
     QSet <UDNode*> children;             // зависимые слова
     bool connectedToRoot ;                // достижимость до корня
 public:
+    friend class GrammarRule;
     UDNode();
     UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m);
     UDNode(QString lem, PosTag up, VerbMood m);
@@ -32,6 +33,7 @@ public:
     bool isCountable()const;
     int getPerson() const;
     int getNumber() const;
+    bool doesHaveSibling(QString sibling)const;
 
     void addChild(const UDNode*);
     //gets

@@ -13,14 +13,14 @@ private slots:
     void testPersonNumberCheck();
     void testPersonNumberCheck_data();
 
-    // void testNumberCheck();
-    // void testNumberCheck_data();
+    void testNumberCheck();
+    void testNumberCheck_data();
 
-    // void testMainAuxAgreement();
-    // void testMainAuxAgreement_data();
+    void testMainAuxAgreement();
+    void testMainAuxAgreement_data();
 
-    // void testAuxAuxAgreement();
-    // void testAuxAuxAgreement_data();
+    void testAuxAuxAgreement();
+    void testAuxAuxAgreement_data();
 
     // void testPassiveAgreement();
     // void testPassiveAgreement_data();

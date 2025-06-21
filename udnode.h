@@ -22,14 +22,16 @@ public:
     UDNode(QString lem, PosTag up, VerbMood m);
     void markRelatedDescendants();  // отмечает достижимость потомков до корня
     void checkPattern(const Pattern* pattern,  QSet<Mistake> &Mistakes) const;     // метод выполнения всех проверок шаблона
-    bool isBeForm ();
-    bool isModalVerb ();
-    bool isHaveForm ();
-    bool isDoForm();
-    bool isPresentClause ();
-    bool isFutureClause ();
-    bool isPastClause ();
-    bool isCountable();
+    bool isBeForm () const;
+    bool isModalVerb ()const;
+    bool isHaveForm ()const;
+    bool isDoForm()const;
+    bool isPresentClause ()const;
+    bool isFutureClause ()const;
+    bool isPastClause ()const;
+    bool isCountable()const;
+    int getPerson() const;
+    int getNumber() const;
 
     void addChild(const UDNode*);
     //gets

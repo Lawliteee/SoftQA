@@ -391,7 +391,7 @@ void Tests::testNumberCheck_data()
     QTest::newRow("Test 3: No mistake, 1st word compatible with any number") << node3_1 << node3_2 << true << emptyMistakes << false << "";
 
     // Тест 4: Есть ошибка - 1 слово в ед. числе, а второе во мн. числе
-    const UDNode* node4_1 = new UDNode("he", PRP, None);
+    const UDNode* node4_1 = new UDNode("I", PRP, None);
     const UDNode* node4_2 = new UDNode("were", VBD, Ind);
     mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим I. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 4: Mistake, 1st word singular, 2nd plural") << node4_1 << node4_2 << false << mistakeSet << false << "";
@@ -2446,29 +2446,63 @@ void Tests::testCreateNodesFromLines()
     createNodesFromLines(inputLines, actualNodes, actualErrors);
 
     // Проверка узлов
-    QCOMPARE(actualNodes.size(), expNodes.size());
+    bool nodesMatch = true;
+
+    // Проверка на лишние узлы (которые есть в actual, но нет в expected)
+    for (auto it = actualNodes.begin(); it != actualNodes.end(); ++it)
+    {
+        int id = it.key();
+        if (!expNodes.contains(id)) {
+            qDebug() << "Unexpected node found with key =" << id;
+            nodesMatch = false;
+        }
+    }
+
+    // Проверка ожидаемых узлов (найдет недостающие и несоответствия)
     for (auto it = expNodes.begin(); it != expNodes.end(); ++it)
     {
         int id = it.key();
         UDNode* expected = it.value();
         UDNode* actual = actualNodes.value(id, nullptr);
 
-        QVERIFY2(actual != nullptr,  ("Actual node with key = " + QString::number(it.key()) + " is NULL").toUtf8());
-        if (actual->getId() != expected->getId())
-        {
-            QVERIFY2(actual != nullptr,  ("Key =" + QString::number(it.key()) +": Actual's node id = " + QString::number(actual->getId()) + ", exp id = "+ QString::number(expected->getId())).toUtf8());
+        if (actual == nullptr) {
+            qDebug() << "Missing expected node with key =" << id;
+            nodesMatch = false;
+            continue;
         }
-        if (actual->getlemma() != expected->getlemma())
-        {
-            QVERIFY2(actual != nullptr,  ("Key =" + QString::number(it.key()) +": Actual's node lemma = " + QString(actual->getlemma()) + ", exp lemma = "+ QString(expected->getlemma())).toUtf8());
+
+        bool nodePropertiesMatch = true;
+        if (actual->getId() != expected->getId()) {
+            qDebug() << "Key =" << id << ": Actual's node id =" << actual->getId()
+                     << ", exp id =" << expected->getId();
+            nodePropertiesMatch = false;
         }
-        QCOMPARE(actual->getUpos(), expected->getUpos());
-        if (actual->getHead() != expected->getHead())
-        {
-            QVERIFY2(actual != nullptr,  ("Key =" + QString::number(it.key()) +": Actual's node Head = " + QString::number(actual->getHead()) + ", exp Head = "+ QString::number(expected->getHead())).toUtf8());
+        if (actual->getlemma() != expected->getlemma()) {
+            qDebug() << "Key =" << id << ": Actual's node lemma =" << actual->getlemma()
+                     << ", exp lemma =" << expected->getlemma();
+            nodePropertiesMatch = false;
         }
-        QCOMPARE(actual->getDepRel(), expected->getDepRel());
-        QCOMPARE(actual->getMood(), expected->getMood());
+        if (actual->getUpos() != expected->getUpos()) {
+            qDebug() << "Key =" << id << ": Actual's node upos differs from expected";
+            nodePropertiesMatch = false;
+        }
+        if (actual->getHead() != expected->getHead()) {
+            qDebug() << "Key =" << id << ": Actual's node Head =" << actual->getHead()
+                     << ", exp Head =" << expected->getHead();
+            nodePropertiesMatch = false;
+        }
+        if (actual->getDepRel() != expected->getDepRel()) {
+            qDebug() << "Key =" << id << ": Actual's node DepRel differs from expected";
+            nodePropertiesMatch = false;
+        }
+        if (actual->getMood() != expected->getMood()) {
+            qDebug() << "Key =" << id << ": Actual's node Mood differs from expected";
+            nodePropertiesMatch = false;
+        }
+
+        if (!nodePropertiesMatch) {
+            nodesMatch = false;
+        }
     }
 
     // Подробное сравнение ошибок
@@ -2498,6 +2532,7 @@ void Tests::testCreateNodesFromLines()
             }
         }
     }
+    QVERIFY2(nodesMatch, "Nodes do not match expected values");
     QCOMPARE(actualErrors, expErrors);
 
 }
@@ -3168,16 +3203,58 @@ void Tests::testAddChildren()
     }
     QCOMPARE(actualErrors, expErrors);
 
-    // сравнение детей
+    // Сравнение детей с подробной диагностикой
+    bool allChildrenMatch = true;
+
+    // Проверим всех узлов из inputNodes
     for (auto it = inputNodes.begin(); it != inputNodes.end(); ++it)
     {
-        QSet <UDNode*> tmp;
-        it.value()->writeChildren(tmp);
-        if (tmp != expChildren.value(it.key()))
+        int nodeId = it.key();
+        QSet<UDNode*> actualChildren;
+        it.value()->writeChildren(actualChildren);
+        QSet<UDNode*> expectedChildren = expChildren.value(nodeId);
+
+        if (actualChildren != expectedChildren)
         {
-            QVERIFY2(false, ("expected children of node with key = " + QString::number(it.key()) + " did not match").toUtf8());
+            allChildrenMatch = false;
+
+            // Найдем лишних детей
+            QSet<UDNode*> extraChildren = actualChildren - expectedChildren;
+            if (!extraChildren.isEmpty())
+            {
+                qDebug() << "Node" << nodeId << "has unexpected children:";
+                for (UDNode* child : extraChildren)
+                {
+                    qDebug() << "  - ID:" << child->getId();
+                }
+            }
+
+            // Найдем недостающих детей
+            QSet<UDNode*> missingChildren = expectedChildren - actualChildren;
+            if (!missingChildren.isEmpty())
+            {
+                qDebug() << "Node" << nodeId << "is missing expected children:";
+                for (UDNode* child : missingChildren)
+                {
+                    qDebug() << "  + ID:" << child->getId();
+                }
+            }
         }
     }
+
+    // Проверим узлы из expChildren, которых нет в inputNodes
+    for (auto it = expChildren.begin(); it != expChildren.end(); ++it)
+    {
+        int nodeId = it.key();
+        if (!inputNodes.contains(nodeId))
+        {
+            allChildrenMatch = false;
+            qDebug() << "Expected children for node" << nodeId
+                     << "but this node doesn't exist in inputNodes";
+        }
+    }
+
+    QVERIFY2(allChildrenMatch, "Children comparison failed");
 }
 void Tests::testAddChildren_data()
 {
@@ -4236,7 +4313,7 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("Глагол 'write' несогласован с подлежащим 'She'. Должен быть в форме 3-го лица единственного числа"));
 
-        QTest::newRow("Present Simple errors") << tree << pats << mistakes;
+        QTest::newRow("Present Simple mistakes") << tree << pats << mistakes;
     }
 
     // Тест 5: Past Simple
@@ -4259,10 +4336,10 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("Глагол 'was' несогласован с подлежащим 'They'. Должна быть форма множественного числа 'were'"));
 
-        QTest::newRow("Past Simple errors") << tree << pats << mistakes;
+        QTest::newRow("Past Simple mistakes") << tree << pats << mistakes;
     }
 
-    // Тест 6: Числительные и существительные (3 ошибки)
+    // Тест 6: Числительные и существительные (2 ошибки)
     {
         QMap<int, UDNode*> tree;
         UDNode* i = new UDNode(1, "I", PRP, 2, Nsubj, None);
@@ -4283,7 +4360,7 @@ void Tests::testCheckAllPatterns_data()
         mistakes.insert(Mistake("Существительное 'book' несогласовано с числительным 'three'. Должно быть во множественном числе"));
         mistakes.insert(Mistake("Глагол 'has' несогласован с подлежащим 'I'. Должна быть начальная форма"));
 
-        QTest::newRow("Numeral-noun agreement errors") << tree << pats << mistakes;
+        QTest::newRow("Numeral-noun agreement mistakes") << tree << pats << mistakes;
     }
 
     // Тест 7: Квантификаторы (2 ошибки)
@@ -4316,12 +4393,12 @@ void Tests::testCheckAllPatterns_data()
         mistakes.insert(Mistake("квантификатор 'many' некорректно использован, исчесляемое существительное 'book' в единственном числе не может сочетаться с квантификатором."));
         mistakes.insert(Mistake("артикль 'a' употреблен с существительным 'rooms' множественного числа. Требуется артикль the или нулевой артикль."));
 
-        QTest::newRow("Quantifier errors") << tree << pats << mistakes;
+        QTest::newRow("Quantifier mistakes") << tree << pats << mistakes;
     }
 
 
 
-    // Тест 8: Вспомогательные глаголы (3 ошибки)
+    // Тест 8: Вспомогательные глаголы (2 ошибки)
     {
         QMap<int, UDNode*> tree;
         UDNode* does = new UDNode(1, "Do", VBP, 3, Aux, None);
@@ -4344,10 +4421,10 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("Глагол 'likes' после 'Do' должен быть в форме 3-го лица единственного числа."));
         mistakes.insert(Mistake("всмогательный глагол ‘do’ несогласован с подлежащим she. Требуется форма 3-го лица единственного числа."));
-        QTest::newRow("Auxiliary verbs errors") << tree << pats << mistakes;
+        QTest::newRow("Auxiliary verbs mistakes") << tree << pats << mistakes;
     }
 
-    // Тест 9: Present Perfect (2 ошибки)
+    // Тест 9: Present Perfect
     {
         QMap<int, UDNode*> tree;
         UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
@@ -4367,7 +4444,7 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("Вспомогательный глагол 'have' несогласован с подлежащим 'She'. Требуется форма 3-го лица единственного числа 'has'"));
 
-        QTest::newRow("Present Perfect errors") << tree << pats << mistakes;
+        QTest::newRow("Present Perfect mistakes") << tree << pats << mistakes;
     }
 
     // Тест 10: Future
@@ -4393,10 +4470,10 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("Глагол 'goes' после 'will' должен быть в начальной форме 'go'"));
 
-        QTest::newRow("Future tense errors") << tree << pats << mistakes;
+        QTest::newRow("Future tense mistakes") << tree << pats << mistakes;
     }
 
-    // Тест 11: Passive Voice
+    // Тест 11: Passive Voice (2 ошибки)
     {
         QMap<int, UDNode*> tree;
         UDNode* the = new UDNode(1, "The", DT, 2, Det, None);
@@ -4417,10 +4494,10 @@ void Tests::testCheckAllPatterns_data()
         mistakes.insert(Mistake("Вспомогательный глагол 'were' несогласован с подлежащим 'book'. Требуется форма единственного числа 'was'"));
         mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
 
-        QTest::newRow("Passive voice errors") << tree << pats << mistakes;
+        QTest::newRow("Passive voice mistakes") << tree << pats << mistakes;
     }
 
-    // Тест 12: Условные предложения (2 ошибки)
+    // Тест 12: Условные предложения (1 ошибка)
     {
         QMap<int, UDNode*> tree;
         UDNode* iff = new UDNode(1, "If", IN, 4, Mark, None);
@@ -4455,7 +4532,7 @@ void Tests::testCheckAllPatterns_data()
         QSet<Mistake> mistakes;
         mistakes.insert(Mistake("В условном предложении после 'If' не должно быть 'will'. Используйте Present Simple"));
 
-        QTest::newRow("Conditional sentences errors") << tree << pats << mistakes;
+        QTest::newRow("Conditional sentences mistakes") << tree << pats << mistakes;
     }
 
     // Тест 13: Согласование времен в Past
@@ -4491,6 +4568,6 @@ void Tests::testCheckAllPatterns_data()
         // Добавляем возможные ошибки:
         mistakes.insert(Mistake("придаточная часть несогласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах. "));
 
-        QTest::newRow("Past Continuous + Past Simple with errors") << tree << pats << mistakes;
+        QTest::newRow("Past Continuous + Past Simple with mistakes") << tree << pats << mistakes;
     }
 }

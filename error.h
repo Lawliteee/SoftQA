@@ -19,7 +19,7 @@ class Error
 public:
     Error();
     //Error(ErrorType t = NoError, const QSet<int>& l = QSet<int>()) : type(t), line(l) {}
-    Error(QSet <int>&l,ErrorType t,QString s)
+    Error(QSet <int>& l,ErrorType t,QString s)
     {
         line = l;
         type = t;

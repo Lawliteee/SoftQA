@@ -18,24 +18,41 @@ class UDNode
     bool connectedToRoot ;                // достижимость до корня
 public:
     friend class GrammarRule;
+
     UDNode();
     UDNode(int i, QString lem, PosTag up, int h, DepRel dp, VerbMood m);
     UDNode(QString lem, PosTag up, VerbMood m);
+
     void markRelatedDescendants();  // отмечает достижимость потомков до корня
+    const QSet<UDNode*>& getChildren() const { return children; }
+    bool isConnectedToRoot() const { return connectedToRoot; }
+    void setConnectedToRoot(bool connected) { connectedToRoot = connected; }
+
+
     void checkPattern(const Pattern* pattern,  QSet<Mistake> &Mistakes) const;     // метод выполнения всех проверок шаблона
+
     bool isBeForm () const;
     bool isModalVerb ()const;
     bool isHaveForm ()const;
     bool isDoForm()const;
+
     bool isPresentClause ()const;
     bool isFutureClause ()const;
     bool isPastClause ()const;
     bool isCountable()const;
+
     int getPerson() const;
     int getNumber() const;
     bool doesHaveSibling(QString sibling)const;
 
     void addChild(const UDNode*);
+
+    // Перегрузка оператора сравнения
+    bool operator==(const UDNode& other) const
+    {
+        return id == other.id && lemma == other.lemma && upos == other.upos && head == other.head && depRel == other.depRel && mood == other.mood;
+    }
+
     //gets
     int getId() const;
     QString getlemma() const;

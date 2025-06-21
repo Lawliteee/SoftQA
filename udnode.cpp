@@ -155,3 +155,17 @@ int UDNode::getNumber() const
     // 3. Все остальные случаи считаем множественным числом
     return 2;
 }
+
+void UDNode::markRelatedDescendants() {
+    // Если уже посещен, выходим чтобы избежать бесконечной рекурсии
+    if (connectedToRoot) {
+        return;
+    }
+
+    connectedToRoot = true;
+
+    // Рекурсивно помечаем всех детей
+    for (UDNode* child : children) {
+        child->markRelatedDescendants();
+    }
+}

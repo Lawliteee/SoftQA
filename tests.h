@@ -31,14 +31,14 @@ private slots:
     // void testConditionalsAgreement();
     // void testConditionalsAgreement_data();
 
-    // void testCreateNodesFromLines();
-    // void testCreateNodesFromLines_data();
+    void testCreateNodesFromLines();
+    void testCreateNodesFromLines_data();
 
-    // void testCheckTreeConnectivity();
-    // void testCheckTreeConnectivity_data();
+    void testCheckTreeConnectivity();
+    void testCheckTreeConnectivity_data();
 
-    // void testAddChildren();
-    // void testAddChildren_data();
+    void testAddChildren();
+    void testAddChildren_data();
 
     // void testGetNodesChild();
     // void testGetNodesChild_data();

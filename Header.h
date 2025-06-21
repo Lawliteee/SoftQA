@@ -38,6 +38,11 @@ enum PosTag
     WRB, RB, RBR, RBS, RP, SYM, TO, UH, WDT, PDT, ANY
 };
 
+DepRel stringToDepRel(const QString& relStr);
+
+PosTag stringToPosTag(const QString& tagStr) ;
+
+VerbMood stringToVerbMood(const QString& moodStr);
 
 /*!
 * \brief Функция для считывания данных о слове из строк в объекты класса
@@ -47,6 +52,7 @@ enum PosTag
 */
 void createNodesFromLines(const QStringList& lines, QMap<int, UDNode*>&nodes, QSet<Error>& errors);
 
+bool createUdNodeFromLine(const QString& line, int lineNumber, UDNode*& node, QSet<Error>& errors);
 /*!
 * \brief Функция проверки корректности дерева
 * \param [in] root – корень дерева

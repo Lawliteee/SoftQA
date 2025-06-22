@@ -14,7 +14,13 @@ public:
     void callCheck(const UDNode* node1, const UDNode* node2, QSet <Mistake> & m)
     {
         checkCalled = true;
-        rule->check(node1,node2,m);
+        try {
+            if (rule) {
+                rule->check(node1, node2, m);
+            }
+        } catch (const QString& error) {
+            throw; // Перебрасываем для обработки в Pattern
+        }
     }
     bool isCalled()const
     {

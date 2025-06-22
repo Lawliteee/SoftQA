@@ -49,11 +49,11 @@ private slots:
     void testMatchesPattern();
     void testMatchesPattern_data();
 
-    // void testCheckPattern();
-    // void testCheckPattern_data();
+    void testCheckPattern();
+    void testCheckPattern_data();
 
-    // void testCheckAllPatterns();
-    // void testCheckAllPatterns_data();
+    void testCheckAllPatterns();
+    void testCheckAllPatterns_data();
 };
 
 #endif // TESTS_H

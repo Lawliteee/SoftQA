@@ -11,7 +11,7 @@ Pattern::Pattern() {}
 bool Pattern::matchesPattern(const UDNode* node, QSet<const UDNode*>& usedChildren)
 {
     // 1. Проверка леммы и тега текущего узла
-    if (!validWords.isEmpty() && !validWords.contains(node->getlemma())) return false;
+    if (!validWords.isEmpty() && !validWords.contains(node->getlemma().toLower())) return false;
     if (!validTags.isEmpty() && !validTags.contains(node->getUpos())) return false;
 
     // 2. Группируем все ожидаемые связи
@@ -122,36 +122,59 @@ void Pattern::compareMatches(const Pattern* expected, QStringList& errors, const
 
 QStringList Pattern::getUncalledChecks(const QString& path) const
 {
-    QStringList result;
-
+    QStringList uncalled;
     // Проверяем checks текущего Pattern
-    for (const RelTypeCheck* check : checks) {
-        if (!check) {
-            result << QString("%1: null check").arg(path);
-        } else if (!check->isCalled()) {
-            result << QString("%1: uncalled check").arg(path);
+    for (RelTypeCheck* check : checks) {
+        if (!check->isCalled()) {
+            uncalled << QString("%1: uncalled check").arg(path);
         }
     }
 
-    // Рекурсивно проверяем все дочерние Pattern
+    // Рекурсивно проверяем дочерние Pattern
     for (auto it = children.constBegin(); it != children.constEnd(); ++it) {
         const QString relationName = depRelToString(it.key());
-        const QList<Pattern*> childPatterns = children.values(it.key());
-        for (int i = 0; i < childPatterns.size(); ++i) {
-            const QString childPath = QString("%1[%2](%3)").arg(path).arg(relationName).arg(i);
-            if (!childPatterns[i]) {
-                result << QString("%1: null pattern").arg(childPath);
+        int childIndex = 0;
+
+        // Перебираем все дочерние шаблоны для данной связи
+        const auto childPatterns = children.values(it.key());
+        for (Pattern* childPattern : childPatterns) {
+            const QString childPath = QString("%1[%2](%3)").arg(path).arg(relationName).arg(childIndex++);
+            if (childPattern) {
+                uncalled << childPattern->getUncalledChecks(childPath);
             } else {
-                result << childPatterns[i]->getUncalledChecks(childPath);
+                uncalled << QString("%1: null pattern").arg(childPath);
             }
         }
     }
 
-    return result;
+    return uncalled;
 }
 
 
+void Pattern::check(const UDNode* node, QSet<Mistake>& mistakes) const {
 
+    for (auto it = children.begin(); it != children.end(); ++it)
+    {
+        Pattern* childPattern = it.value();
+        if (!childPattern->checks.isEmpty())
+        {
+            for (RelTypeCheck* check : childPattern->checks)
+            {
+                UDNode* relatedNode = nullptr;
+                try {
+                    check->getNodes(childPattern->currentMatch, &relatedNode, currentMatch);
+                    if (relatedNode) {
+                        qDebug() << childPattern->currentMatch->getlemma() << relatedNode->getlemma();
+                        check->callCheck(childPattern->currentMatch, relatedNode, mistakes);
+                    }
+                } catch (const QString& error) {
+                    throw;
+                }
+            }
+        }
+        childPattern->check(childPattern->currentMatch, mistakes);
+    }
+}
 
 
 void getPatterns(QSet <Pattern*> & s)
@@ -227,8 +250,8 @@ void getPatterns(QSet <Pattern*> & s)
     s.insert(pat6);
 
     // 7 	Согласование квантификаторов с существительным
-    Pattern* pat7 = new Pattern({"much","many","few","little","several"},{JJ});
-    Pattern* pat7_1 = new Pattern({},{NN,NNS,NNP,NNPS});
+    Pattern* pat7 = new Pattern({},{NN,NNS,NNP,NNPS});
+    Pattern* pat7_1 = new Pattern({"much","many","few","little","several"},{JJ});
     pat7->addChildPattern(Amod,pat7_1);
 
     ParentChild* check7 = new ParentChild;

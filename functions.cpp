@@ -321,7 +321,22 @@ UDNode* addChildren(QMap<int, UDNode*>& nodes, QSet<Error>& errors)
 */
 void checkAllPatterns(const QMap<int, UDNode*>& nodes, const QSet<Pattern*> & patterns, QSet<Mistake> &mistakes)
 {
-
+    // 1. Для каждого узла в дереве
+    for (UDNode* node : nodes) {
+        // 2. Для каждого шаблона
+        for (Pattern* pattern : patterns) {
+            // 3. Проверяем соответствие узла шаблону
+            QSet<const UDNode*> usedNodes;
+            if (pattern->matchesPattern(node, usedNodes)) {
+                // 4. Если соответствует - выполняем проверки шаблона
+                try {
+                    node->checkPattern(pattern, mistakes);
+                } catch (const QString& error) {
+                    throw;
+                }
+            }
+        }
+    }
 };
 
 QString depRelToString(DepRel rel)

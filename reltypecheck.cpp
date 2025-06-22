@@ -19,7 +19,7 @@ void ChildChild::getNodes(const UDNode* mainNode,UDNode** searchNode, const UDNo
         bool isSameNode = (child->getId() == mainNode->getId());
         bool hasValidRel = (relatedRel == Other || child->getDepRel() == relatedRel);
         bool hasValidTag = validTags.isEmpty() || validTags.contains(child->getUpos());
-        bool hasValidWord = validWords.isEmpty() || validWords.contains(child->getlemma());
+        bool hasValidWord = validWords.isEmpty() || validWords.contains(child->getlemma().toLower());
 
         if (!isSameNode && hasValidRel && hasValidTag && hasValidWord)
         {

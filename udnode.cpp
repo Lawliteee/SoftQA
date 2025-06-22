@@ -1,4 +1,4 @@
-#include "udnode.h"
+#include "pattern.h"
 
 UDNode::UDNode()
     : id(0), lemma(""), upos(PosTag::NN), head(0),
@@ -65,10 +65,11 @@ VerbMood UDNode::getMood()const
 * \param [in] nodes – ассоциативный контейнер связей по идентификатору
 * \param [in,out] mistakes – ошибки согласования
 */
-void UDNode::checkPattern(const Pattern* pattern,  QSet<Mistake> &Mistakes) const
-{
-
-};
+void UDNode::checkPattern(const Pattern* pattern, QSet<Mistake>& mistakes) const {
+    if (pattern) {
+        pattern->check(this, mistakes);
+    }
+}
 
 bool UDNode::isBeForm() const
 {

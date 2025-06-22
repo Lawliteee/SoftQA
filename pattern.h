@@ -16,6 +16,7 @@ class Pattern
 
 public:
     Pattern();
+    void check(const UDNode* node, QSet<Mistake>& mistakes) const;
     Pattern(const QSet<QString>& words, const QSet<PosTag>& tags, QMultiMap<DepRel, Pattern*>& childrenPatterns)
     {
         validWords = words;

@@ -128,7 +128,7 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node5_1 = new UDNode("he", PRP, None);
     const UDNode* node5_2 = new UDNode("run", VBP, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол run несогласован с подлежащим he. Глагол должен быть в форме 3-го лица ед. числа")));
+    mistakeSet.insert(Mistake(QString("Основной глагол run не согласован с подлежащим he. Глагол должен быть в форме 3-го лица ед. числа")));
     QTest::newRow("Test 4: mistake, subject is 3rd singular but verb is not")
         << node5_1 << node5_2 << false << mistakeSet<< false << "";
 
@@ -136,7 +136,7 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node6_1 = new UDNode("you", PRP, None);
     const UDNode* node6_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим you. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим you. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 5: error, subject is not 3rd singular but verb is")
         << node6_1 << node6_2 << false << mistakeSet<< false << "";
 
@@ -165,28 +165,28 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node11_1 = new UDNode("I", PRP, None);
     const UDNode* node11_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим I. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим I. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 10: mistake with 'I'")
         << node11_1 << node11_2 << false << mistakeSet<< false << "";
 
     const UDNode* node12_1 = new UDNode("we", PRP, None);
     const UDNode* node12_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим we. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим we. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 11: mistake with 'we'")
         << node12_1 << node12_2 << false << mistakeSet<< false << "";
 
     const UDNode* node13_1 = new UDNode("you", PRP, None);
     const UDNode* node13_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим you. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим you. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 12: mistake with 'you'")
         << node13_1 << node13_2 << false << mistakeSet<< false << "";
 
     const UDNode* node14_1 = new UDNode("they", PRP, None);
     const UDNode* node14_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим they. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим they. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 13: mistake with 'they'")
         << node14_1 << node14_2 << false << mistakeSet<< false << "";
 
@@ -210,21 +210,21 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node18_1 = new UDNode("he", PRP, None);
     const UDNode* node18_2 = new UDNode("are", VBP, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Вспомогательный глагол are несогласован с подлежащим he. Глагол должен быть в форме 3-го лица ед. числа")));
+    mistakeSet.insert(Mistake(QString("Вспомогательный глагол are не согласован с подлежащим he. Глагол должен быть в форме 3-го лица ед. числа")));
     QTest::newRow("Test 17: mistake with 'he'")
         << node18_1 << node18_2 << false << mistakeSet<< false << "";
 
     const UDNode* node19_1 = new UDNode("she", PRP, None);
     const UDNode* node19_2 = new UDNode("run", VBP, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол run несогласован с подлежащим she. Глагол должен быть в форме 3-го лица ед. числа")));
+    mistakeSet.insert(Mistake(QString("Основной глагол run не согласован с подлежащим she. Глагол должен быть в форме 3-го лица ед. числа")));
     QTest::newRow("Test 18: mistake with 'she'")
         << node19_1 << node19_2 << false << mistakeSet<< false << "";
 
     const UDNode* node20_1 = new UDNode("it", PRP, None);
     const UDNode* node20_2 = new UDNode("run", VBP, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол run несогласован с подлежащим it. Глагол должен быть в форме 3-го лица ед. числа")));
+    mistakeSet.insert(Mistake(QString("Основной глагол run не согласован с подлежащим it. Глагол должен быть в форме 3-го лица ед. числа")));
     QTest::newRow("Test 19: mistake with 'it'")
         << node20_1 << node20_2 << false << mistakeSet<< false << "";
 
@@ -254,7 +254,7 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node25_1 = new UDNode("dogs", NNS, None);
     const UDNode* node25_2 = new UDNode("runs", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол runs несогласован с подлежащим dogs. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Основной глагол runs не согласован с подлежащим dogs. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 24: mistake with plural noun")
         << node25_1 << node25_2 << false << mistakeSet<< false << "";
 
@@ -262,7 +262,7 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node26_1 = new UDNode("dog", NN, None);
     const UDNode* node26_2 = new UDNode("run", VBP, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Основной глагол run несогласован с подлежащим dog. Глагол должен быть в форме 3-го лица ед. числа")));
+    mistakeSet.insert(Mistake(QString("Основной глагол run не согласован с подлежащим dog. Глагол должен быть в форме 3-го лица ед. числа")));
     QTest::newRow("Test 25: mistake with singular noun")
         << node26_1 << node26_2 << false << mistakeSet<< false << "";
 
@@ -281,7 +281,7 @@ void Tests::testPersonNumberCheck_data()
     const UDNode* node29_1 = new UDNode("I", PRP, None);
     const UDNode* node29_2 = new UDNode("has", VBZ, Ind);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Вспомогательный глагол has несогласован с подлежащим I. Глагол должен быть в начальной форме")));
+    mistakeSet.insert(Mistake(QString("Вспомогательный глагол has не согласован с подлежащим I. Глагол должен быть в начальной форме")));
     QTest::newRow("Test 28: mistake I + has")
         << node29_1 << node29_2 << false << mistakeSet<< false << "";
 
@@ -421,7 +421,7 @@ void Tests::testNumberCheck_data()
     // Тест 4: Есть ошибка - 1 слово в ед. числе, а второе во мн. числе
     const UDNode* node4_1 = new UDNode("I", PRP, None);
     const UDNode* node4_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим I. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим I. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 4: Mistake, 1st word singular, 2nd plural") << node4_1 << node4_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -554,19 +554,19 @@ void Tests::testNumberCheck_data()
     // Тесты 32-34: A, an, one c мн. числом (ошибка)
     const UDNode* node32_1 = new UDNode("a", DT, None);
     const UDNode* node32_2 = new UDNode("bottles", NNS, None);
-    mistakeSet.insert(Mistake(QString("Артикль a несогласован по числу с существительным bottles. Требуется артикль the или нулевой артикль.")));
+    mistakeSet.insert(Mistake(QString("Артикль a не согласован по числу с существительным bottles. Требуется артикль the или нулевой артикль.")));
     QTest::newRow("Test 32: 'a' with plural noun (mistake)") << node32_1 << node32_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node33_1 = new UDNode("an", DT, None);
     const UDNode* node33_2 = new UDNode("apples", NNS, None);
-    mistakeSet.insert(Mistake(QString("Артикль an несогласован по числу с существительным apples. Требуется артикль the или нулевой артикль.")));
+    mistakeSet.insert(Mistake(QString("Артикль an не согласован по числу с существительным apples. Требуется артикль the или нулевой артикль.")));
     QTest::newRow("Test 33: 'an' with plural noun (mistake)") << node33_1 << node33_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node34_1 = new UDNode("one", CD, None);
     const UDNode* node34_2 = new UDNode("bottles", NNS, None);
-    mistakeSet.insert(Mistake(QString("Числительное one несогласовано по числу с существительным bottles.")));
+    mistakeSet.insert(Mistake(QString("Числительное one не согласовано по числу с существительным bottles.")));
     QTest::newRow("Test 34: 'one' with plural noun (mistake)") << node34_1 << node34_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -578,69 +578,69 @@ void Tests::testNumberCheck_data()
     // Тест 36: Числительное мн. числа с ошибкой
     const UDNode* node36_1 = new UDNode("two", CD, None);
     const UDNode* node36_2 = new UDNode("bottle", NN, None);
-    mistakeSet.insert(Mistake(QString("Числительное two несогласовано по числу с существительным bottle.")));
+    mistakeSet.insert(Mistake(QString("Числительное two не согласовано по числу с существительным bottle.")));
     QTest::newRow("Test 36: Plural number with singular noun (mistake)") << node36_1 << node36_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     // Тесты 37-41: Личные местоимения и существительные ед. числа ошибки
     const UDNode* node37_1 = new UDNode("he", PRP, None);
     const UDNode* node37_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим he. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим he. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 37: Singular pronoun with plural verb (mistake)") << node37_1 << node37_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node38_1 = new UDNode("she", PRP, None);
     const UDNode* node38_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим she. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим she. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 38: Singular pronoun with plural verb (mistake)") << node38_1 << node38_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node39_1 = new UDNode("it", PRP, None);
     const UDNode* node39_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим it. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим it. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 39: Singular pronoun with plural verb (mistake)") << node39_1 << node39_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node40_1 = new UDNode("cat", NN, None);
     const UDNode* node40_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим cat. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим cat. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 40: Singular noun with plural verb (mistake)") << node40_1 << node40_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node41_1 = new UDNode("John", NNP, None);
     const UDNode* node41_2 = new UDNode("were", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол were несогласован с подлежащим John. Глагол должен быть в форме единственного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол were не согласован с подлежащим John. Глагол должен быть в форме единственного числа.")));
     QTest::newRow("Test 41: Singular proper noun with plural verb (mistake)") << node41_1 << node41_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     // Тесты 42-46: Личные местоимения и существительные мн. числа ошибки
     const UDNode* node42_1 = new UDNode("we", PRP, None);
     const UDNode* node42_2 = new UDNode("was", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол was несогласован с подлежащим we. Глагол должен быть в форме множественного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол was не согласован с подлежащим we. Глагол должен быть в форме множественного числа.")));
     QTest::newRow("Test 42: Plural pronoun with singular verb (mistake)") << node42_1 << node42_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node43_1 = new UDNode("they", PRP, None);
     const UDNode* node43_2 = new UDNode("was", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол was несогласован с подлежащим they. Глагол должен быть в форме множественного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол was не согласован с подлежащим they. Глагол должен быть в форме множественного числа.")));
     QTest::newRow("Test 43: Plural pronoun with singular verb (mistake)") << node43_1 << node43_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node44_1 = new UDNode("you", PRP, None);
     const UDNode* node44_2 = new UDNode("was", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол was несогласован с подлежащим you. Глагол должен быть в форме множественного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол was не согласован с подлежащим you. Глагол должен быть в форме множественного числа.")));
     QTest::newRow("Test 44: Plural pronoun with singular verb (mistake)") << node44_1 << node44_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node45_1 = new UDNode("cats", NNS, None);
     const UDNode* node45_2 = new UDNode("was", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол was несогласован с подлежащим cats. Глагол должен быть в форме множественного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол was не согласован с подлежащим cats. Глагол должен быть в форме множественного числа.")));
     QTest::newRow("Test 45: Plural noun with singular verb (mistake)") << node45_1 << node45_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node46_1 = new UDNode("Rockies", NNPS, None);
     const UDNode* node46_2 = new UDNode("was", VBD, Ind);
-    mistakeSet.insert(Mistake(QString("глагол was несогласован с подлежащим Rockies. Глагол должен быть в форме множественного числа.")));
+    mistakeSet.insert(Mistake(QString("глагол was не согласован с подлежащим Rockies. Глагол должен быть в форме множественного числа.")));
     QTest::newRow("Test 46: Plural proper noun with singular verb (mistake)") << node46_1 << node46_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -656,13 +656,13 @@ void Tests::testNumberCheck_data()
     // Тесты 49-50: Указательные местоимения для ед. числа с ошибками
     const UDNode* node49_1 = new UDNode("this", DT, None);
     const UDNode* node49_2 = new UDNode("apples", NNS, None);
-    mistakeSet.insert(Mistake(QString("Указательное местоимение this несогласовано по числу с существительным apples. Указательное местоимение должно быть в форме these/those.")));
+    mistakeSet.insert(Mistake(QString("Указательное местоимение this не согласовано по числу с существительным apples. Указательное местоимение должно быть в форме these/those.")));
     QTest::newRow("Test 49: 'this' with plural noun (mistake)") << node49_1 << node49_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node50_1 = new UDNode("that", DT, None);
     const UDNode* node50_2 = new UDNode("apples", NNS, None);
-    mistakeSet.insert(Mistake(QString("Указательное местоимение that несогласовано по числу с существительным apples. Указательное местоимение должно быть в форме these/those.")));
+    mistakeSet.insert(Mistake(QString("Указательное местоимение that не согласовано по числу с существительным apples. Указательное местоимение должно быть в форме these/those.")));
     QTest::newRow("Test 50: 'that' with plural noun (mistake)") << node50_1 << node50_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -706,13 +706,13 @@ void Tests::testNumberCheck_data()
     // Тесты 60-68: Указательные местоимения для мн. числа с ошибками
     const UDNode* node60_1 = new UDNode("these", DT, None);
     const UDNode* node60_2 = new UDNode("apple", NN, None);
-    mistakeSet.insert(Mistake(QString("Указательное местоимение these несогласовано по числу с существительным apple. Указательное местоимение должно быть в форме this/that.")));
+    mistakeSet.insert(Mistake(QString("Указательное местоимение these не согласовано по числу с существительным apple. Указательное местоимение должно быть в форме this/that.")));
     QTest::newRow("Test 60: 'these' with singular noun (mistake)") << node60_1 << node60_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node61_1 = new UDNode("those", DT, None);
     const UDNode* node61_2 = new UDNode("apple", NN, None);
-    mistakeSet.insert(Mistake(QString("Указательное местоимение those несогласовано по числу с существительным apple. Указательное местоимение должно быть в форме this/that.")));
+    mistakeSet.insert(Mistake(QString("Указательное местоимение those не согласовано по числу с существительным apple. Указательное местоимение должно быть в форме this/that.")));
     QTest::newRow("Test 61: 'those' with singular noun (mistake)") << node61_1 << node61_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -877,31 +877,31 @@ void Tests::testMainAuxAgreement_data()
     // Тест 4-8: Есть ошибка, вспомогательный глагол do, основной не в начальной форме
     const UDNode* node4_1 = new UDNode("do", VBP, Ind);
     const UDNode* node4_2 = new UDNode("speaks", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол speaks несогласован по времени с вспомогательным глаголом do"));
+    mistakeSet.insert(Mistake("Глагол speaks не согласован по времени с вспомогательным глаголом do. Требуется начальная форма глагола"));
     QTest::newRow("Test 4: do + VBZ (mistake)") << node4_1 << node4_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node5_1 = new UDNode("does", VBZ, Ind);
     const UDNode* node5_2 = new UDNode("played", VBD, None);
-    mistakeSet.insert(Mistake("Глагол played несогласован по времени с вспомогательным глаголом does"));
+    mistakeSet.insert(Mistake("Глагол played не согласован по времени с вспомогательным глаголом does. Требуется начальная форма глагола"));
     QTest::newRow("Test 5: does + VBD (mistake)") << node5_1 << node5_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node6_1 = new UDNode("did", VBD, Ind);
     const UDNode* node6_2 = new UDNode("playing", VBG, None);
-    mistakeSet.insert(Mistake("Глагол playing несогласован по времени с вспомогательным глаголом did"));
+    mistakeSet.insert(Mistake("Глагол playing не согласован по времени с вспомогательным глаголом did. Требуется начальная форма глагола"));
     QTest::newRow("Test 6: did + VBG (mistake)") << node6_1 << node6_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node7_1 = new UDNode("do", VBP, Ind);
     const UDNode* node7_2 = new UDNode("spoken", VBN, None);
-    mistakeSet.insert(Mistake("Глагол spoken несогласован по времени с вспомогательным глаголом do"));
+    mistakeSet.insert(Mistake("Глагол spoken не согласован по времени с вспомогательным глаголом do. Требуется начальная форма глагола"));
     QTest::newRow("Test 7: do + VBN (mistake)") << node7_1 << node7_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node8_1 = new UDNode("does", VBZ, Ind);
     const UDNode* node8_2 = new UDNode("plays", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол plays несогласован по времени с вспомогательным глаголом does"));
+    mistakeSet.insert(Mistake("Глагол plays не согласован по времени с вспомогательным глаголом does. Требуется начальная форма глагола"));
     QTest::newRow("Test 8: does + VBZ (mistake)") << node8_1 << node8_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -945,31 +945,31 @@ void Tests::testMainAuxAgreement_data()
     // Тест 18-22: Есть ошибка, вспомогательный глагол модальный, основной не в начальной форме
     const UDNode* node18_1 = new UDNode("should", MD, None);
     const UDNode* node18_2 = new UDNode("goes", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол goes несогласован по времени с вспомогательным глаголом should"));
+    mistakeSet.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом should. Требуется начальная форма глагола"));
     QTest::newRow("Test 18: should + VBZ (mistake)") << node18_1 << node18_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node19_1 = new UDNode("can", MD, None);
     const UDNode* node19_2 = new UDNode("gone", VBN, None);
-    mistakeSet.insert(Mistake("Глагол gone несогласован по времени с вспомогательным глаголом can"));
+    mistakeSet.insert(Mistake("Глагол gone не согласован по времени с вспомогательным глаголом can. Требуется начальная форма глагола"));
     QTest::newRow("Test 19: can + VBN (mistake)") << node19_1 << node19_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node20_1 = new UDNode("must", MD, None);
     const UDNode* node20_2 = new UDNode("played", VBD, None);
-    mistakeSet.insert(Mistake("Глагол played несогласован по времени с вспомогательным глаголом must"));
+    mistakeSet.insert(Mistake("Глагол played не согласован по времени с вспомогательным глаголом must. Требуется начальная форма глагола"));
     QTest::newRow("Test 20: must + VBD (mistake)") << node20_1 << node20_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node21_1 = new UDNode("will", MD, None);
     const UDNode* node21_2 = new UDNode("playing", VBG, None);
-    mistakeSet.insert(Mistake("Глагол playing несогласован по времени с вспомогательным глаголом will"));
+    mistakeSet.insert(Mistake("Глагол playing не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола"));
     QTest::newRow("Test 21: will + VBG (mistake)") << node21_1 << node21_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node22_1 = new UDNode("would", MD, None);
     const UDNode* node22_2 = new UDNode("plays", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол plays несогласован по времени с вспомогательным глаголом would"));
+    mistakeSet.insert(Mistake("Глагол plays не согласован по времени с вспомогательным глаголом would. Требуется начальная форма глагола"));
     QTest::newRow("Test 22: would + VBZ (mistake)") << node22_1 << node22_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -993,31 +993,31 @@ void Tests::testMainAuxAgreement_data()
     // Тест 27-31: Есть ошибка, вспомогательный глагол be, основной не в форме герундия
     const UDNode* node27_1 = new UDNode("was", VBD, Ind);
     const UDNode* node27_2 = new UDNode("go", VB, None);
-    mistakeSet.insert(Mistake("Глагол go несогласован по времени с вспомогательным глаголом was"));
+    mistakeSet.insert(Mistake("Глагол go не согласован по времени с вспомогательным глаголом was"));
     QTest::newRow("Test 27: was + VB (mistake)") << node27_1 << node27_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node28_1 = new UDNode("were", VBD, Ind);
     const UDNode* node28_2 = new UDNode("goes", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол goes несогласован по времени с вспомогательным глаголом were"));
+    mistakeSet.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом were"));
     QTest::newRow("Test 28: were + VBZ (mistake)") << node28_1 << node28_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node29_1 = new UDNode("be", VBD, Ind);
     const UDNode* node29_2 = new UDNode("gone", VBN, None);
-    mistakeSet.insert(Mistake("Глагол gone несогласован по времени с вспомогательным глаголом be"));
+    mistakeSet.insert(Mistake("Глагол gone не согласован по времени с вспомогательным глаголом be"));
     QTest::newRow("Test 29: be + VBN (mistake)") << node29_1 << node29_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node30_1 = new UDNode("been", VBD, Ind);
     const UDNode* node30_2 = new UDNode("played", VBD, None);
-    mistakeSet.insert(Mistake("Глагол played несогласован по времени с вспомогательным глаголом been"));
+    mistakeSet.insert(Mistake("Глагол played не согласован по времени с вспомогательным глаголом been"));
     QTest::newRow("Test 30: been + VBD (mistake)") << node30_1 << node30_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node31_1 = new UDNode("were", VBD, Ind);
     const UDNode* node31_2 = new UDNode("play", VB, None);
-    mistakeSet.insert(Mistake("Глагол play несогласован по времени с вспомогательным глаголом were"));
+    mistakeSet.insert(Mistake("Глагол play не согласован по времени с вспомогательным глаголом were"));
     QTest::newRow("Test 31: were + VB (mistake)") << node31_1 << node31_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1037,31 +1037,31 @@ void Tests::testMainAuxAgreement_data()
     // Тест 35-39: Есть ошибка, вспомогательный глагол форма have, основной не в форме причастия прошедшего времени
     const UDNode* node35_1 = new UDNode("have", VBP, Ind);
     const UDNode* node35_2 = new UDNode("see", VB, None);
-    mistakeSet.insert(Mistake("Глагол see несогласован по времени с вспомогательным глаголом have"));
+    mistakeSet.insert(Mistake("Глагол see не согласован по времени с вспомогательным глаголом have"));
     QTest::newRow("Test 35: have + VB (mistake)") << node35_1 << node35_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node36_1 = new UDNode("has", VBZ, Ind);
     const UDNode* node36_2 = new UDNode("sees", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол sees несогласован по времени с вспомогательным глаголом has"));
+    mistakeSet.insert(Mistake("Глагол sees не согласован по времени с вспомогательным глаголом has"));
     QTest::newRow("Test 36: has + VBZ (mistake)") << node36_1 << node36_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node37_1 = new UDNode("had", VBD, Ind);
     const UDNode* node37_2 = new UDNode("saw", VBD, None);
-    mistakeSet.insert(Mistake("Глагол saw несогласован по времени с вспомогательным глаголом had"));
+    mistakeSet.insert(Mistake("Глагол saw не согласован по времени с вспомогательным глаголом had"));
     QTest::newRow("Test 37: had + VBD (mistake)") << node37_1 << node37_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node38_1 = new UDNode("have", VBP, Ind);
     const UDNode* node38_2 = new UDNode("seeing", VBG, None);
-    mistakeSet.insert(Mistake("Глагол seeing несогласован по времени с вспомогательным глаголом have"));
+    mistakeSet.insert(Mistake("Глагол seeing не согласован по времени с вспомогательным глаголом have"));
     QTest::newRow("Test 38: have + VBG (mistake)") << node38_1 << node38_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node39_1 = new UDNode("has", VBZ, Ind);
     const UDNode* node39_2 = new UDNode("sees", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол sees несогласован по времени с вспомогательным глаголом has"));
+    mistakeSet.insert(Mistake("Глагол sees не согласован по времени с вспомогательным глаголом has"));
     QTest::newRow("Test 39: has + VBZ (mistake)") << node39_1 << node39_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1077,25 +1077,25 @@ void Tests::testMainAuxAgreement_data()
     // Тест 42-45: Есть ошибка, сокращение 'd, основной глагол в неверной форме
     const UDNode* node42_1 = new UDNode("'d", MD, None); // would
     const UDNode* node42_2 = new UDNode("goes", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол goes несогласован по времени с вспомогательным глаголом 'd"));
+    mistakeSet.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом 'd"));
     QTest::newRow("Test 42: 'd (would) + VBZ (mistake)") << node42_1 << node42_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node43_1 = new UDNode("'d", VBD, None); // had
     const UDNode* node43_2 = new UDNode("went", VBD, None);
-    mistakeSet.insert(Mistake("Глагол went несогласован по времени с вспомогательным глаголом 'd"));
+    mistakeSet.insert(Mistake("Глагол went не согласован по времени с вспомогательным глаголом 'd"));
     QTest::newRow("Test 43: 'd (had) + VBD (mistake)") << node43_1 << node43_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node44_1 = new UDNode("'d", MD, None); // would
     const UDNode* node44_2 = new UDNode("going", VBG, None);
-    mistakeSet.insert(Mistake("Глагол going несогласован по времени с вспомогательным глаголом 'd"));
+    mistakeSet.insert(Mistake("Глагол going не согласован по времени с вспомогательным глаголом 'd"));
     QTest::newRow("Test 44: 'd (would) + VBG (mistake)") << node44_1 << node44_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node45_1 = new UDNode("'d", VBD, None); // had
     const UDNode* node45_2 = new UDNode("go", VB, None);
-    mistakeSet.insert(Mistake("Глагол go несогласован по времени с вспомогательным глаголом 'd"));
+    mistakeSet.insert(Mistake("Глагол go не согласован по времени с вспомогательным глаголом 'd"));
     QTest::newRow("Test 45: 'd (had) + VB (mistake)") << node45_1 << node45_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1237,37 +1237,37 @@ void Tests::testAuxAuxAgreement_data()
     // Тест 10-15: Есть ошибка, модальный глагол + не have/be
     const UDNode* node10_1 = new UDNode("will", MD, None);
     const UDNode* node10_2 = new UDNode("was", VBD, None);
-    mistakeSet.insert(Mistake("Глагол was несогласован по времени с модальным глаголом will. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол was не согласован по времени с модальным глаголом will. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 10: will + was (mistake)") << node10_1 << node10_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node11_1 = new UDNode("should", MD, None);
     const UDNode* node11_2 = new UDNode("has", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол has несогласован по времени с модальным глаголом should. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол has не согласован по времени с модальным глаголом should. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 11: should + has (mistake)") << node11_1 << node11_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node12_1 = new UDNode("can", MD, None);
     const UDNode* node12_2 = new UDNode("had", VBD, None);
-    mistakeSet.insert(Mistake("Глагол had несогласован по времени с модальным глаголом can. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол had не согласован по времени с модальным глаголом can. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 12: can + had (mistake)") << node12_1 << node12_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node13_1 = new UDNode("may", MD, None);
     const UDNode* node13_2 = new UDNode("am", VBP, None);
-    mistakeSet.insert(Mistake("Глагол am несогласован по времени с модальным глаголом may. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол am не согласован по времени с модальным глаголом may. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 13: may + am (mistake)") << node13_1 << node13_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node14_1 = new UDNode("must", MD, None);
     const UDNode* node14_2 = new UDNode("is", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол is несогласован по времени с модальным глаголом must. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол is не согласован по времени с модальным глаголом must. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 14: must + is (mistake)") << node14_1 << node14_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node15_1 = new UDNode("would", MD, None);
     const UDNode* node15_2 = new UDNode("are", VBP, None);
-    mistakeSet.insert(Mistake("Глагол are несогласован по времени с модальным глаголом would. После модального глагола следует в начальной форме"));
+    mistakeSet.insert(Mistake("Глагол are не согласован по времени с модальным глаголом would. После модального глагола следует в начальной форме"));
     QTest::newRow("Test 15: would + are (mistake)") << node15_1 << node15_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1279,25 +1279,25 @@ void Tests::testAuxAuxAgreement_data()
     // Тест 17-20: Есть ошибка, have/had + не been
     const UDNode* node17_1 = new UDNode("have", VB, None);
     const UDNode* node17_2 = new UDNode("is", VBZ, None);
-    mistakeSet.insert(Mistake("Глагол is несогласован по времени с вспомогательным глаголом have. Требуется форма Past Participle/V3(been)."));
+    mistakeSet.insert(Mistake("Глагол is не согласован по времени с вспомогательным глаголом have. Требуется форма Past Participle/V3(been)."));
     QTest::newRow("Test 17: have + is (mistake)") << node17_1 << node17_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node18_1 = new UDNode("had", VBD, None);
     const UDNode* node18_2 = new UDNode("be", VB, None);
-    mistakeSet.insert(Mistake("Глагол be несогласован по времени с вспомогательным глаголом had. Требуется форма Past Participle/V3(been)."));
+    mistakeSet.insert(Mistake("Глагол be не согласован по времени с вспомогательным глаголом had. Требуется форма Past Participle/V3(been)."));
     QTest::newRow("Test 18: have + be (mistake)") << node18_1 << node18_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node19_1 = new UDNode("have", VB, None);
     const UDNode* node19_2 = new UDNode("am", VBP, None);
-    mistakeSet.insert(Mistake("Глагол am несогласован по времени с вспомогательным глаголом have. Требуется форма Past Participle/V3(been)."));
+    mistakeSet.insert(Mistake("Глагол am не согласован по времени с вспомогательным глаголом have. Требуется форма Past Participle/V3(been)."));
     QTest::newRow("Test 19: have + am (mistake)") << node19_1 << node19_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
     const UDNode* node20_1 = new UDNode("had", VBD, None);
     const UDNode* node20_2 = new UDNode("are", VBP, None);
-    mistakeSet.insert(Mistake("Глагол are несогласован по времени с вспомогательным глаголом had. Требуется форма Past Participle/V3(been)."));
+    mistakeSet.insert(Mistake("Глагол are не согласован по времени с вспомогательным глаголом had. Требуется форма Past Participle/V3(been)."));
     QTest::newRow("Test 20: have + are (mistake)") << node20_1 << node20_2 << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1505,7 +1505,7 @@ void Tests::testPassiveAgreement_data()
     node9_0->addChild(node9_1);
     const UDNode* node9_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node9_0->addChild(node9_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 9: are + deliver (VB)") << node9_2 << static_cast<const UDNode*>(node9_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1514,7 +1514,7 @@ void Tests::testPassiveAgreement_data()
     node10_0->addChild(node10_1);
     const UDNode* node10_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node10_0->addChild(node10_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 10: are + delivers (VBZ)") << node10_2 << static_cast<const UDNode*>(node10_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1523,7 +1523,7 @@ void Tests::testPassiveAgreement_data()
     node11_0->addChild(node11_1);
     const UDNode* node11_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node11_0->addChild(node11_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 11: are + delivered (VBD)") << node11_2 << static_cast<const UDNode*>(node11_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1532,7 +1532,7 @@ void Tests::testPassiveAgreement_data()
     node12_0->addChild(node12_1);
     const UDNode* node12_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node12_0->addChild(node12_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 12: are + delivering (VBG)") << node12_2 << static_cast<const UDNode*>(node12_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1541,7 +1541,7 @@ void Tests::testPassiveAgreement_data()
     node13_0->addChild(node13_1);
     const UDNode* node13_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node13_0->addChild(node13_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 13: are + deliver (VBP)") << node13_2 << static_cast<const UDNode*>(node13_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1552,7 +1552,7 @@ void Tests::testPassiveAgreement_data()
     node14_0->addChild(node14_1);
     const UDNode* node14_2 = new UDNode(2, "be", VB, 3, Aux_Pass, Ind);
     node14_0->addChild(node14_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 14: be + delivered (should be are)") << node14_2 << static_cast<const UDNode*>(node14_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1564,7 +1564,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node15_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node15_0->addChild(node15_3);
     node15_0->addChild(node15_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 15: have be + delivered (should have been)") << node15_4 << static_cast<const UDNode*>(node15_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1576,7 +1576,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node16_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node16_0->addChild(node16_3);
     node16_0->addChild(node16_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 16: are be + delivered (should are)") << node16_4 << static_cast<const UDNode*>(node16_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1588,7 +1588,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node17_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node17_0->addChild(node17_3);
     node17_0->addChild(node17_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 17: were be + delivered (should were being)") << node17_4 << static_cast<const UDNode*>(node17_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1600,7 +1600,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node18_4 = new UDNode(3, "are", VBP, 4, Aux_Pass, Ind);
     node18_0->addChild(node18_3);
     node18_0->addChild(node18_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 18: may are + delivered (should may be)") << node18_4 << static_cast<const UDNode*>(node18_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1610,7 +1610,7 @@ void Tests::testPassiveAgreement_data()
     node19_0->addChild(node19_2);
     const UDNode* node19_3 = new UDNode(2, "been", VBP, 3, Aux_Pass, Ind);
     node19_0->addChild(node19_3);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 19: been + delivered (should were)") << node19_3 << static_cast<const UDNode*>(node19_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1623,7 +1623,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node20_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
     node20_0->addChild(node20_3);
     node20_0->addChild(node20_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 20: will been + delivered (should will be)") << node20_4 << static_cast<const UDNode*>(node20_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1635,7 +1635,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node21_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node21_0->addChild(node21_3);
     node21_0->addChild(node21_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
     QTest::newRow("Test 21: had be + delivered (should had been)") << node21_4 << static_cast<const UDNode*>(node21_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1725,7 +1725,7 @@ void Tests::testComplexSentenceAgreement_data()
     QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
     QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
 
-    Mistake mistake("Несогласование времен в сложноподчиненном предложении");
+    Mistake mistake("не согласование времен в сложноподчиненном предложении");
 
     // ==============================================
     // Тесты 1-2: Главное предложение в будущем без условных/временных союзов
@@ -1978,14 +1978,14 @@ void Tests::testComplexSentenceAgreement_data()
         << true << emptyMistakes << false << "";
 
     // Тест 12: Once you sign the contract, we'll start
-    UDNode* node12_0 = new UDNode(6, "start", VB, 0, Root, Ind);
-    const UDNode* node12_1 = new UDNode(4, "we", PRP, 6, Nsubj, None);
-    const UDNode* node12_2 = new UDNode(5, "'ll", MD, 6, Aux, Ind);
-    UDNode* node12_3 = new UDNode(3, "sign", VB, 6, Advcl, None);
+    UDNode* node12_0 = new UDNode(8, "start", VB, 0, Root, Ind);
+    const UDNode* node12_1 = new UDNode(6, "we", PRP, 6, Nsubj, None);
+    const UDNode* node12_2 = new UDNode(7, "'ll", MD, 8, Aux, Ind);
+    UDNode* node12_3 = new UDNode(3, "sign", VBP, 8, Advcl, None);
     const UDNode* node12_4 = new UDNode(1, "Once", IN, 3, Mark, None);
     const UDNode* node12_5 = new UDNode(2, "you", PRP, 3, Nsubj, None);
-    UDNode* node12_6 = new UDNode(7, "contract", NN, 3, Obj, None);
-    const UDNode* node12_7 = new UDNode(8, "the", DT, 7, Det, None);
+    UDNode* node12_6 = new UDNode(5, "contract", NN, 3, Obj, None);
+    const UDNode* node12_7 = new UDNode(4, "the", DT, 5, Det, None);
 
     node12_0->addChild(node12_1);
     node12_0->addChild(node12_2);
@@ -2028,7 +2028,7 @@ void Tests::testComplexSentenceAgreement_data()
     const UDNode* node14_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
     const UDNode* node14_2 = new UDNode(2, "'ll", MD, 3, Aux, Ind);
     const UDNode* node14_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-    UDNode* node14_4 = new UDNode(8, "listen", VB, 3, Advcl, None);
+    UDNode* node14_4 = new UDNode(8, "listen", VBP, 3, Advcl, None);
     UDNode* node14_5 = new UDNode(5, "as", IN, 8, Mark, None);
     const UDNode* node14_6 = new UDNode(6, "long", RB, 5, Fixed, None);
     const UDNode* node14_7 = new UDNode(7, "you", PRP, 8, Nsubj, None);
@@ -2107,7 +2107,7 @@ void Tests::testComplexSentenceAgreement_data()
     node16_8->addChild(node16_9);
     node16_8->addChild(node16_10);
 
-    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
     QTest::newRow("Test 16: Future + future with 'when' - mistake")
         << static_cast<const UDNode*>(node16_4) << static_cast<const UDNode*>(node16_0)
         << false << mistakeSet << false << "";
@@ -2133,7 +2133,7 @@ void Tests::testComplexSentenceAgreement_data()
     node17_4->addChild(node17_7);
     node17_7->addChild(node17_8);
 
-    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
     QTest::newRow("Test 17: Future + past with 'when' - mistake")
         << static_cast<const UDNode*>(node17_4) << static_cast<const UDNode*>(node17_0)
         << false << mistakeSet << false << "";
@@ -2185,7 +2185,7 @@ void Tests::testComplexSentenceAgreement_data()
     node19_2->addChild(node19_5);
     node19_2->addChild(node19_6);
 
-    mistakeSet.insert(Mistake("Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
     QTest::newRow("Test 19: Past + future with 'because' - mistake")
         << static_cast<const UDNode*>(node19_2) << static_cast<const UDNode*>(node19_0)
         << false << mistakeSet << false << "";
@@ -2205,7 +2205,7 @@ void Tests::testComplexSentenceAgreement_data()
     node20_2->addChild(node20_4);
     node20_2->addChild(node20_5);
 
-    mistakeSet.insert(Mistake("Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
     QTest::newRow("Test 20: Past + present with 'because' - mistake")
         << static_cast<const UDNode*>(node20_2) << static_cast<const UDNode*>(node20_0)
         << false << mistakeSet << false << "";
@@ -2310,8 +2310,8 @@ void Tests::testConditionalsAgreement_data()
     QSet<Mistake> mistakeSet3rd;         // Множество ошибок для 3-го типа условных
 
     // Сообщения об ошибках
-    mistakeSet2nd.insert(Mistake("придаточная часть несогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1."));
-    mistakeSet3rd.insert(Mistake("придаточная часть несогласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3."));
+    mistakeSet2nd.insert(Mistake("придаточная часть не согласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1."));
+    mistakeSet3rd.insert(Mistake("придаточная часть не согласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3."));
 
     /* Тесты для 2-го типа условных предложений */
 
@@ -3896,18 +3896,18 @@ void Tests::testMatchesPattern_data()
     QTest::newRow("Test 2: Node with valid tag") << static_cast<const UDNode*>(node1_0) << pattern2 << pattern2s << true;
 
     // Тест №3. Узел без детей. Заданы допустимые слова.
-    Pattern* pattern3 = new Pattern({"Hello"}, {});
-    Pattern* pattern3s = new Pattern({"Hello"}, {});
+    Pattern* pattern3 = new Pattern({"hello"}, {});
+    Pattern* pattern3s = new Pattern({"hello"}, {});
     pattern3s->setMatch(node1_0);
     QTest::newRow("Test 3: Node with valid word") << static_cast<const UDNode*>(node1_0) << pattern3 << pattern3s << true;
 
     // Тест №4. Узел без детей. Тег совпадает, слово - нет.
-    Pattern* pattern4 = new Pattern({"World"}, {UH});
+    Pattern* pattern4 = new Pattern({"world"}, {UH});
     QTest::newRow("Test 4: Tag matches, word doesn't") << static_cast<const UDNode*>(node1_0) << pattern4 << new Pattern() << false;
 
     // Тест №5. Узел без детей. Теu не совпадает, слово - да.
-    Pattern* pattern5 = new Pattern({"Hello"}, {UH});
-    UDNode* node5_0 = new UDNode(1,"Hello",CC,0,Root,None);
+    Pattern* pattern5 = new Pattern({"hello"}, {UH});
+    UDNode* node5_0 = new UDNode(1,"hello",CC,0,Root,None);
     QTest::newRow("Test 5: Word matches, tag doesn't") << static_cast<const UDNode*>(node5_0) << pattern5 << new Pattern() << false;
 
     // Тест №6. Шаблон с одним любым ребенком.
@@ -4074,532 +4074,547 @@ void Tests::testMatchesPattern_data()
 
 }
 
-// void Tests::testCheckPattern()
-// {
-//     QFETCH(const UDNode*, inputNode);
-//     QFETCH(Pattern*, pat);
-
-//     QSet<Mistake> mistakes;
-
-//     inputNode->checkPattern(pat,mistakes);
-
-//     // Проверяем, все ли checks были вызваны
-//         QStringList uncalledChecks = pat->getUncalledChecks("root");
-//         if (!uncalledChecks.isEmpty()) {
-//             QString errorMessage = "Не все проверки были вызваны:\n";
-//             errorMessage += "--------------------------------\n";
-//             errorMessage += uncalledChecks.join("\n");
-//             errorMessage += "\n--------------------------------\n";
-//             QFAIL(qPrintable(errorMessage));
-//         }
-
-//     // Дополнительно проверить, были ли найдены ошибки
-//     if (!mistakes.isEmpty()) {
-//         QString mistakeReport = "Обнаружены ошибки:\n";
-//         mistakeReport += "--------------------------------\n";
-//         for (const Mistake& mistake : mistakes) {
-//             mistakeReport += mistake.getMessage() + "\n";
-//         }
-//         mistakeReport += "--------------------------------\n";
-//         qDebug() << qPrintable(mistakeReport);
-//     }
-
-// }
-// void Tests::testCheckPattern_data()
-// {
-//     QTest::addColumn<const UDNode*>("inputNode");
-//     QTest::addColumn<Pattern*>("pat");
-
-//     QSet<Mistake> mistakes;
-
-//     //Тест 1
-//     UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
-//     Pattern* pattern1 = new Pattern({},{});
-//     mistakes.clear();
-//     QTest::newRow("Test 1: no checks") <<static_cast<const UDNode*>(node1_0) << pattern1;
-
-//     // Тест №2. Одна проверка в шаблоне
-//     UDNode* node2 = new UDNode(1, "he", PRP, 2, Nsubj, None);
-//     UDNode* node2_1 = new UDNode(2, "run", VBP, 0, Root, None);
-
-//     Pattern* pattern2_0 = new Pattern();
-//     pattern2_0->setMatch(node2);
-//     Pattern* pattern2_1 = new Pattern();
-//     pattern2_1->setMatch(node2_1);
-//     pattern2_0->addChildPattern(Nsubj,pattern2_1);
-
-//     RelTypeCheck* check2 = new ParentChild();
-//     check2->setRule(new PersonNumberAgreement);
-//     pattern2_1->addСheck(check2);
-
-//     QTest::newRow("Test 2: Single check in pattern")
-//         << static_cast<const UDNode*>(node2_1) << pattern2_0;
-
-//     // Тест №3. Проверка между детьми
-//     UDNode* node3 = new UDNode(1, "she", PRP, 3, Nsubj, None);
-//     UDNode* node3_1 = new UDNode(2, "am", VBP, 3, Aux, None);
-//     UDNode* node3_2 = new UDNode(3, "singing", VBG, 0, Root, None);
-
-//     Pattern* pattern3_0 = new Pattern();
-//     pattern3_0->setMatch(node3_2);
-//     Pattern* pattern3_1 = new Pattern();
-//     pattern3_1->setMatch(node3_1);
-//     Pattern* pattern3_2 = new Pattern();
-//     pattern3_2->setMatch(node3);
-//     pattern3_0->addChildPattern(Nsubj,pattern3_2);
-//     pattern3_0->addChildPattern(Aux,pattern3_1);
-
-//     ChildChild* check3 = new ChildChild();
-//     check3->setRule(new PersonNumberAgreement);
-//     check3->setValidTags({VBP});
-//     pattern3_2->addСheck(check3);
-
-//     QTest::newRow("Test 3: Check between children")
-//         <<  static_cast<const UDNode*>(node3_2) << pattern3_0;
-
-//     // Тест №4. Несколько проверок
-//     UDNode* node4 = new UDNode(1, "she", PRP, 3, Nsubj, None);
-//     UDNode* node4_1 = new UDNode(2, "am", VBP, 3, Aux, None);
-//     UDNode* node4_2 = new UDNode(3, "sing", VB, 0, Root, None);
-
-//     Pattern* pattern4_0 = new Pattern();
-//     pattern4_0->setMatch(node4_2);
-//     Pattern* pattern4_1 = new Pattern();
-//     pattern4_1->setMatch(node4_1);
-//     Pattern* pattern4_2 = new Pattern();
-//     pattern4_2->setMatch(node4);
-//     pattern4_0->addChildPattern(Nsubj,pattern4_2);
-//     pattern4_0->addChildPattern(Aux,pattern4_1);
-
-//     ChildChild* check4 = new ChildChild();
-//     check4->setRule(new PersonNumberAgreement);
-//     check4->setValidTags({VBP});
-//     pattern4_2->addСheck(check4);
-
-//     ParentChild* check4_1 = new ParentChild();
-//     check4->setRule(new MainAuxAgreement);
-//     pattern4_1->addСheck(check4_1);
-
-//     QTest::newRow("Test 4: Multiple checks")
-//         <<  static_cast<const UDNode*>(node4_2) << pattern4_0 ;
-
-//     // Тест №5. Проверка во внуке
-//     UDNode* node5_1 = new UDNode(2, "wants", VBZ, 0, Root, None);
-//     UDNode* node5_2 = new UDNode(3, "to", TO, 4, Mark, None);
-//     UDNode* node5_3 = new UDNode(4, "travelling", VBG, 2, Xcomp, None);
-
-//     Pattern* grandChildPattern5 = new Pattern();
-//     ParentChild* check5 = new ParentChild();
-//     grandChildPattern5->setMatch(node5_2);
-//     grandChildPattern5->addСheck(check5);
-
-//     Pattern* childPattern5 = new Pattern();
-//     childPattern5->setMatch(node5_3);
-//     childPattern5->addChildPattern(Mark, grandChildPattern5);
-
-//     Pattern* pattern5 = new Pattern();
-//     pattern5->setMatch(node5_1);
-//     pattern5->addChildPattern(Xcomp, childPattern5);
-
-//     QTest::newRow("Test 5: Check in grandchild")
-//         << static_cast<const UDNode*>(node5_1) << pattern5 ;
-
-// }
-
-
-// void Tests::testCheckAllPatterns()
-// {
-//     typedef QMap<int, UDNode*> NodeMap;
-//     QFETCH(NodeMap, inputNodes);
-//     QFETCH(QSet<Pattern*>, pats);
-//     QFETCH(QSet<Mistake>, expMistakes);
-
-//     QSet<Mistake> mistakes;
-
-//     checkAllPatterns(inputNodes, pats, mistakes);
-
-//     // Подробное сравнение ошибок
-//     if (mistakes != expMistakes)
-//     {
-//         qDebug() << "Discrepancy found in mistakes:";
-
-//         // Находим ошибки, которые есть в mistakes, но нет в expMistakes
-//         QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-//         if (!unexpectedMistakes.isEmpty())
-//         {
-//             qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-//             for (const Mistake& mistake : unexpectedMistakes)
-//             {
-//                 qDebug() << "  -" << mistake.getMessage();
-//             }
-//         }
-
-//         // Находим ошибки, которые есть в expMistakes, но нет в mistakes
-//         QSet<Mistake> missingMistakes = expMistakes - mistakes;
-//         if (!missingMistakes.isEmpty())
-//         {
-//             qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-//             for (const Mistake& mistake : missingMistakes)
-//             {
-//                 qDebug() << "  +" << mistake.getMessage();
-//             }
-//         }
-//     }
-//     QCOMPARE(mistakes, expMistakes);
-// }
-
-// void Tests::testCheckAllPatterns_data()
-// {
-//     QTest::addColumn<QMap<int, UDNode*>>("inputNodes");
-//     QTest::addColumn<QSet<Pattern*>>("pats");
-//     QTest::addColumn<QSet<Mistake>>("expMistakes");
-
-//     QSet<Mistake> noMistakes;
-//     QSet<Pattern*> pats;
-//     getPatterns(pats);
-//     QMap<int,UDNode*> tree;
-
-//     // Тест 1: Дерево из одного слова
-//         {
-//             QMap<int, UDNode*> tree1;
-//             tree1.insert(1, new UDNode(1, "Hello", UH, 0, Root, None));
-//             QTest::newRow("Test 1: Single word tree") << tree1 << pats << noMistakes;
-//         }
-
-//         // Тест 2: Несколько шаблонов с ошибками
-//         {
-//             QMap<int, UDNode*> tree2;
-//             UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//             UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
-//             UDNode* waiting = new UDNode(3, "waiting", VBG, 0, Root, None);
-//             UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
-//             UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
-//             UDNode* stop = new UDNode(6, "stop", VB, 3, Advcl, None);
-
-//             waiting->addChild(she);
-//             waiting->addChild(will);
-//             waiting->addChild(stop);
-//             stop->addChild(until);
-//             stop->addChild(rain);
-
-//             tree2.insert(1, she);
-//             tree2.insert(2, will);
-//             tree2.insert(3, waiting);
-//             tree2.insert(4, until);
-//             tree2.insert(5, rain);
-//             tree2.insert(6, stop);
-
-//             QSet<Mistake> expectedMistakes;
-//             expectedMistakes.insert(Mistake("Глагол 'waiting' не согласован с глаголом 'will'. После will требуется начальная форма глагола"));
-//             expectedMistakes.insert(Mistake("Глагол 'stop' не согласован с подлежащим 'rain'. Глагол должен быть в форме 3-го лица единственного числа"));
-
-//             QTest::newRow("Test 2: Multiple patterns with mistakes") << tree2 << pats << expectedMistakes;
-//         }
-
-//     // Тест 3: Несколько шаблонов без ошибок
-//     {
-//             QMap<int, UDNode*> tree3;
-//             UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//             UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
-//             UDNode* wait = new UDNode(3, "wait", VB, 0, Root, None);
-//             UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
-//             UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
-//             UDNode* stops = new UDNode(6, "stops", VBZ, 3, Advcl, None);
-
-//             wait->addChild(she);
-//             wait->addChild(will);
-//             wait->addChild(stops);
-//             stops->addChild(until);
-//             stops->addChild(rain);
-
-//             tree3.insert(1, she);
-//             tree3.insert(2, will);
-//             tree3.insert(3, wait);
-//             tree3.insert(4, until);
-//             tree3.insert(5, rain);
-//             tree3.insert(6, stops);
-
-//             QTest::newRow("Test 3: Multiple patterns without mistakes") << tree3 << pats << noMistakes;
-//     }
-
-//     // Тест 4: Present Simple
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* she = new UDNode(1, "She", PRP, 2, Nsubj, None);
-//         UDNode* write = new UDNode(2, "write", VBP, 0, Root, None);
-//         UDNode* letters = new UDNode(3, "letters", NNS, 2, Obj, None);
-//         UDNode* every = new UDNode(4, "every", DT, 5, Det, None);
-//         UDNode* day = new UDNode(5, "day", NN, 2, Obl_Tmod, None);
-
-//         write->addChild(she);
-//         write->addChild(letters);
-//         write->addChild(day);
-//         day->addChild(every);
-
-//         tree.insert(1, she);
-//         tree.insert(2, write);
-//         tree.insert(3, letters);
-//         tree.insert(4, every);
-//         tree.insert(5, day);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Глагол 'write' несогласован с подлежащим 'She'. Должен быть в форме 3-го лица единственного числа"));
-
-//         QTest::newRow("Present Simple mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 5: Past Simple
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* they = new UDNode(1, "They", PRP, 3, Nsubj, None);
-//         UDNode* was = new UDNode(2, "was", VBD, 3, Cop, None);
-//         UDNode* happy = new UDNode(3, "happy", JJ, 0, Root, None);
-//         UDNode* yesterday = new UDNode(4, "yesterday", NN, 3, Obl_Tmod, None);
-
-//         happy->addChild(they);
-//         happy->addChild(was);
-//         happy->addChild(yesterday);
-
-//         tree.insert(1, they);
-//         tree.insert(2, was);
-//         tree.insert(3, happy);
-//         tree.insert(4, yesterday);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Глагол 'was' несогласован с подлежащим 'They'. Должна быть форма множественного числа 'were'"));
-
-//         QTest::newRow("Past Simple mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 6: Числительные и существительные (2 ошибки)
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* i = new UDNode(1, "I", PRP, 2, Nsubj, None);
-//         UDNode* has = new UDNode(2, "has", VBZ, 0, Root, None);
-//         UDNode* three = new UDNode(3, "three", CD, 4, Nummod, None);
-//         UDNode* book = new UDNode(4, "book", NN, 2, Obj, None);
-
-//         has->addChild(i);
-//         has->addChild(book);
-//         book->addChild(three);
-
-//         tree.insert(1, i);
-//         tree.insert(2, has);
-//         tree.insert(3, three);
-//         tree.insert(4, book);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Существительное 'book' несогласовано с числительным 'three'. Должно быть во множественном числе"));
-//         mistakes.insert(Mistake("Глагол 'has' несогласован с подлежащим 'I'. Должна быть начальная форма"));
-
-//         QTest::newRow("Numeral-noun agreement mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 7: Квантификаторы (2 ошибки)
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* there = new UDNode(1, "There", EX, 2, Expl, None);
-//         UDNode* is = new UDNode(2, "is", VBZ, 0, Root, None);
-//         UDNode* many = new UDNode(3, "many", JJ, 4, Amod, None);
-//         UDNode* book = new UDNode(4, "book", NN, 2, Nsubj, None);
-//         UDNode* in = new UDNode(5, "in", IN, 7, Case, None);
-//         UDNode* a = new UDNode(6, "a", DT, 7, Det, None);
-//         UDNode* rooms = new UDNode(7, "rooms", NNS, 4, Nmod, None);
-
-//         is->addChild(there);
-//         is->addChild(book);
-//         book->addChild(rooms);
-//         book->addChild(many);
-//         rooms->addChild(in);
-//         rooms->addChild(a);
-
-//         tree.insert(1, there);
-//         tree.insert(2, is);
-//         tree.insert(3, many);
-//         tree.insert(4, book);
-//         tree.insert(5, in);
-//         tree.insert(6, a);
-//         tree.insert(7, rooms);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("квантификатор 'many' некорректно использован, исчесляемое существительное 'book' в единственном числе не может сочетаться с квантификатором."));
-//         mistakes.insert(Mistake("артикль 'a' употреблен с существительным 'rooms' множественного числа. Требуется артикль the или нулевой артикль."));
-
-//         QTest::newRow("Quantifier mistakes") << tree << pats << mistakes;
-//     }
-
-
-
-//     // Тест 8: Вспомогательные глаголы (2 ошибки)
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* does = new UDNode(1, "Do", VBP, 3, Aux, None);
-//         UDNode* she = new UDNode(2, "she", PRP, 3, Nsubj, None);
-//         UDNode* likes = new UDNode(3, "likes", VBZ, 0, Root, None);
-//         UDNode* ice = new UDNode(4, "ice", NN, 5, Compound, None);
-//         UDNode* cream = new UDNode(5, "cream", NN, 3, Obj, None);
-
-//         likes->addChild(does);
-//         likes->addChild(she);
-//         likes->addChild(cream);
-//         cream->addChild(ice);
-
-//         tree.insert(1, does);
-//         tree.insert(2, she);
-//         tree.insert(3, likes);
-//         tree.insert(4, ice);
-//         tree.insert(5, cream);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Глагол 'likes' после 'Do' должен быть в форме 3-го лица единственного числа."));
-//         mistakes.insert(Mistake("всмогательный глагол ‘do’ несогласован с подлежащим she. Требуется форма 3-го лица единственного числа."));
-//         QTest::newRow("Auxiliary verbs mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 9: Present Perfect
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//         UDNode* have = new UDNode(2, "have", VBP, 3, Aux, None);
-//         UDNode* finished = new UDNode(3, "finished", VBN, 0, Root, None);
-//         UDNode* work = new UDNode(4, "work", NN, 3, Obj, None);
-
-//         finished->addChild(she);
-//         finished->addChild(have);
-//         finished->addChild(work);
-
-//         tree.insert(1, she);
-//         tree.insert(2, have);
-//         tree.insert(3, finished);
-//         tree.insert(4, work);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Вспомогательный глагол 'have' несогласован с подлежащим 'She'. Требуется форма 3-го лица единственного числа 'has'"));
-
-//         QTest::newRow("Present Perfect mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 10: Future
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* he = new UDNode(1, "He", PRP, 3, Nsubj, None);
-//         UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
-//         UDNode* goes = new UDNode(3, "goes", VBZ, 0, Root, None);
-//         UDNode* to = new UDNode(4, "to", IN, 5, Case, None);
-//         UDNode* school = new UDNode(5, "school", NN, 3, Obl, None);
-
-//         goes->addChild(he);
-//         goes->addChild(will);
-//         goes->addChild(school);
-//         school->addChild(to);
-
-//         tree.insert(1, he);
-//         tree.insert(2, will);
-//         tree.insert(3, goes);
-//         tree.insert(4, to);
-//         tree.insert(5, school);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Глагол 'goes' после 'will' должен быть в начальной форме 'go'"));
-
-//         QTest::newRow("Future tense mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 11: Passive Voice (2 ошибки)
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* the = new UDNode(1, "The", DT, 2, Det, None);
-//         UDNode* book = new UDNode(2, "book", NN, 4, Nsubj_Pass, None);
-//         UDNode* were = new UDNode(3, "were", VBD, 4, Aux_Pass, None);
-//         UDNode* write = new UDNode(4, "write", VB, 0, Root, None);
-
-//         write->addChild(book);
-//         write->addChild(were);
-//         book->addChild(the);
-
-//         tree.insert(1, the);
-//         tree.insert(2, book);
-//         tree.insert(3, were);
-//         tree.insert(4, write);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("Вспомогательный глагол 'were' несогласован с подлежащим 'book'. Требуется форма единственного числа 'was'"));
-//         mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-
-//         QTest::newRow("Passive voice mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 12: Условные предложения (1 ошибка)
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* iff = new UDNode(1, "If", IN, 4, Mark, None);
-//         UDNode* i = new UDNode(2, "I", PRP, 4, Nsubj, None);
-//         UDNode* will = new UDNode(3, "will", MD, 4, Aux, None);
-//         UDNode* have = new UDNode(4, "have", VB, 7, Advcl, None);
-//         UDNode* time = new UDNode(5, "time", NN, 4, Obj, None);
-//         UDNode* I = new UDNode(6, "I", PRP, 8, Nsubj, None);
-//         UDNode* ill = new UDNode(7, "'ll", MD, 8, Aux, None);
-//         UDNode* help = new UDNode(8, "help", VB, 0, Root, None);
-//         UDNode* you = new UDNode(9, "you", PRP, 8, Obj, None);
-
-//         have->addChild(iff);
-//         have->addChild(i);
-//         have->addChild(will);
-//         have->addChild(time);
-//         help->addChild(I);
-//         help->addChild(ill);
-//         help->addChild(have);
-//         help->addChild(you);
-
-//         tree.insert(1, iff);
-//         tree.insert(2, i);
-//         tree.insert(3, will);
-//         tree.insert(4, have);
-//         tree.insert(5, time);
-//         tree.insert(6, I);
-//         tree.insert(7, ill);
-//         tree.insert(8, help);
-//         tree.insert(9, you);
-
-//         QSet<Mistake> mistakes;
-//         mistakes.insert(Mistake("В условном предложении после 'If' не должно быть 'will'. Используйте Present Simple"));
-
-//         QTest::newRow("Conditional sentences mistakes") << tree << pats << mistakes;
-//     }
-
-//     // Тест 13: Согласование времен в Past
-//     {
-//         QMap<int, UDNode*> tree;
-//         UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//         UDNode* was = new UDNode(2, "was", VBD, 3, Aux, None);
-//         UDNode* cooking = new UDNode(3, "cooking", VBG, 0, Root, None);
-//         UDNode* dinner = new UDNode(4, "dinner", NN, 3, Obj, None);
-//         UDNode* while_ = new UDNode(5, "while", IN, 7, Mark, None);
-//         UDNode* he = new UDNode(6, "he", PRP, 7, Nsubj, None);
-//         UDNode* watches = new UDNode(7, "watches", VBZ, 3, Advcl, None);
-//         UDNode* tv = new UDNode(8, "TV", NN, 7, Obj, None);
-
-//         cooking->addChild(she);
-//         cooking->addChild(was);
-//         cooking->addChild(dinner);
-//         cooking->addChild(watches);
-//         watches->addChild(while_);
-//         watches->addChild(he);
-//         watches->addChild(tv);
-
-//         tree.insert(1, she);
-//         tree.insert(2, was);
-//         tree.insert(3, cooking);
-//         tree.insert(4, dinner);
-//         tree.insert(5, while_);
-//         tree.insert(6, he);
-//         tree.insert(7, watches);
-//         tree.insert(8, tv);
-
-//         QSet<Mistake> mistakes;
-//         // Добавляем возможные ошибки:
-//         mistakes.insert(Mistake("придаточная часть несогласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах. "));
-
-//         QTest::newRow("Past Continuous + Past Simple with mistakes") << tree << pats << mistakes;
-//     }
-// }
+void Tests::testCheckPattern()
+{
+    QFETCH(const UDNode*, inputNode);
+    QFETCH(Pattern*, pat);
+
+    QSet<Mistake> mistakes;
+
+    try {
+        inputNode->checkPattern(pat,mistakes);
+    }catch(QString s){
+        qDebug() << s;
+    }
+    // Проверяем, все ли checks были вызваны
+        QStringList uncalledChecks = pat->getUncalledChecks("root");
+        if (!uncalledChecks.isEmpty()) {
+            QString errorMessage = "Не все проверки были вызваны:\n";
+            errorMessage += "--------------------------------\n";
+            errorMessage += uncalledChecks.join("\n");
+            errorMessage += "\n--------------------------------\n";
+            QFAIL(qPrintable(errorMessage));
+        }
+
+    // Дополнительно проверить, были ли найдены ошибки
+    if (!mistakes.isEmpty()) {
+        QString mistakeReport = "Обнаружены ошибки:\n";
+        mistakeReport += "--------------------------------\n";
+        for (const Mistake& mistake : mistakes) {
+            mistakeReport += mistake.getMessage() + "\n";
+        }
+        mistakeReport += "--------------------------------\n";
+        qDebug() << qPrintable(mistakeReport);
+    }
+
+}
+void Tests::testCheckPattern_data()
+{
+    QTest::addColumn<const UDNode*>("inputNode");
+    QTest::addColumn<Pattern*>("pat");
+
+    QSet<Mistake> mistakes;
+
+    //Тест 1
+    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
+    Pattern* pattern1 = new Pattern({},{});
+    mistakes.clear();
+    QTest::newRow("Test 1: no checks") <<static_cast<const UDNode*>(node1_0) << pattern1;
+
+    // Тест №2. Одна проверка в шаблоне
+    UDNode* node2 = new UDNode(1, "he", PRP, 2, Nsubj, None);
+    UDNode* node2_1 = new UDNode(2, "runs", VBZ, 0, Root, None);
+    node2_1->addChild(node2);
+    Pattern* pattern2_0 = new Pattern();
+    pattern2_0->setMatch(node2_1);
+    Pattern* pattern2_1 = new Pattern();
+    pattern2_1->setMatch(node2);
+    pattern2_0->addChildPattern(Nsubj,pattern2_1);
+
+    RelTypeCheck* check2 = new ParentChild();
+    check2->setRule(new PersonNumberAgreement);
+    pattern2_1->addСheck(check2);
+
+    QTest::newRow("Test 2: Single check in pattern")
+        << static_cast<const UDNode*>(node2_1) << pattern2_0;
+
+    // Тест №3. Проверка между детьми
+    UDNode* node3 = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* node3_1 = new UDNode(2, "am", VBP, 3, Aux, None);
+    UDNode* node3_2 = new UDNode(3, "singing", VBG, 0, Root, None);
+    node3_2->addChild(node3);
+    node3_2->addChild(node3_1);
+
+
+    Pattern* pattern3_0 = new Pattern();
+    pattern3_0->setMatch(node3_2);
+    Pattern* pattern3_1 = new Pattern();
+    pattern3_1->setMatch(node3_1);
+    Pattern* pattern3_2 = new Pattern();
+    pattern3_2->setMatch(node3);
+    pattern3_0->addChildPattern(Nsubj,pattern3_2);
+    pattern3_0->addChildPattern(Aux,pattern3_1);
+
+    ChildChild* check3 = new ChildChild();
+    check3->setRule(new PersonNumberAgreement);
+    check3->setRelatedRel(Aux);
+    check3->setValidTags({VBP});
+    pattern3_2->addСheck(check3);
+
+    QTest::newRow("Test 3: Check between children")
+        <<  static_cast<const UDNode*>(node3_2) << pattern3_0;
+
+    // Тест №4. Несколько проверок
+    UDNode* node4 = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* node4_1 = new UDNode(2, "am", VBP, 3, Aux, None);
+    UDNode* node4_2 = new UDNode(3, "sing", VB, 0, Root, None);
+    node4_2->addChild(node4_1);
+    node4_2->addChild(node4);
+
+    Pattern* pattern4_0 = new Pattern();
+    pattern4_0->setMatch(node4_2);
+    Pattern* pattern4_1 = new Pattern();
+    pattern4_1->setMatch(node4_1);
+    Pattern* pattern4_2 = new Pattern();
+    pattern4_2->setMatch(node4);
+    pattern4_0->addChildPattern(Nsubj,pattern4_2);
+    pattern4_0->addChildPattern(Aux,pattern4_1);
+
+    ChildChild* check4 = new ChildChild();
+    check4->setRule(new PersonNumberAgreement);
+    check4->setValidTags({VBP});
+    check4->setRelatedRel(Aux);
+    pattern4_2->addСheck(check4);
+
+    ParentChild* check4_1 = new ParentChild();
+    check4_1->setRule(new MainAuxAgreement);
+    pattern4_1->addСheck(check4_1);
+
+    QTest::newRow("Test 4: Multiple checks")
+        <<  static_cast<const UDNode*>(node4_2) << pattern4_0 ;
+
+    // Тест №5. Проверка во внуке
+    UDNode* node5_1 = new UDNode(2, "wants", VBZ, 0, Root, None);
+    UDNode* node5_2 = new UDNode(3, "to", TO, 4, Mark, None);
+    UDNode* node5_3 = new UDNode(4, "travelling", VBG, 2, Xcomp, None);
+
+    Pattern* grandChildPattern5 = new Pattern();
+    ParentChild* check5 = new ParentChild();
+    grandChildPattern5->setMatch(node5_2);
+    grandChildPattern5->addСheck(check5);
+
+    Pattern* childPattern5 = new Pattern();
+    childPattern5->setMatch(node5_3);
+    childPattern5->addChildPattern(Mark, grandChildPattern5);
+
+    Pattern* pattern5 = new Pattern();
+    pattern5->setMatch(node5_1);
+    pattern5->addChildPattern(Xcomp, childPattern5);
+
+    QTest::newRow("Test 5: Check in grandchild")
+        << static_cast<const UDNode*>(node5_1) << pattern5 ;
+
+}
+
+
+void Tests::testCheckAllPatterns()
+{
+    typedef QMap<int, UDNode*> NodeMap;
+    QFETCH(NodeMap, inputNodes);
+    QFETCH(QSet<Pattern*>, pats);
+    QFETCH(QSet<Mistake>, expMistakes);
+
+    QSet<Mistake> mistakes;
+
+    try {
+        checkAllPatterns(inputNodes, pats, mistakes);
+    }catch(QString s)
+    {
+        qDebug() << s;
+    }
+
+    // Подробное сравнение ошибок
+    if (mistakes != expMistakes)
+    {
+        qDebug() << "Discrepancy found in mistakes:";
+
+        // Находим ошибки, которые есть в mistakes, но нет в expMistakes
+        QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+        if (!unexpectedMistakes.isEmpty())
+        {
+            qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+            for (const Mistake& mistake : unexpectedMistakes)
+            {
+                qDebug() << "  -" << mistake.getMessage();
+            }
+        }
+
+        // Находим ошибки, которые есть в expMistakes, но нет в mistakes
+        QSet<Mistake> missingMistakes = expMistakes - mistakes;
+        if (!missingMistakes.isEmpty())
+        {
+            qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+            for (const Mistake& mistake : missingMistakes)
+            {
+                qDebug() << "  +" << mistake.getMessage();
+            }
+        }
+    }
+    QCOMPARE(mistakes, expMistakes);
+}
+
+void Tests::testCheckAllPatterns_data()
+{
+    QTest::addColumn<QMap<int, UDNode*>>("inputNodes");
+    QTest::addColumn<QSet<Pattern*>>("pats");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+
+    QSet<Mistake> noMistakes;
+    QSet<Pattern*> pats;
+    getPatterns(pats);
+    QMap<int,UDNode*> tree;
+
+    // Тест 1: Дерево из одного слова
+        {
+            QMap<int, UDNode*> tree1;
+            tree1.insert(1, new UDNode(1, "Hello", UH, 0, Root, None));
+            QTest::newRow("Test 1: Single word tree") << tree1 << pats << noMistakes;
+        }
+
+        // Тест 2: Несколько шаблонов с ошибками
+        {
+            QMap<int, UDNode*> tree2;
+            UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+            UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+            UDNode* waiting = new UDNode(3, "waiting", VBG, 0, Root, None);
+            UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
+            UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
+            UDNode* stop = new UDNode(6, "stop", VBP, 3, Advcl, None);
+
+            waiting->addChild(she);
+            waiting->addChild(will);
+            waiting->addChild(stop);
+            stop->addChild(until);
+            stop->addChild(rain);
+
+            tree2.insert(1, she);
+            tree2.insert(2, will);
+            tree2.insert(3, waiting);
+            tree2.insert(4, until);
+            tree2.insert(5, rain);
+            tree2.insert(6, stop);
+
+            QSet<Mistake> expectedMistakes;
+            expectedMistakes.insert(Mistake("Глагол waiting не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола"));
+            expectedMistakes.insert(Mistake("Основной глагол stop не согласован с подлежащим rain. Глагол должен быть в форме 3-го лица ед. числа"));
+
+            QTest::newRow("Test 2: Multiple patterns with mistakes") << tree2 << pats << expectedMistakes;
+        }
+
+    // Тест 3: Несколько шаблонов без ошибок
+    {
+            QMap<int, UDNode*> tree3;
+            UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+            UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+            UDNode* wait = new UDNode(3, "wait", VB, 0, Root, None);
+            UDNode* until = new UDNode(4, "until", IN, 6, Mark, None);
+            UDNode* rain = new UDNode(5, "rain", NN, 6, Nsubj, None);
+            UDNode* stops = new UDNode(6, "stops", VBZ, 3, Advcl, None);
+
+            wait->addChild(she);
+            wait->addChild(will);
+            wait->addChild(stops);
+            stops->addChild(until);
+            stops->addChild(rain);
+
+            tree3.insert(1, she);
+            tree3.insert(2, will);
+            tree3.insert(3, wait);
+            tree3.insert(4, until);
+            tree3.insert(5, rain);
+            tree3.insert(6, stops);
+
+            QTest::newRow("Test 3: Multiple patterns without mistakes") << tree3 << pats << noMistakes;
+    }
+
+    // Тест 4: Present Simple
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 2, Nsubj, None);
+        UDNode* write = new UDNode(2, "write", VBP, 0, Root, None);
+        UDNode* letters = new UDNode(3, "letters", NNS, 2, Obj, None);
+        UDNode* every = new UDNode(4, "every", DT, 5, Det, None);
+        UDNode* day = new UDNode(5, "day", NN, 2, Obl_Tmod, None);
+
+        write->addChild(she);
+        write->addChild(letters);
+        write->addChild(day);
+        day->addChild(every);
+
+        tree.insert(1, she);
+        tree.insert(2, write);
+        tree.insert(3, letters);
+        tree.insert(4, every);
+        tree.insert(5, day);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Основной глагол write не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа"));
+
+        QTest::newRow("Test 4: Present Simple mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 5: Past Simple
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* they = new UDNode(1, "They", PRP, 3, Nsubj, None);
+        UDNode* was = new UDNode(2, "was", VBD, 3, Cop, None);
+        UDNode* happy = new UDNode(3, "happy", JJ, 0, Root, None);
+        UDNode* yesterday = new UDNode(4, "yesterday", NN, 3, Obl_Tmod, None);
+
+        happy->addChild(they);
+        happy->addChild(was);
+        happy->addChild(yesterday);
+
+        tree.insert(1, they);
+        tree.insert(2, was);
+        tree.insert(3, happy);
+        tree.insert(4, yesterday);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("глагол was не согласован с подлежащим They. Глагол должен быть в форме множественного числа."));
+
+        QTest::newRow("Test 5: Past Simple mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 6: Числительные и существительные (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* i = new UDNode(1, "I", PRP, 2, Nsubj, None);
+        UDNode* has = new UDNode(2, "has", VBZ, 0, Root, None);
+        UDNode* three = new UDNode(3, "three", CD, 4, Nummod, None);
+        UDNode* book = new UDNode(4, "book", NN, 2, Obj, None);
+
+        has->addChild(i);
+        has->addChild(book);
+        book->addChild(three);
+
+        tree.insert(1, i);
+        tree.insert(2, has);
+        tree.insert(3, three);
+        tree.insert(4, book);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Вспомогательный глагол has не согласован с подлежащим I. Глагол должен быть в начальной форме"));
+        mistakes.insert(Mistake("Числительное three не согласовано по числу с существительным book."));
+
+        QTest::newRow("Test 6: Numeral-noun agreement mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 7: Квантификаторы (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* there = new UDNode(1, "There", EX, 2, Expl, None);
+        UDNode* is = new UDNode(2, "is", VBZ, 0, Root, None);
+        UDNode* many = new UDNode(3, "many", JJ, 4, Amod, None);
+        UDNode* book = new UDNode(4, "book", NN, 2, Nsubj, None);
+        UDNode* in = new UDNode(5, "in", IN, 7, Case, None);
+        UDNode* a = new UDNode(6, "a", DT, 7, Det, None);
+        UDNode* rooms = new UDNode(7, "rooms", NNS, 4, Nmod, None);
+
+        is->addChild(there);
+        is->addChild(book);
+        book->addChild(rooms);
+        book->addChild(many);
+        rooms->addChild(in);
+        rooms->addChild(a);
+
+        tree.insert(1, there);
+        tree.insert(2, is);
+        tree.insert(3, many);
+        tree.insert(4, book);
+        tree.insert(5, in);
+        tree.insert(6, a);
+        tree.insert(7, rooms);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Квантификатор many некорректно использован. Нельзя использовать с существительным book в единственном числе"));
+        mistakes.insert(Mistake("Артикль a не согласован по числу с существительным rooms. Требуется артикль the или нулевой артикль."));
+
+        QTest::newRow("Test 7: Quantifier mistakes") << tree << pats << mistakes;
+    }
+
+
+
+    // Тест 8: Вспомогательные глаголы (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* do_ = new UDNode(1, "Do", VBP, 3, Aux, None);
+        UDNode* she = new UDNode(2, "she", PRP, 3, Nsubj, None);
+        UDNode* likes = new UDNode(3, "likes", VBZ, 0, Root, None);
+        UDNode* ice = new UDNode(4, "ice", NN, 5, Compound, None);
+        UDNode* cream = new UDNode(5, "cream", NN, 3, Obj, None);
+
+        likes->addChild(do_);
+        likes->addChild(she);
+        likes->addChild(cream);
+        cream->addChild(ice);
+
+        tree.insert(1, do_);
+        tree.insert(2, she);
+        tree.insert(3, likes);
+        tree.insert(4, ice);
+        tree.insert(5, cream);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол likes не согласован по времени с вспомогательным глаголом Do. Требуется начальная форма глагола"));
+        mistakes.insert(Mistake("Вспомогательный глагол Do не согласован с подлежащим she. Глагол должен быть в форме 3-го лица ед. числа"));
+        QTest::newRow("Test 8: Auxiliary verbs mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 9: Present Perfect
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+        UDNode* have = new UDNode(2, "have", VBP, 3, Aux, None);
+        UDNode* finished = new UDNode(3, "finished", VBN, 0, Root, None);
+        UDNode* work = new UDNode(4, "work", NN, 3, Obj, None);
+
+        finished->addChild(she);
+        finished->addChild(have);
+        finished->addChild(work);
+
+        tree.insert(1, she);
+        tree.insert(2, have);
+        tree.insert(3, finished);
+        tree.insert(4, work);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Вспомогательный глагол have не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа"));
+
+        QTest::newRow("Test 9: Present Perfect mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 10: Future
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* he = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        UDNode* will = new UDNode(2, "will", MD, 3, Aux, None);
+        UDNode* goes = new UDNode(3, "goes", VBZ, 0, Root, None);
+        UDNode* to = new UDNode(4, "to", IN, 5, Case, None);
+        UDNode* school = new UDNode(5, "school", NN, 3, Obl, None);
+
+        goes->addChild(he);
+        goes->addChild(will);
+        goes->addChild(school);
+        school->addChild(to);
+
+        tree.insert(1, he);
+        tree.insert(2, will);
+        tree.insert(3, goes);
+        tree.insert(4, to);
+        tree.insert(5, school);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола"));
+
+        QTest::newRow("Test 10: Future tense mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 11: Passive Voice (2 ошибки)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* the = new UDNode(1, "The", DT, 2, Det, None);
+        UDNode* book = new UDNode(2, "book", NN, 4, Nsubj_Pass, None);
+        UDNode* were = new UDNode(3, "were", VBD, 4, Aux_Pass, None);
+        UDNode* write = new UDNode(4, "write", VB, 0, Root, None);
+
+        write->addChild(book);
+        write->addChild(were);
+        book->addChild(the);
+
+        tree.insert(1, the);
+        tree.insert(2, book);
+        tree.insert(3, were);
+        tree.insert(4, write);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("глагол were не согласован с подлежащим book. Глагол должен быть в форме единственного числа."));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+
+        QTest::newRow("Test 11: Passive voice mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 12: Условные предложения (1 ошибка)
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* iff = new UDNode(1, "If", IN, 4, Mark, None);
+        UDNode* i = new UDNode(2, "I", PRP, 4, Nsubj, None);
+        UDNode* will = new UDNode(3, "will", MD, 4, Aux, None);
+        UDNode* have = new UDNode(4, "have", VB, 7, Advcl, None);
+        UDNode* time = new UDNode(5, "time", NN, 4, Obj, None);
+        UDNode* I = new UDNode(6, "I", PRP, 8, Nsubj, None);
+        UDNode* ill = new UDNode(7, "'ll", MD, 8, Aux, None);
+        UDNode* help = new UDNode(8, "help", VB, 0, Root, None);
+        UDNode* you = new UDNode(9, "you", PRP, 8, Obj, None);
+
+        have->addChild(iff);
+        have->addChild(i);
+        have->addChild(will);
+        have->addChild(time);
+        help->addChild(I);
+        help->addChild(ill);
+        help->addChild(have);
+        help->addChild(you);
+
+        tree.insert(1, iff);
+        tree.insert(2, i);
+        tree.insert(3, will);
+        tree.insert(4, have);
+        tree.insert(5, time);
+        tree.insert(6, I);
+        tree.insert(7, ill);
+        tree.insert(8, help);
+        tree.insert(9, you);
+
+        QSet<Mistake> mistakes;
+        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+
+        QTest::newRow("Test 12: Conditional sentences mistakes") << tree << pats << mistakes;
+    }
+
+    // Тест 13: Согласование времен в Past
+    {
+        QMap<int, UDNode*> tree;
+        UDNode* she = new UDNode(1, "She", PRP, 3, Nsubj, None);
+        UDNode* was = new UDNode(2, "was", VBD, 3, Aux, None);
+        UDNode* cooking = new UDNode(3, "cooking", VBG, 0, Root, None);
+        UDNode* dinner = new UDNode(4, "dinner", NN, 3, Obj, None);
+        UDNode* while_ = new UDNode(5, "while", IN, 7, Mark, None);
+        UDNode* he = new UDNode(6, "he", PRP, 7, Nsubj, None);
+        UDNode* watches = new UDNode(7, "watches", VBZ, 3, Advcl, None);
+        UDNode* tv = new UDNode(8, "TV", NN, 7, Obj, None);
+
+        cooking->addChild(she);
+        cooking->addChild(was);
+        cooking->addChild(dinner);
+        cooking->addChild(watches);
+        watches->addChild(while_);
+        watches->addChild(he);
+        watches->addChild(tv);
+
+        tree.insert(1, she);
+        tree.insert(2, was);
+        tree.insert(3, cooking);
+        tree.insert(4, dinner);
+        tree.insert(5, while_);
+        tree.insert(6, he);
+        tree.insert(7, watches);
+        tree.insert(8, tv);
+
+        QSet<Mistake> mistakes;
+        // Добавляем возможные ошибки:
+        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+
+        QTest::newRow("Past Continuous + Past Simple with mistakes") << tree << pats << mistakes;
+    }
+}

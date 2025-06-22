@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QMultiMap>
 #include <error.h>
+#include <QDebug>
 
 class UDNode;
 class Pattern;

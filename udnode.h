@@ -36,14 +36,47 @@ public:
     bool isHaveForm ()const;
     bool isDoForm()const;
 
-    bool isPresentClause ()const;
-    bool isFutureClause ()const;
-    bool isPastClause ()const;
+    bool hasChildWithRel(DepRel rel) const;
+    bool hasTemporalConditionalConjunction() const;
+
+    bool isPresentSimple() const;
+    bool isPresentContinuous() const;
+    bool isPresentPerfect() const;
+    bool isPresentPerfectContinuous() const;
+    bool isNominalPredicate() const;
+    bool isPresentBe() const;
+    bool isPresentModal() const;
+    bool isPresentHave() const;
+    bool isPresentTense() const {
+        return isPresentSimple() ||
+               isPresentContinuous() ||
+               isPresentPerfect() ||
+               isPresentPerfectContinuous() ||
+               isNominalPredicate() ||
+               isPresentModal();  // Добавлена проверка модальных глаголов
+    }
+
+    bool isPastSimple() const;
+    bool isPastContinuous() const;
+    bool isPastPerfect() const;
+    bool isPastPerfectContinuous() const;
+    bool isPastNominalPredicate() const;
+    bool isPastModal() const;
+    bool isPastBe() const;
+    bool isPastHave() const;
+    bool isPastTense() const {
+        return isPastSimple() ||
+               isPastContinuous() ||
+               isPastPerfect() ||
+               isPastPerfectContinuous() ||
+               isPastNominalPredicate() ||
+               isPastModal();
+    }
+
     bool isCountable()const;
 
     int getPerson() const;
     int getNumber() const;
-    bool doesHaveSibling(QString sibling)const;
 
     void addChild(const UDNode*);
 
@@ -60,11 +93,22 @@ public:
     int getHead() const;
     DepRel getDepRel() const;
     VerbMood getMood() const;
+
     void writeChildren(QSet<UDNode*>& ch)
     {
         ch = children;
     }
-
+private:
+    // Вспомогательный метод для проверки инфинитива
+    bool hasInfinitiveChild() const {
+        for (UDNode* child : children) {
+            if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+                child->upos == VB) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 };
 #endif // UDNODE_H

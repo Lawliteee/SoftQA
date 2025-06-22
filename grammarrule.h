@@ -47,6 +47,16 @@ public:
         }
         return false;
     }
+
+    bool isPresentClause (const UDNode* main)const;
+
+    bool isFutureClause (const UDNode* main)const;
+    bool isFutureAuxiliary(const UDNode* node) const;
+    bool isFutureMainVerb(const UDNode* node) const;
+    bool hasChildWithPos(const UDNode* node, PosTag pos) const;
+
+    bool isPastClause (const UDNode* main)const;
+
 };
 
 class PersonNumberAgreement : public GrammarRule
@@ -90,6 +100,47 @@ class ConditionalsAgreement : public GrammarRule
 {
 public:
     bool check(const UDNode*,const UDNode*,QSet<Mistake>& mistakes ) override;
+private:
+    // Проверка 2-го типа условных (would + V1)
+    bool isSecondConditional(const UDNode* mainVerb) const
+    {
+        if (!mainVerb) return false;
+
+        // Ищем would среди детей
+        bool hasWould = false;
+        bool hasBaseVerb = (mainVerb->getUpos() == VB);
+
+        for (const UDNode* child : mainVerb->getChildren()) {
+            if (child->getDepRel() == Aux &&
+                child->getlemma().toLower() == "would") {
+                hasWould = true;
+                break;
+            }
+        }
+
+        return hasWould && hasBaseVerb;
+    }
+
+    // Проверка 3-го типа условных (would have + V3)
+    bool isThirdConditional(const UDNode* mainVerb) const
+    {
+        if (!mainVerb) return false;
+
+        // Ищем would и have среди детей
+        bool hasWould = false;
+        bool hasHave = false;
+        bool hasPastParticiple = (mainVerb->getUpos() == VBN);
+
+        for (const UDNode* child : mainVerb->getChildren()) {
+            if (child->getDepRel() == Aux) {
+                QString lemma = child->getlemma().toLower();
+                if (lemma == "would") hasWould = true;
+                if (lemma == "have") hasHave = true;
+            }
+        }
+
+        return hasWould && hasHave && hasPastParticiple;
+    }
 };
 
 #endif // GRAMMARRULE_H

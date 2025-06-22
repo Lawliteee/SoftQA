@@ -169,3 +169,206 @@ void UDNode::markRelatedDescendants() {
         child->markRelatedDescendants();
     }
 }
+
+bool UDNode::isPresentSimple() const {
+    return (upos == VBP || upos == VBZ) &&
+           !isBeForm() && !isHaveForm(); // Исключаем вспомогательные глаголы
+}
+
+// Present Continuous (am/is/are + VBG)
+bool UDNode::isPresentContinuous() const {
+    if (!isPresentBe()) return false;
+
+    for (UDNode* child : children) {
+        if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+            child->upos == VBG) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UDNode::isPresentPerfect() const {
+    if (!isPresentHave()) return false;
+
+    for (UDNode* child : children) {
+        if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+            child->upos == VBN) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UDNode::isPresentPerfectContinuous() const {
+    if (!isPresentHave()) return false;
+
+    for (UDNode* child : children) {
+        if (child->upos == VBN &&
+            child->lemma.compare("be", Qt::CaseInsensitive) == 0) {
+            for (UDNode* vbgChild : child->children) {
+                if (vbgChild->upos == VBG) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+// Именное сказуемое (I am [student])
+bool UDNode::isNominalPredicate() const {
+
+    for (UDNode* child : children) {
+        if (child->isPresentBe() &&
+            (child->depRel == Cop || child->depRel == Aux)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UDNode::isPresentBe() const {
+    QString lowerLemma = lemma.toLower();
+    return (lowerLemma == "be" || lowerLemma == "am" ||
+            lowerLemma == "is" || lowerLemma == "are") &&
+           (upos == VBP || upos == VBZ);
+}
+
+bool UDNode::isPresentModal() const {
+    if (upos != MD) return false;
+
+    QString lowerLemma = lemma.toLower();
+    // Основные модальные глаголы настоящего времени
+    if (lowerLemma == "can" || lowerLemma == "may" ||
+        lowerLemma == "must" || lowerLemma == "shall") {
+        // Проверяем наличие инфинитива
+        for (UDNode* child : children) {
+            if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+                child->upos == VB) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool UDNode::isPresentHave() const {
+    QString lowerLemma = lemma.toLower();
+    return (lowerLemma == "have" || lowerLemma == "has") && (upos == VBP || upos == VBZ);
+}
+
+// Past Simple (VBD)
+bool UDNode::isPastSimple() const {
+    return upos == VBD;
+}
+
+// Past Continuous (was/were + VBG)
+bool UDNode::isPastContinuous() const {
+    if (!isPastBe()) return false;
+
+    for (UDNode* child : children) {
+        if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+            child->upos == VBG) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Past Perfect (had + VBN)
+bool UDNode::isPastPerfect() const {
+    if (!isPastHave()) return false;
+
+    for (UDNode* child : children) {
+        if ((child->depRel == Xcomp || child->depRel == Ccomp) &&
+            child->upos == VBN) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Past Perfect Continuous (had been + VBG)
+bool UDNode::isPastPerfectContinuous() const {
+    if (!isPastHave()) return false;
+
+    for (UDNode* child : children) {
+        if (child->upos == VBN &&
+            child->lemma.compare("be", Qt::CaseInsensitive) == 0) {
+            for (UDNode* vbgChild : child->children) {
+                if (vbgChild->upos == VBG) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+// Именное сказуемое в прошедшем (I was [student])
+bool UDNode::isPastNominalPredicate() const {
+
+    for (UDNode* child : children) {
+        if (child->isPastBe() &&
+            (child->depRel == Cop || child->depRel == Aux)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Вспомогательные методы
+bool UDNode::isPastBe() const {
+    QString lowerLemma = lemma.toLower();
+    return (lowerLemma == "was" || lowerLemma == "were") &&
+           (upos == VBD);
+}
+
+bool UDNode::isPastHave() const {
+    QString lowerLemma = lemma.toLower();
+    return (lowerLemma == "had" || lowerLemma == "'d") &&
+           upos == VBD;
+}
+
+bool UDNode::isPastModal() const {
+    if (!isModalVerb()) return false;
+
+    QString lowerLemma = lemma.toLower();
+    // Основные модалы прошедшего времени
+    return (lowerLemma == "could" || lowerLemma == "might" ||
+            lowerLemma == "would") &&
+           hasInfinitiveChild();
+}
+
+bool UDNode::hasChildWithRel(DepRel rel) const
+{
+    for (UDNode* child : children) {
+        if (child->depRel == rel) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Проверка наличия временного/условного союза
+bool UDNode::hasTemporalConditionalConjunction() const
+{
+
+    // Список временных и условных союзов
+    static const QSet<QString> conjunctions = {
+        "when", "while", "as", "after",
+        "until", "till", "since", "once",
+        "if", "unless", "case", "provided",
+        "assuming", "whether"
+    };
+
+    // Ищем маркер среди детей зависимого глагола
+    for (const UDNode* child : children) {
+        if (child->getDepRel() == Mark &&
+            conjunctions.contains(child->getlemma().toLower())) {
+            return true;
+        }
+    }
+    return false;
+}

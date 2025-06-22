@@ -1,5 +1,5 @@
 #include "grammarrule.h"
-
+#include "QDebug"
 
 /*!
 * \brief Функция проверки согласованности по лицу и числу
@@ -387,17 +387,225 @@ bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet
     throw QString("Invalid auxiliary verb type");
 };
 
-bool PassiveAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet<Mistake>& mistakes)
 {
+    // 1. Проверка нулевых указателей
+    if (!auxVerb) throw QString("Auxiliary verb node pointer is null");
+    if (!mainVerb) throw QString("Main verb node pointer is null");
+
+    // 2. Проверка типа связи вспомогательного глагола
+    if (auxVerb->getDepRel() != Aux_Pass) {
+        throw QString("Invalid auxiliary verb relation (should be aux:pass)");
+    }
+
+    // 3. Основной глагол должен быть причастием прошедшего времени (VBN)
+    if (mainVerb->getUpos() != VBN) {
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+        return false;
+    }
+
+    const QString auxLemma = auxVerb->getlemma().toLower();
+    const PosTag auxPos = auxVerb->getUpos();
+
+    // 4. Проверка всех допустимых конструкций пассивного залога
+
+    // Конструкция 1: (am/is/are/was/were) + VBN
+    if (auxLemma == "am" || auxLemma == "is" || auxLemma == "are" || auxLemma == "was" || auxLemma == "were") {
+        if (mainVerb->hasChildWithRel(Aux))
+        {
+            mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+            return false;
+        }
+        else return true;
+    }
+
+    // Конструкция 2: been (после have/has/had) + VBN
+    if (auxLemma == "been" && auxPos == VBN) {
+        // Ищем have/has/had среди родителей
+        for (const UDNode* child : mainVerb->getChildren()) {
+            const QString childLemma = child->getlemma().toLower();
+            if ((childLemma == "have" || childLemma == "has" || childLemma == "had") &&
+                child->getDepRel() == Aux) {
+                return true;
+            }
+        }
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+        return false;
+    }
+
+    // Конструкция 3: being (после am/is/are/was/were) + VBN
+    if (auxLemma == "being" && auxPos == VBG) {
+        // Ищем am/is/are/was/were среди родителей
+        for (const UDNode* child : mainVerb->getChildren()) {
+            const QString childLemma = child->getlemma().toLower();
+            if ((childLemma == "am" || childLemma == "is" || childLemma == "are" ||
+                 childLemma == "was" || childLemma == "were") &&
+                child->getDepRel() == Aux) {
+                return true;
+            }
+        }
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+        return false;
+    }
+
+    // Конструкция 4: be (после модальных глаголов) + VBN
+    if (auxLemma == "be" && auxPos == VB) {
+        // Ищем модальный глагол среди родителей
+        for (const UDNode* child : mainVerb->getChildren()) {
+            if (child->getDepRel() == Aux && child->isModalVerb()) {
+                return true;
+            }
+        }
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+        return false;
+    }
+
+    // Если ни одна конструкция не подошла
+    mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    return false;
+}
+
+bool ComplexSentenceAgreement::check(const UDNode* depVerb,const UDNode* mainVerb,QSet<Mistake>& mistakes )
+{
+    // 1. Проверка нулевых указателей
+    if (!depVerb) throw QString("Dependent verb node pointer is null");
+    if (!mainVerb) throw QString("Main verb node pointer is null");
+
+    // 2. Проверка типа связи (должна быть advcl или acl:relcl)
+    if (depVerb->getDepRel() != Advcl && depVerb->getDepRel() != Acl_Relcl) {
+        throw QString("Invalid clause relation");
+    }
+
+    // 1. Если главная часть в настоящем времени
+    if (isPresentClause(mainVerb)) {
+        return true;
+    }
+    // 2. Если главная часть в будущем времени
+    else if (isFutureClause(mainVerb)) {
+        // 2.1. Проверяем временные/условные союзы
+        if (depVerb->hasTemporalConditionalConjunction()) {
+            // 2.1.1. Придаточная должна быть в настоящем
+            qDebug() << depVerb->getlemma();
+            if (isPresentClause(depVerb)) {
+                return true;
+            }
+            else {
+                mistakes.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+                return false;
+            }
+        }
+        // 2.2. Для других случаев - согласование верное
+        return true;
+    }
+    // 3. Если главная часть в прошедшем времени
+    else if (isPastClause(mainVerb)) {
+        // 3.1. Придаточная должна быть в прошедшем
+        if (isPastClause(depVerb)) {
+            return true;
+        }
+        else {
+            mistakes.insert(Mistake("Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+            return false;
+        }
+    }
+
+    // 4. Для других случаев (например, повелительное наклонение) - согласование верное
     return true;
 };
 
-bool ComplexSentenceAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+bool ConditionalsAgreement::check(const UDNode* depVerb,const UDNode* mainVerb,QSet<Mistake>& mistakes )
 {
-    return true;
+    // 1. Проверка нулевых указателей
+    if (!depVerb) throw QString("node pointer is null");
+    if (!mainVerb) throw QString("node pointer is null");
+
+    // 2. Проверка типа связи (должна быть advcl)
+    if (depVerb->getDepRel() != Advcl) {
+        throw QString("Invalid clause relation");
+    }
+
+    // 3. Проверка 2-го типа условных предложений
+    if (isSecondConditional(mainVerb)) {
+        // 3.1. Придаточная должна быть в Past
+        if (isPastClause(depVerb)) {
+            return true;
+        }
+        else {
+            mistakes.insert(Mistake("придаточная часть несогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1."));
+            return false;
+        }
+    }
+    // 4. Проверка 3-го типа условных предложений
+    else if (isThirdConditional(mainVerb)) {
+        // 4.1. Придаточная должна быть в Past
+        if (isPastClause(depVerb)) {
+            return true;
+        }
+        else {
+            mistakes.insert(Mistake("придаточная часть несогласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3."));
+            return false;
+        }
+    }
+
+    // 5. Если главная часть не соответствует ни 2-му, ни 3-му типу
+    throw QString("Invalid main clause");
 };
 
-bool ConditionalsAgreement::check(const UDNode* node1,const UDNode* node2,QSet<Mistake>& mistakes )
+bool GrammarRule::isFutureClause(const UDNode* main) const
 {
-    return true;
-};
+    if (!main) return false;
+
+    // Случай 1: will/shall как вспомогательный глагол (обычный случай)
+    for (UDNode* child : main->getChildren()) {
+        if (isFutureAuxiliary(child)) {
+            return true;
+        }
+    }
+
+    // Случай 2: will/shall как основной глагол (редкий, но возможный случай)
+    if (isFutureMainVerb(main)) {
+        return true;
+    }
+
+    return false;
+}
+
+bool GrammarRule::isFutureAuxiliary(const UDNode* node) const
+{
+    if (!node) return false;
+
+    QString lemma = node->getlemma().toLower();
+    return (lemma == "will" || lemma == "shall") &&
+           node->getUpos() == MD &&
+           node->getDepRel() == Aux;
+}
+
+bool GrammarRule::isFutureMainVerb(const UDNode* node) const
+{
+    if (!node) return false;
+
+    QString lemma = node->getlemma().toLower();
+    return (lemma == "will" || lemma == "shall") &&
+           node->getUpos() == MD &&
+           hasChildWithPos(node, VB);  // Должен управлять инфинитивом
+}
+
+bool GrammarRule::hasChildWithPos(const UDNode* node, PosTag pos) const
+{
+    if (!node) return false;
+
+    for (UDNode* child : node->getChildren()) {
+        if (child->getUpos() == pos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GrammarRule::isPresentClause(const UDNode* main) const {
+    return main && main->isPresentTense();
+}
+
+bool GrammarRule::isPastClause(const UDNode* main) const {
+    return main && main->isPastTense();
+}

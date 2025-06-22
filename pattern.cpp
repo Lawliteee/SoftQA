@@ -1,5 +1,5 @@
 #include "pattern.h"
-
+#include <QBitArray>
 Pattern::Pattern() {}
 
 /*!
@@ -10,8 +10,67 @@ Pattern::Pattern() {}
 */
 bool Pattern::matchesPattern(const UDNode* node, QSet<const UDNode*>& usedChildren)
 {
+    // 1. Проверка леммы и тега текущего узла
+    if (!validWords.isEmpty() && !validWords.contains(node->getlemma())) return false;
+    if (!validTags.isEmpty() && !validTags.contains(node->getUpos())) return false;
+
+    // 2. Группируем все ожидаемые связи
+    QMultiMap<DepRel, Pattern*> expectedChildren = children;
+
+    // 3. Проверяем наличие ВСЕХ требуемых детей
+    for (auto relIt = expectedChildren.constBegin(); relIt != expectedChildren.constEnd(); )
+    {
+        DepRel currentRel = relIt.key();
+        int expectedCount = expectedChildren.count(currentRel);
+
+        // Считаем доступных детей для этой связи
+        int availableCount = 0;
+        for (UDNode* child : node->getChildren()) {
+            if ((currentRel == Other || child->getDepRel() == currentRel) &&
+                !usedChildren.contains(child)) {
+                availableCount++;
+            }
+        }
+
+        // Если детей меньше чем требуется - несоответствие
+        if (availableCount < expectedCount) return false;
+
+        // Переходим к следующей связи
+        while (relIt != expectedChildren.constEnd() && relIt.key() == currentRel) {
+            ++relIt;
+        }
+    }
+
+    // 4. Проверяем соответствие каждого конкретного шаблона
+    QSet<const UDNode*> tempUsed = usedChildren;
+    for (auto relIt = expectedChildren.constBegin(); relIt != expectedChildren.constEnd(); ++relIt)
+    {
+        DepRel rel = relIt.key();
+        Pattern* childPattern = relIt.value();
+
+        bool found = false;
+        for (UDNode* child : node->getChildren()) {
+            if ((rel == Other || child->getDepRel() == rel) &&
+                !tempUsed.contains(child))
+            {
+                QSet<const UDNode*> patternUsed = tempUsed;
+                if (childPattern->matchesPattern(child, patternUsed)) {
+                    tempUsed.unite(patternUsed);
+                    tempUsed.insert(child);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!found) return false;
+    }
+
+    // 5. Все проверки пройдены - обновляем usedChildren
+    usedChildren = tempUsed;
+    currentMatch = const_cast<UDNode*>(node);
     return true;
-};
+}
 
 void Pattern::compareMatches(const Pattern* expected, QStringList& errors, const QString& path) const
 {

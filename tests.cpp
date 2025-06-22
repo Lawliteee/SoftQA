@@ -1347,1120 +1347,1123 @@ void Tests::testAuxAuxAgreement_data()
 
 }
 
-// void Tests::testPassiveAgreement()
-// {
-//     QFETCH(const UDNode*, inputNode1);
-//     QFETCH(const UDNode*, inputNode2);
-//     QFETCH(bool, expAgreement);
-//     QFETCH(QSet<Mistake>, expMistakes);
-//     QFETCH(bool, expectException);
-//     QFETCH(QString, exceptionMessage);
-
-//     QSet<Mistake> mistakes;
-//     PassiveAgreement gRule;
-//     bool agreement = false;
-//     bool exceptionThrown = false;
-//     QString actualExceptionMessage;
-
-//     try {
-//         agreement = gRule.check(inputNode1, inputNode2, mistakes);
-//     }
-//     catch (const QString& e) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = e;
-//     }
-//     catch (...) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = "Unexpected exception type";
-//     }
-
-//     // Проверка исключений
-//     if (expectException) {
-//         QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
-//         QCOMPARE(actualExceptionMessage, exceptionMessage);
-//     } else {
-//         QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
-
-//         // Сравнение результата
-//         QCOMPARE(agreement, expAgreement);
-
-//         // Подробное сравнение ошибок
-//         if (mistakes != expMistakes) {
-//             qDebug() << "Discrepancy found in mistakes:";
-
-//             QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-//             if (!unexpectedMistakes.isEmpty()) {
-//                 qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-//                 for (const Mistake& mistake : unexpectedMistakes) {
-//                     qDebug() << "  -" << mistake.getMessage();
-//                 }
-//             }
-
-//             QSet<Mistake> missingMistakes = expMistakes - mistakes;
-//             if (!missingMistakes.isEmpty()) {
-//                 qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-//                 for (const Mistake& mistake : missingMistakes) {
-//                     qDebug() << "  +" << mistake.getMessage();
-//                 }
-//             }
-//         }
-//         QCOMPARE(mistakes, expMistakes);
-//     }
-// }
-
-// void Tests::testPassiveAgreement_data()
-// {
-//     // Добавляем столбцы
-
-//     QTest::addColumn<const UDNode*>("inputNode1");
-//     QTest::addColumn<const UDNode*>("inputNode2");
-//     QTest::addColumn<bool>("expAgreement");
-//     QTest::addColumn<QSet<Mistake>>("expMistakes");
-//     QTest::addColumn<bool>("expectException");
-//     QTest::addColumn<QString>("exceptionMessage");
-
-//     QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
-//     QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
-
-//     // Тест 1-8: Нет ошибки, правильные формы пассивного залога
-//     // 1. Letters are delivered.
-//     UDNode* node1_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node1_1 = new UDNode(1, "Letters", NNS, 3, Nsubj_Pass, None);
-//     node1_0->addChild(node1_1);
-//     const UDNode* node1_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node1_0->addChild(node1_2);
-//     QTest::newRow("Test 1: are + delivered") << node1_2 << static_cast<const UDNode*>(node1_0) << true << emptyMistakes << false << "";
-
-//     // 2.  letters were delivered.
-//     UDNode* node2_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node2_2 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node2_0->addChild(node2_2);
-//     const UDNode* node2_3 = new UDNode(2, "were", VBD, 3, Aux_Pass, Ind);
-//     node2_0->addChild(node2_3);
-//     QTest::newRow("Test 2: were + delivered") << node2_3 << static_cast<const UDNode*>(node2_0) << true << emptyMistakes << false << "";
-
-//     // 3. letters have been delivered.
-//     UDNode* node3_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node3_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node3_0->addChild(node3_2);
-//     const UDNode* node3_3 = new UDNode(2, "have", VBP, 4, Aux, Ind);
-//     const UDNode* node3_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
-//     node3_0->addChild(node3_3);
-//     node3_0->addChild(node3_4);
-//     QTest::newRow("Test 3: have been + delivered") << node3_4 << static_cast<const UDNode*>(node3_0) << true << emptyMistakes << false << "";
-
-//     // 4.  letters will be delivered.
-//     UDNode* node4_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node4_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node4_0->addChild(node4_2);
-//     const UDNode* node4_3 = new UDNode(2, "will", MD, 4, Aux, Ind);
-//     const UDNode* node4_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node4_0->addChild(node4_3);
-//     node4_0->addChild(node4_4);
-//     QTest::newRow("Test 4: will be + delivered") << node4_4 << static_cast<const UDNode*>(node4_0) << true << emptyMistakes << false << "";
-
-//     // 5.  letters had been delivered.
-//     UDNode* node5_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node5_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node5_0->addChild(node5_2);
-//     const UDNode* node5_3 = new UDNode(2, "had", VBD, 4, Aux, Ind);
-//     const UDNode* node5_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
-//     node5_0->addChild(node5_3);
-//     node5_0->addChild(node5_4);
-//     QTest::newRow("Test 5: had been + delivered") << node5_4 << static_cast<const UDNode*>(node5_0) << true << emptyMistakes << false << "";
-
-//     // 6.  letters are being delivered.
-//     UDNode* node6_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node6_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node6_0->addChild(node6_2);
-//     const UDNode* node6_3 = new UDNode(2, "are", VBP, 4, Aux, Ind);
-//     const UDNode* node6_4 = new UDNode(3, "being", VBG, 4, Aux_Pass, Ind);
-//     node6_0->addChild(node6_3);
-//     node6_0->addChild(node6_4);
-//     QTest::newRow("Test 6: are being + delivered") << node6_4 << static_cast<const UDNode*>(node6_0) << true << emptyMistakes << false << "";
-
-//     // 7.  letters were being delivered.
-//     UDNode* node7_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node7_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node7_0->addChild(node7_2);
-//     const UDNode* node7_3 = new UDNode(2, "were", VBD, 4, Aux, Ind);
-//     const UDNode* node7_4 = new UDNode(3, "being", VBG, 4, Aux_Pass, Ind);
-//     node7_0->addChild(node7_3);
-//     node7_0->addChild(node7_4);
-//     QTest::newRow("Test 7: were being + delivered") << node7_4 << static_cast<const UDNode*>(node7_0) << true << emptyMistakes << false << "";
-
-//     // 8. letters may be delivered.
-//     UDNode* node8_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node8_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node8_0->addChild(node8_2);
-//     const UDNode* node8_3 = new UDNode(2, "may", MD, 4, Aux, Ind);
-//     const UDNode* node8_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node8_0->addChild(node8_3);
-//     node8_0->addChild(node8_4);
-//     QTest::newRow("Test 8: may be + delivered") << node8_4 << static_cast<const UDNode*>(node8_0) << true << emptyMistakes << false << "";
-
-//     // Тест 9-13: Есть ошибка, основной глагол не в форме причастия прошедшего времени
-//     UDNode* node9_0 = new UDNode(3, "deliver", VB, 0, Root, Ind);
-//     const UDNode* node9_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node9_0->addChild(node9_1);
-//     const UDNode* node9_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node9_0->addChild(node9_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 9: are + deliver (VB)") << node9_2 << static_cast<const UDNode*>(node9_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     UDNode* node10_0 = new UDNode(3, "delivers", VBZ, 0, Root, Ind);
-//     const UDNode* node10_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node10_0->addChild(node10_1);
-//     const UDNode* node10_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node10_0->addChild(node10_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 10: are + delivers (VBZ)") << node10_2 << static_cast<const UDNode*>(node10_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     UDNode* node11_0 = new UDNode(3, "delivered", VBD, 0, Root, Ind);
-//     const UDNode* node11_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node11_0->addChild(node11_1);
-//     const UDNode* node11_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node11_0->addChild(node11_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 11: are + delivered (VBD)") << node11_2 << static_cast<const UDNode*>(node11_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     UDNode* node12_0 = new UDNode(3, "delivering", VBG, 0, Root, Ind);
-//     const UDNode* node12_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node12_0->addChild(node12_1);
-//     const UDNode* node12_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node12_0->addChild(node12_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 12: are + delivering (VBG)") << node12_2 << static_cast<const UDNode*>(node12_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     UDNode* node13_0 = new UDNode(3, "deliver", VBP, 0, Root, Ind);
-//     const UDNode* node13_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node13_0->addChild(node13_1);
-//     const UDNode* node13_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
-//     node13_0->addChild(node13_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 13: are + deliver (VBP)") << node13_2 << static_cast<const UDNode*>(node13_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // Тест 14-21: Есть ошибка, неправильная форма глагола be
-//     // 14. Letters be delivered. (вместо are)
-//     UDNode* node14_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node14_1 = new UDNode(1, "Letters", NNS, 3, Nsubj_Pass, None);
-//     node14_0->addChild(node14_1);
-//     const UDNode* node14_2 = new UDNode(2, "be", VB, 3, Aux_Pass, Ind);
-//     node14_0->addChild(node14_2);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 14: be + delivered (should be are)") << node14_2 << static_cast<const UDNode*>(node14_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 15.  letters have be delivered. (вместо been)
-//     UDNode* node15_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node15_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node15_0->addChild(node15_2);
-//     const UDNode* node15_3 = new UDNode(2, "have", VBP, 4, Aux, Ind);
-//     const UDNode* node15_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node15_0->addChild(node15_3);
-//     node15_0->addChild(node15_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 15: have be + delivered (should have been)") << node15_4 << static_cast<const UDNode*>(node15_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 16. letters are be delivered. (лишний be)
-//     UDNode* node16_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node16_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node16_0->addChild(node16_2);
-//     const UDNode* node16_3 = new UDNode(2, "are", VBP, 4, Aux, Ind);
-//     const UDNode* node16_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node16_0->addChild(node16_3);
-//     node16_0->addChild(node16_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 16: are be + delivered (should are)") << node16_4 << static_cast<const UDNode*>(node16_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 17. letters were be delivered. (вместо были being)
-//     UDNode* node17_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node17_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node17_0->addChild(node17_2);
-//     const UDNode* node17_3 = new UDNode(2, "were", VBD, 4, Aux, Ind);
-//     const UDNode* node17_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node17_0->addChild(node17_3);
-//     node17_0->addChild(node17_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 17: were be + delivered (should were being)") << node17_4 << static_cast<const UDNode*>(node17_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 18. letters may are delivered. (неправильное сочетание)
-//     UDNode* node18_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node18_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node18_0->addChild(node18_2);
-//     const UDNode* node18_3 = new UDNode(2, "may", MD, 4, Aux, Ind);
-//     const UDNode* node18_4 = new UDNode(3, "are", VBP, 4, Aux_Pass, Ind);
-//     node18_0->addChild(node18_3);
-//     node18_0->addChild(node18_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 18: may are + delivered (should may be)") << node18_4 << static_cast<const UDNode*>(node18_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 19. letters been delivered. (неправильное сочетание)
-//     UDNode* node19_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node19_2 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
-//     node19_0->addChild(node19_2);
-//     const UDNode* node19_3 = new UDNode(2, "been", VBP, 3, Aux_Pass, Ind);
-//     node19_0->addChild(node19_3);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 19: been + delivered (should were)") << node19_3 << static_cast<const UDNode*>(node19_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-
-//     // 20. letters will been delivered. (неправильное сочетание)
-//     UDNode* node20_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node20_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node20_0->addChild(node20_2);
-//     const UDNode* node20_3 = new UDNode(2, "will", MD, 4, Aux, Ind);
-//     const UDNode* node20_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
-//     node20_0->addChild(node20_3);
-//     node20_0->addChild(node20_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 20: will been + delivered (should will be)") << node20_4 << static_cast<const UDNode*>(node20_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // 21. letters had be delivered. (неправильное сочетание)
-//     UDNode* node21_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
-//     const UDNode* node21_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
-//     node21_0->addChild(node21_2);
-//     const UDNode* node21_3 = new UDNode(2, "had", VBD, 4, Aux, Ind);
-//     const UDNode* node21_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
-//     node21_0->addChild(node21_3);
-//     node21_0->addChild(node21_4);
-//     mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
-//     QTest::newRow("Test 21: had be + delivered (should had been)") << node21_4 << static_cast<const UDNode*>(node21_0) << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // Тест 22: Ошибочный вызов, связь не aux:pass
-//     UDNode* node22_0 = new UDNode(2, "gone", VBN, 0, Root, Ind);
-//     const UDNode* node22_1 = new UDNode(1, "have", VBP, 2, Aux, Ind);
-//     node22_0->addChild(node22_1);
-//     QTest::newRow("Test 22: Invalid aux relation") << node22_1 << static_cast<const UDNode*>(node22_0) << true << emptyMistakes << true << "Invalid auxiliary verb relation (should be aux:pass)";
-
-//     // Тест 23-24: Ошибочный вызов, нулевой указатель
-//     QTest::newRow("Test 23: auxVerb is nullptr") << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(new UDNode("delivered", VBN, None) )<< true << emptyMistakes << true << "Auxiliary verb node pointer is null";
-//     QTest::newRow("Test 24: mainVerb is nullptr") << static_cast<const UDNode*>(new UDNode("are", VBP, None) )<<static_cast<const UDNode*>( nullptr) << true << emptyMistakes << true << "Main verb node pointer is null";
-// }
-
-// void Tests::testComplexSentenceAgreement()
-// {
-//     QFETCH(const UDNode*, inputNode1);
-//     QFETCH(const UDNode*, inputNode2);
-//     QFETCH(bool, expAgreement);
-//     QFETCH(QSet<Mistake>, expMistakes);
-//     QFETCH(bool, expectException);
-//     QFETCH(QString, exceptionMessage);
-
-//     QSet<Mistake> mistakes;
-//     ComplexSentenceAgreement gRule;
-//     bool agreement = false;
-//     bool exceptionThrown = false;
-//     QString actualExceptionMessage;
-
-//     try {
-//         agreement = gRule.check(inputNode1, inputNode2, mistakes);
-//     }
-//     catch (const QString& e) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = e;
-//     }
-//     catch (...) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = "Unexpected exception type";
-//     }
-
-//     // Проверка исключений
-//     if (expectException) {
-//         QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
-//         QCOMPARE(actualExceptionMessage, exceptionMessage);
-//     } else {
-//         QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
-
-//         // Сравнение результата
-//         QCOMPARE(agreement, expAgreement);
-
-//         // Подробное сравнение ошибок
-//         if (mistakes != expMistakes) {
-//             qDebug() << "Discrepancy found in mistakes:";
-
-//             QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-//             if (!unexpectedMistakes.isEmpty()) {
-//                 qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-//                 for (const Mistake& mistake : unexpectedMistakes) {
-//                     qDebug() << "  -" << mistake.getMessage();
-//                 }
-//             }
-
-//             QSet<Mistake> missingMistakes = expMistakes - mistakes;
-//             if (!missingMistakes.isEmpty()) {
-//                 qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-//                 for (const Mistake& mistake : missingMistakes) {
-//                     qDebug() << "  +" << mistake.getMessage();
-//                 }
-//             }
-//         }
-//         QCOMPARE(mistakes, expMistakes);
-//     }
-// }
-
-// void Tests::testComplexSentenceAgreement_data()
-// {
-//     // Добавляем столбцы
-
-//     QTest::addColumn<const UDNode*>("inputNode1");
-//     QTest::addColumn<const UDNode*>("inputNode2");
-//     QTest::addColumn<bool>("expAgreement");
-//     QTest::addColumn<QSet<Mistake>>("expMistakes");
-//     QTest::addColumn<bool>("expectException");
-//     QTest::addColumn<QString>("exceptionMessage");
-
-//     QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
-//     QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
-
-//     Mistake mistake("Несогласование времен в сложноподчиненном предложении");
-
-//     // ==============================================
-//     // Тесты 1-2: Главное предложение в будущем без условных/временных союзов
-//     // ==============================================
-
-//     // Тест 1: He will fail the exam because he never studies.
-//     UDNode* node1_0 = new UDNode(3, "fail", VB, 0, Root, Ind);
-//     const UDNode* node1_1 = new UDNode(1, "He", PRP, 3, Nsubj, None);
-//     const UDNode* node1_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node1_3 = new UDNode(4, "exam", NN, 3, Obj, None);
-//     const UDNode* node1_4 = new UDNode(5, "the", DT, 4, Det, None);
-//     UDNode* node1_5 = new UDNode(9, "studies", VBZ, 3, Advcl, None);
-//     const UDNode* node1_6 = new UDNode(6, "because", IN, 9, Mark, None);
-//     const UDNode* node1_7 = new UDNode(7, "he", PRP, 9, Nsubj, None);
-//     const UDNode* node1_8 = new UDNode(8, "never", RB, 9, Advmod, None);
-
-//     node1_0->addChild(node1_1);
-//     node1_0->addChild(node1_2);
-//     node1_0->addChild(node1_3);
-//     node1_3->addChild(node1_4);
-//     node1_0->addChild(node1_5);
-//     node1_5->addChild(node1_6);
-//     node1_5->addChild(node1_7);
-//     node1_5->addChild(node1_8);
-
-//     QTest::newRow("Test 1: Future main + present dep (because)")
-//         << static_cast<const UDNode*>(node1_5) << static_cast<const UDNode*>(node1_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 2: The doctor will examine the patient who was admitted yesterday
-//     UDNode* node2_0 = new UDNode(3, "examine", VB, 0, Root, Ind);
-//     UDNode* node2_1 = new UDNode(1, "doctor", NN, 3, Nsubj, None);
-//     const UDNode* node2_2 = new UDNode(2, "The", DT, 1, Det, None);
-//     UDNode* node2_3 = new UDNode(4, "patient", NN, 3, Obj, None);
-//     const UDNode* node2_4 = new UDNode(5, "the", DT, 4, Det, None);
-//     const UDNode* node2_5 = new UDNode(6, "will", MD, 3, Aux, Ind);
-//     UDNode* node2_6 = new UDNode(9, "admitted", VBD, 4, Acl_Relcl, None);
-//     const UDNode* node2_7 = new UDNode(7, "who", WP, 9, Nsubj_Pass, None);
-//     const UDNode* node2_8 = new UDNode(8, "was", VBD, 9, Aux_Pass, None);
-//     const UDNode* node2_9 = new UDNode(10, "yesterday", NN, 9, Nmod, None);
-
-//     node2_0->addChild(node2_1);
-//     node2_1->addChild(node2_2);
-//     node2_0->addChild(node2_3);
-//     node2_3->addChild(node2_4);
-//     node2_0->addChild(node2_5);
-//     node2_3->addChild(node2_6);
-//     node2_6->addChild(node2_7);
-//     node2_6->addChild(node2_8);
-//     node2_6->addChild(node2_9);
-
-//     QTest::newRow("Test 2: Future main + past dep (relative clause)")
-//         << static_cast<const UDNode*>(node2_3) << static_cast<const UDNode*>(node2_0)
-//         << true << emptyMistakes << false << "";
-
-//     // ==============================================
-//     // Тесты 3-14: Главное в будущем с временными/условными союзами
-//     // ==============================================
-
-//     // Тест 3: I will call you when I arrive
-//     UDNode* node3_0 = new UDNode(3, "call", VB, 0, Root, Ind);
-//     const UDNode* node3_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
-//     const UDNode* node3_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     const UDNode* node3_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-//     UDNode* node3_4 = new UDNode(7, "arrive", VB, 3, Advcl, None);
-//     const UDNode* node3_5 = new UDNode(5, "when", WRB, 7, Mark, None);
-//     const UDNode* node3_6 = new UDNode(6, "I", PRP, 7, Nsubj, None);
-
-//     node3_0->addChild(node3_1);
-//     node3_0->addChild(node3_2);
-//     node3_0->addChild(node3_3);
-//     node3_0->addChild(node3_4);
-//     node3_4->addChild(node3_5);
-//     node3_4->addChild(node3_6);
-
-//     QTest::newRow("Test 3: Future + present with 'when'")
-//         << static_cast<const UDNode*>(node3_4) << static_cast<const UDNode*>(node3_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 4: She will wait until the rain stops
-//     UDNode* node4_0 = new UDNode(3, "wait", VB, 0, Root, Ind);
-//     const UDNode* node4_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//     const UDNode* node4_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node4_3 = new UDNode(7, "stops", VBZ, 3, Advcl, None);
-//     const UDNode* node4_4 = new UDNode(4, "until", IN, 7, Mark, None);
-//     UDNode* node4_5 = new UDNode(5, "rain", NN, 7, Nsubj, None);
-//     const UDNode* node4_6 = new UDNode(6, "the", DT, 5, Det, None);
-
-//     node4_0->addChild(node4_1);
-//     node4_0->addChild(node4_2);
-//     node4_0->addChild(node4_3);
-//     node4_3->addChild(node4_4);
-//     node4_3->addChild(node4_5);
-//     node4_5->addChild(node4_6);
-
-//     QTest::newRow("Test 4: Future + present with 'until'")
-//         << static_cast<const UDNode*>(node4_3) << static_cast<const UDNode*>(node4_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 5: They will leave before the concert begins
-//     UDNode* node5_0 = new UDNode(3, "leave", VB, 0, Root, Ind);
-//     const UDNode* node5_1 = new UDNode(1, "They", PRP, 3, Nsubj, None);
-//     const UDNode* node5_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node5_3 = new UDNode(7, "begins", VBZ, 3, Advcl, None);
-//     UDNode* node5_4 = new UDNode(4, "before", IN, 7, Mark, None);
-//     UDNode* node5_5 = new UDNode(5, "concert", NN, 7, Nsubj, None);
-//     const UDNode* node5_6 = new UDNode(6, "the", DT, 5, Det, None);
-
-//     node5_0->addChild(node5_1);
-//     node5_0->addChild(node5_2);
-//     node5_0->addChild(node5_3);
-//     node5_3->addChild(node5_4);
-//     node5_3->addChild(node5_5);
-//     node5_5->addChild(node5_6);
-
-//     QTest::newRow("Test 5: Future + present with 'before'")
-//         << static_cast<const UDNode*>(node5_3) << static_cast<const UDNode*>(node5_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 6: He will forgive you if you apologize
-//     UDNode* node6_0 = new UDNode(3, "forgive", VB, 0, Root, Ind);
-//     const UDNode* node6_1 = new UDNode(1, "He", PRP, 3, Nsubj, None);
-//     const UDNode* node6_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     const UDNode* node6_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-//     UDNode* node6_4 = new UDNode(7, "apologize", VB, 3, Advcl, None);
-//     const UDNode* node6_5 = new UDNode(5, "if", IN, 7, Mark, None);
-//     const UDNode* node6_6 = new UDNode(6, "you", PRP, 7, Nsubj, None);
-
-//     node6_0->addChild(node6_1);
-//     node6_0->addChild(node6_2);
-//     node6_0->addChild(node6_3);
-//     node6_0->addChild(node6_4);
-//     node6_4->addChild(node6_5);
-//     node6_4->addChild(node6_6);
-
-//     QTest::newRow("Test 6: Future + present with 'if'")
-//         << static_cast<const UDNode*>(node6_4) << static_cast<const UDNode*>(node6_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 7: We won't start dinner unless everyone is here
-//     UDNode* node7_0 = new UDNode(4, "start", VB, 0, Root, Ind);
-//     const UDNode* node7_1 = new UDNode(1, "We", PRP, 4, Nsubj, None);
-//     UDNode* node7_2 = new UDNode(2, "wo", MD, 4, Aux, Ind);
-//     UDNode* node7_3 = new UDNode(3, "n't", RB, 2, Other, None);
-//     const UDNode* node7_4 = new UDNode(5, "dinner", NN, 4, Obj, None);
-//     UDNode* node7_5 = new UDNode(9, "is", VBZ, 4, Advcl, None);
-//     const UDNode* node7_6 = new UDNode(6, "unless", IN, 9, Mark, None);
-//     const UDNode* node7_7 = new UDNode(7, "everyone", NN, 9, Nsubj, None);
-//     const UDNode* node7_8 = new UDNode(8, "here", RB, 9, Advmod, None);
-
-//     node7_0->addChild(node7_1);
-//     node7_0->addChild(node7_2);
-//     node7_2->addChild(node7_3);
-//     node7_0->addChild(node7_4);
-//     node7_0->addChild(node7_5);
-//     node7_5->addChild(node7_6);
-//     node7_5->addChild(node7_7);
-//     node7_5->addChild(node7_8);
-
-//     QTest::newRow("Test 7: Future + present with 'unless'")
-//         << static_cast<const UDNode*>(node7_5) << static_cast<const UDNode*>(node7_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 8: She will text you as soon as she lands
-//     UDNode* node8_0 = new UDNode(3, "text", VB, 0, Root, Ind);
-//     const UDNode* node8_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//     const UDNode* node8_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     const UDNode* node8_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-//     UDNode* node8_4 = new UDNode(8, "lands", VBZ, 3, Advcl, None);
-//     UDNode* node8_5 = new UDNode(5, "as", IN, 8, Mark, None);
-//     const UDNode* node8_6 = new UDNode(6, "soon", RB, 5, Advmod, None);
-//     const UDNode* node8_7 = new UDNode(7, "she", PRP, 8, Nsubj, None);
-
-//     node8_0->addChild(node8_1);
-//     node8_0->addChild(node8_2);
-//     node8_0->addChild(node8_3);
-//     node8_0->addChild(node8_4);
-//     node8_4->addChild(node8_5);
-//     node8_5->addChild(node8_6);
-//     node8_4->addChild(node8_7);
-
-//     QTest::newRow("Test 8: Future + present with 'as soon as'")
-//         << static_cast<const UDNode*>(node8_4) << static_cast<const UDNode*>(node8_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 9: We will celebrate after we pass the exam
-//     UDNode* node9_0 = new UDNode(3, "celebrate", VB, 0, Root, Ind);
-//     const UDNode* node9_1 = new UDNode(1, "We", PRP, 3, Nsubj, None);
-//     const UDNode* node9_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node9_3 = new UDNode(7, "pass", VB, 3, Advcl, None);
-//     const UDNode* node9_4 = new UDNode(4, "after", IN, 7, Mark, None);
-//     const UDNode* node9_5 = new UDNode(5, "we", PRP, 7, Nsubj, None);
-//     UDNode* node9_6 = new UDNode(6, "exam", NN, 7, Obj, None);
-//     const UDNode* node9_7 = new UDNode(8, "the", DT, 6, Det, None);
-
-//     node9_0->addChild(node9_1);
-//     node9_0->addChild(node9_2);
-//     node9_0->addChild(node9_3);
-//     node9_3->addChild(node9_4);
-//     node9_3->addChild(node9_5);
-//     node9_3->addChild(node9_6);
-//     node9_6->addChild(node9_7);
-
-//     QTest::newRow("Test 9: Future + present with 'after'")
-//         << static_cast<const UDNode*>(node9_3) << static_cast<const UDNode*>(node9_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 10: She will listen to music while she cooks dinner
-//     UDNode* node10_0 = new UDNode(3, "listen", VB, 0, Root, Ind);
-//     const UDNode* node10_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
-//     const UDNode* node10_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node10_3 = new UDNode(4, "music", NN, 3, Obj, None);
-//     const UDNode* node10_4 = new UDNode(5, "to", IN, 4, Case, None);
-//     UDNode* node10_5 = new UDNode(9, "cooks", VBZ, 3, Advcl, None);
-//     const UDNode* node10_6 = new UDNode(6, "while", IN, 9, Mark, None);
-//     const UDNode* node10_7 = new UDNode(7, "she", PRP, 9, Nsubj, None);
-//     const UDNode* node10_8 = new UDNode(8, "dinner", NN, 9, Obj, None);
-
-//     node10_0->addChild(node10_1);
-//     node10_0->addChild(node10_2);
-//     node10_0->addChild(node10_3);
-//     node10_3->addChild(node10_4);
-//     node10_0->addChild(node10_5);
-//     node10_5->addChild(node10_6);
-//     node10_5->addChild(node10_7);
-//     node10_5->addChild(node10_8);
-
-//     QTest::newRow("Test 10: Future + present with 'while'")
-//         << static_cast<const UDNode*>(node10_5) << static_cast<const UDNode*>(node10_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 11: Take an umbrella in case it rains
-//     UDNode* node11_0 = new UDNode(1, "Take", VB, 0, Root, Imp);
-//     UDNode* node11_1 = new UDNode(2, "umbrella", NN, 1, Obj, None);
-//     const UDNode* node11_2 = new UDNode(3, "an", DT, 2, Det, None);
-//     UDNode* node11_3 = new UDNode(6, "rains", VBZ, 1, Advcl, None);
-//     UDNode* node11_4 = new UDNode(4, "in", IN, 6, Mark, None);
-//     const UDNode* node11_5 = new UDNode(5, "case", NN, 4, Fixed, None);
-//     const UDNode* node11_6 = new UDNode(7, "it", PRP, 6, Nsubj, None);
-
-//     node11_0->addChild(node11_1);
-//     node11_1->addChild(node11_2);
-//     node11_0->addChild(node11_3);
-//     node11_3->addChild(node11_4);
-//     node11_4->addChild(node11_5);
-//     node11_3->addChild(node11_6);
-
-//     QTest::newRow("Test 11: Imperative + present with 'in case'")
-//         << static_cast<const UDNode*>(node11_3) << static_cast<const UDNode*>(node11_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 12: Once you sign the contract, we'll start
-//     UDNode* node12_0 = new UDNode(6, "start", VB, 0, Root, Ind);
-//     const UDNode* node12_1 = new UDNode(4, "we", PRP, 6, Nsubj, None);
-//     const UDNode* node12_2 = new UDNode(5, "'ll", MD, 6, Aux, Ind);
-//     UDNode* node12_3 = new UDNode(3, "sign", VB, 6, Advcl, None);
-//     const UDNode* node12_4 = new UDNode(1, "Once", IN, 3, Mark, None);
-//     const UDNode* node12_5 = new UDNode(2, "you", PRP, 3, Nsubj, None);
-//     UDNode* node12_6 = new UDNode(7, "contract", NN, 3, Obj, None);
-//     const UDNode* node12_7 = new UDNode(8, "the", DT, 7, Det, None);
-
-//     node12_0->addChild(node12_1);
-//     node12_0->addChild(node12_2);
-//     node12_0->addChild(node12_3);
-//     node12_3->addChild(node12_4);
-//     node12_3->addChild(node12_5);
-//     node12_3->addChild(node12_6);
-//     node12_6->addChild(node12_7);
-
-//     QTest::newRow("Test 12: Future + present with 'once'")
-//         << static_cast<const UDNode*>(node12_3) << static_cast<const UDNode*>(node12_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 13: By the time you arrive, we will have left
-//     UDNode* node13_0 = new UDNode(6, "left", VBN, 0, Root, Ind);
-//     const UDNode* node13_1 = new UDNode(4, "we", PRP, 6, Nsubj, None);
-//     const UDNode* node13_2 = new UDNode(5, "will", MD, 6, Aux, Ind);
-//     const UDNode* node13_3 = new UDNode(7, "have", VB, 6, Aux, None);
-//     UDNode* node13_4 = new UDNode(3, "arrive", VB, 6, Advcl, None);
-//     UDNode* node13_5 = new UDNode(1, "By", IN, 3, Mark, None);
-//     UDNode* node13_6 = new UDNode(2, "time", NN, 1, Fixed, None);
-//     const UDNode* node13_7 = new UDNode(8, "you", PRP, 3, Nsubj, None);
-//     const UDNode* node13_8 = new UDNode(9, "the", DT, 2, Det, None);
-
-//     node13_0->addChild(node13_1);
-//     node13_0->addChild(node13_2);
-//     node13_0->addChild(node13_3);
-//     node13_0->addChild(node13_4);
-//     node13_4->addChild(node13_5);
-//     node13_5->addChild(node13_6);
-//     node13_4->addChild(node13_7);
-//     node13_6->addChild(node13_8);
-
-//     QTest::newRow("Test 13: Future perfect + present with 'by the time'")
-//         << static_cast<const UDNode*>(node13_4) << static_cast<const UDNode*>(node13_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест 14: I'll help you as long as you listen
-//     UDNode* node14_0 = new UDNode(3, "help", VB, 0, Root, Ind);
-//     const UDNode* node14_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
-//     const UDNode* node14_2 = new UDNode(2, "'ll", MD, 3, Aux, Ind);
-//     const UDNode* node14_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-//     UDNode* node14_4 = new UDNode(8, "listen", VB, 3, Advcl, None);
-//     UDNode* node14_5 = new UDNode(5, "as", IN, 8, Mark, None);
-//     const UDNode* node14_6 = new UDNode(6, "long", RB, 5, Fixed, None);
-//     const UDNode* node14_7 = new UDNode(7, "you", PRP, 8, Nsubj, None);
-
-//     node14_0->addChild(node14_1);
-//     node14_0->addChild(node14_2);
-//     node14_0->addChild(node14_3);
-//     node14_0->addChild(node14_4);
-//     node14_4->addChild(node14_5);
-//     node14_5->addChild(node14_6);
-//     node14_4->addChild(node14_7);
-
-//     QTest::newRow("Test 14: Future + present with 'as long as'")
-//         << static_cast<const UDNode*>(node14_4) << static_cast<const UDNode*>(node14_0)
-//         << true << emptyMistakes << false << "";
-
-//     // ==============================================
-//     // Тест 15: Особый случай с before + future
-//     // ==============================================
-
-//     // Тест 15: We will establish the rules before the committee will convene next month
-//     UDNode* node15_0 = new UDNode(3, "establish", VB, 0, Root, Ind);
-//     const UDNode* node15_1 = new UDNode(1, "We", PRP, 3, Nsubj, None);
-//     const UDNode* node15_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     UDNode* node15_3 = new UDNode(4, "rules", NNS, 3, Obj, None);
-//     const UDNode* node15_4 = new UDNode(5, "the", DT, 4, Det, None);
-//     UDNode* node15_5 = new UDNode(10, "convene", VB, 3, Advcl, None);
-//     const UDNode* node15_6 = new UDNode(6, "before", IN, 10, Mark, None);
-//     UDNode* node15_7 = new UDNode(7, "committee", NN, 10, Nsubj, None);
-//     const UDNode* node15_8 = new UDNode(8, "the", DT, 7, Det, None);
-//     const UDNode* node15_9 = new UDNode(9, "will", MD, 10, Aux, Ind);
-//     UDNode* node15_10 = new UDNode(11, "month", NN, 10, Nmod, None);
-//     const UDNode* node15_11 = new UDNode(12, "next", JJ, 11, Amod, None);
-
-//     node15_0->addChild(node15_1);
-//     node15_0->addChild(node15_2);
-//     node15_0->addChild(node15_3);
-//     node15_3->addChild(node15_4);
-//     node15_0->addChild(node15_5);
-//     node15_5->addChild(node15_6);
-//     node15_5->addChild(node15_7);
-//     node15_7->addChild(node15_8);
-//     node15_5->addChild(node15_9);
-//     node15_5->addChild(node15_10);
-//     node15_10->addChild(node15_11);
-
-//     QTest::newRow("Test 15: Future + future with 'before' (special case)")
-//         << static_cast<const UDNode*>(node15_5) << static_cast<const UDNode*>(node15_0)
-//         << true << emptyMistakes << false << "";
-
-//     // ==============================================
-//     // Тесты 16-17: Ошибки в согласовании времен
-//     // ==============================================
-
-//     // Тест 16: I will call you when I will arrive at the station
-//     UDNode* node16_0 = new UDNode(3, "call", VB, 0, Root, Ind);
-//     const UDNode* node16_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
-//     const UDNode* node16_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
-//     const UDNode* node16_3 = new UDNode(4, "you", PRP, 3, Obj, None);
-//     UDNode* node16_4 = new UDNode(8, "arrive", VB, 3, Advcl, None);
-//     const UDNode* node16_5 = new UDNode(5, "when", WRB, 8, Mark, None);
-//     const UDNode* node16_6 = new UDNode(6, "I", PRP, 8, Nsubj, None);
-//     const UDNode* node16_7 = new UDNode(7, "will", MD, 8, Aux, Ind);
-//     UDNode* node16_8 = new UDNode(9, "station", NN, 8, Obl, None);
-//     const UDNode* node16_9 = new UDNode(10, "the", DT, 9, Det, None);
-//     const UDNode* node16_10 = new UDNode(11, "at", IN, 9, Case, None);
-
-//     node16_0->addChild(node16_1);
-//     node16_0->addChild(node16_2);
-//     node16_0->addChild(node16_3);
-//     node16_0->addChild(node16_4);
-//     node16_4->addChild(node16_5);
-//     node16_4->addChild(node16_6);
-//     node16_4->addChild(node16_7);
-//     node16_4->addChild(node16_8);
-//     node16_8->addChild(node16_9);
-//     node16_8->addChild(node16_10);
-
-//     mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
-//     QTest::newRow("Test 16: Future + future with 'when' - mistake")
-//         << static_cast<const UDNode*>(node16_4) << static_cast<const UDNode*>(node16_0)
-//         << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // Тест 17: I will be surprised when I heard the news
-//     UDNode* node17_0 = new UDNode(4, "surprised", JJ, 0, Root, Ind);
-//     const UDNode* node17_1 = new UDNode(1, "I", PRP, 4, Nsubj, None);
-//     const UDNode* node17_2 = new UDNode(2, "will", MD, 4, Aux, Ind);
-//     const UDNode* node17_3 = new UDNode(3, "be", VB, 4, Cop, None);
-//     UDNode* node17_4 = new UDNode(8, "heard", VBD, 4, Advcl, None);
-//     const UDNode* node17_5 = new UDNode(5, "when", WRB, 8, Mark, None);
-//     const UDNode* node17_6 = new UDNode(6, "I", PRP, 8, Nsubj, None);
-//     UDNode* node17_7 = new UDNode(7, "news", NN, 8, Obj, None);
-//     const UDNode* node17_8 = new UDNode(9, "the", DT, 7, Det, None);
-
-//     node17_0->addChild(node17_1);
-//     node17_0->addChild(node17_2);
-//     node17_0->addChild(node17_3);
-//     node17_0->addChild(node17_4);
-//     node17_4->addChild(node17_5);
-//     node17_4->addChild(node17_6);
-//     node17_4->addChild(node17_7);
-//     node17_7->addChild(node17_8);
-
-//     mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
-//     QTest::newRow("Test 17: Future + past with 'when' - mistake")
-//         << static_cast<const UDNode*>(node17_4) << static_cast<const UDNode*>(node17_0)
-//         << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // ==============================================
-//     // Тест 18: Главное в прошедшем, придаточное в прошедшем
-//     // ==============================================
-
-//     // Тест 18: While I was cooking dinner, the phone rang
-//     UDNode* node18_0 = new UDNode(5, "rang", VBD, 0, Root, Ind);
-//     UDNode* node18_1 = new UDNode(3, "phone", NN, 5, Nsubj, None);
-//     const UDNode* node18_2 = new UDNode(4, "the", DT, 3, Det, None);
-//     UDNode* node18_3 = new UDNode(3, "cooking", VBG, 5, Advcl, None);
-//     const UDNode* node18_4 = new UDNode(1, "While", IN, 3, Mark, None);
-//     const UDNode* node18_5 = new UDNode(2, "I", PRP, 3, Nsubj, None);
-//     const UDNode* node18_6 = new UDNode(6, "was", VBD, 3, Aux, None);
-//     const UDNode* node18_7 = new UDNode(7, "dinner", NN, 3, Obj, None);
-
-//     node18_0->addChild(node18_1);
-//     node18_1->addChild(node18_2);
-//     node18_0->addChild(node18_3);
-//     node18_3->addChild(node18_4);
-//     node18_3->addChild(node18_5);
-//     node18_3->addChild(node18_6);
-//     node18_3->addChild(node18_7);
-
-//     QTest::newRow("Test 18: Past + past with 'while'")
-//         << static_cast<const UDNode*>(node18_3) << static_cast<const UDNode*>(node18_0)
-//         << true << emptyMistakes << false << "";
-
-//     // ==============================================
-//     // Тесты 19-20: Ошибки в прошедшем времени
-//     // ==============================================
-
-//     // Тест 19: She left because he will feel sick
-//     UDNode* node19_0 = new UDNode(2, "left", VBD, 0, Root, Ind);
-//     const UDNode* node19_1 = new UDNode(1, "She", PRP, 2, Nsubj, None);
-//     UDNode* node19_2 = new UDNode(6, "feel", VB, 2, Advcl, None);
-//     const UDNode* node19_3 = new UDNode(3, "because", IN, 6, Mark, None);
-//     const UDNode* node19_4 = new UDNode(4, "he", PRP, 6, Nsubj, None);
-//     const UDNode* node19_5 = new UDNode(5, "will", MD, 6, Aux, Ind);
-//     const UDNode* node19_6 = new UDNode(7, "sick", JJ, 6, Ccomp, None);
-
-//     node19_0->addChild(node19_1);
-//     node19_0->addChild(node19_2);
-//     node19_2->addChild(node19_3);
-//     node19_2->addChild(node19_4);
-//     node19_2->addChild(node19_5);
-//     node19_2->addChild(node19_6);
-
-//     mistakeSet.insert(Mistake("Если главное предложение стоит впрошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
-//     QTest::newRow("Test 19: Past + future with 'because' - mistake")
-//         << static_cast<const UDNode*>(node19_2) << static_cast<const UDNode*>(node19_0)
-//         << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // Тест 20: She left because he feels sick
-//     UDNode* node20_0 = new UDNode(2, "left", VBD, 0, Root, Ind);
-//     const UDNode* node20_1 = new UDNode(1, "She", PRP, 2, Nsubj, None);
-//     UDNode* node20_2 = new UDNode(5, "feels", VBZ, 2, Advcl, None);
-//     const UDNode* node20_3 = new UDNode(3, "because", IN, 5, Mark, None);
-//     const UDNode* node20_4 = new UDNode(4, "he", PRP, 5, Nsubj, None);
-//     const UDNode* node20_5 = new UDNode(6, "sick", JJ, 5, Ccomp, None);
-
-//     node20_0->addChild(node20_1);
-//     node20_0->addChild(node20_2);
-//     node20_2->addChild(node20_3);
-//     node20_2->addChild(node20_4);
-//     node20_2->addChild(node20_5);
-
-//     mistakeSet.insert(Mistake("Если главное предложение стоит впрошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
-//     QTest::newRow("Test 20: Past + present with 'because' - mistake")
-//         << static_cast<const UDNode*>(node20_2) << static_cast<const UDNode*>(node20_0)
-//         << false << mistakeSet << false << "";
-//     mistakeSet.clear();
-
-//     // ==============================================
-//     // Тесты 21-23: Ошибочные вызовы
-//     // ==============================================
-
-//     // Тест 21: Неверная связь (have gone)
-//     UDNode* node21_0 = new UDNode(2, "gone", VBN, 0, Root, Ind);
-//     const UDNode* node21_1 = new UDNode(1, "have", VBP, 2, Aux, Ind);
-//     node21_0->addChild(node21_1);
-//     QTest::newRow("Test 21: Invalid clause relation")
-//         << node21_1 << static_cast<const UDNode*>(node21_0)
-//         << true << emptyMistakes << true << "Invalid clause relation";
-
-//     // Тест 22: depVerb is nullptr
-//     QTest::newRow("Test 22: depVerb is nullptr")
-//         << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(new UDNode("call", VB, None))
-//         << true << emptyMistakes << true << "Dependent verb node pointer is null";
-
-//     // Тест 23: mainVerb is nullptr
-//     QTest::newRow("Test 23: mainVerb is nullptr")
-//         << static_cast<const UDNode*>(new UDNode("arrive", VB, None)) << static_cast<const UDNode*>(nullptr)
-//         << true << emptyMistakes << true << "Main verb node pointer is null";
-// }
-
-// void Tests::testConditionalsAgreement()
-// {
-//     QFETCH(const UDNode*, inputNode1);
-//     QFETCH(const UDNode*, inputNode2);
-//     QFETCH(bool, expAgreement);
-//     QFETCH(QSet<Mistake>, expMistakes);
-//     QFETCH(bool, expectException);
-//     QFETCH(QString, exceptionMessage);
-
-//     QSet<Mistake> mistakes;
-//     ComplexSentenceAgreement gRule;
-//     bool agreement = false;
-//     bool exceptionThrown = false;
-//     QString actualExceptionMessage;
-
-//     try {
-//         agreement = gRule.check(inputNode1, inputNode2, mistakes);
-//     }
-//     catch (const QString& e) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = e;
-//     }
-//     catch (...) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = "Unexpected exception type";
-//     }
-
-//     // Проверка исключений
-//     if (expectException) {
-//         QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
-//         QCOMPARE(actualExceptionMessage, exceptionMessage);
-//     } else {
-//         QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
-
-//         // Сравнение результата
-//         QCOMPARE(agreement, expAgreement);
-
-//         // Подробное сравнение ошибок
-//         if (mistakes != expMistakes) {
-//             qDebug() << "Discrepancy found in mistakes:";
-
-//             QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
-//             if (!unexpectedMistakes.isEmpty()) {
-//                 qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
-//                 for (const Mistake& mistake : unexpectedMistakes) {
-//                     qDebug() << "  -" << mistake.getMessage();
-//                 }
-//             }
-
-//             QSet<Mistake> missingMistakes = expMistakes - mistakes;
-//             if (!missingMistakes.isEmpty()) {
-//                 qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
-//                 for (const Mistake& mistake : missingMistakes) {
-//                     qDebug() << "  +" << mistake.getMessage();
-//                 }
-//             }
-//         }
-//         QCOMPARE(mistakes, expMistakes);
-//     }
-// }
-// void Tests::testConditionalsAgreement_data()
-// {
-//     // Добавляем столбцы
-
-//     QTest::addColumn<const UDNode*>("inputNode1");
-//     QTest::addColumn<const UDNode*>("inputNode2");
-//     QTest::addColumn<bool>("expAgreement");
-//     QTest::addColumn<QSet<Mistake>>("expMistakes");
-//     QTest::addColumn<bool>("expectException");
-//     QTest::addColumn<QString>("exceptionMessage");
-
-//     QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
-//     QSet<Mistake> mistakeSet2nd;         // Множество ошибок для 2-го типа условных
-//     QSet<Mistake> mistakeSet3rd;         // Множество ошибок для 3-го типа условных
-
-//     // Сообщения об ошибках
-//     mistakeSet2nd.insert(Mistake("придаточная часть несогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1. "));
-//     mistakeSet3rd.insert(Mistake("придаточная часть несогласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3. "));
-
-//     /* Тесты для 2-го типа условных предложений */
-
-//     // Тест №1. Нет ошибки, второй тип, придаточная часть в Past Simple
-//     UDNode* node1_0 = new UDNode(7,"travel",VB,0,Root,Subj);
-//     UDNode* node1_1 = new UDNode(3,"had",VBD,7,Advcl,None);
-//     node1_0->addChild(node1_1);
-//     const UDNode* node1_2 = new UDNode(6,"would",MD,7,Aux,Ind);
-//     node1_0->addChild(node1_2);
-//     QTest::newRow("Test 1: No mistake 2nd Conditional, Past Simple")
-//         << static_cast<const UDNode*>(node1_1) << static_cast<const UDNode*>(node1_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №2. Нет ошибки, второй тип, придаточная часть в Past Continuous
-//     UDNode* node2_0 = new UDNode(7,"go",VB,0,Root,Subj);
-//     UDNode* node2_1 = new UDNode(4,"were",VBD,7,Advcl,None);
-//     UDNode* node2_2 = new UDNode(5,"shining",VBG,4,Advcl,None);
-//     node2_1->addChild(node2_2);
-//     node2_0->addChild(node2_1);
-//     const UDNode* node2_3 = new UDNode(6,"would",MD,7,Aux,Ind);
-//     node2_0->addChild(node2_3);
-//     QTest::newRow("Test 2: No mistake 2nd Conditional, Past Continuous")
-//         << static_cast<const UDNode*>(node2_1) << static_cast<const UDNode*>(node2_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №3. Нет ошибки, второй тип, придаточная часть в Past Perfect
-//     UDNode* node3_0 = new UDNode(7,"be",VB,0,Root,Subj);
-//     UDNode* node3_1 = new UDNode(3,"had",VBD,7,Advcl,None);
-//     UDNode* node3_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
-//     node3_1->addChild(node3_2);
-//     node3_0->addChild(node3_1);
-//     const UDNode* node3_3 = new UDNode(6,"would",MD,7,Aux,Ind);
-//     node3_0->addChild(node3_3);
-//     QTest::newRow("Test 3: No mistake 2nd Conditional, Past Perfect")
-//         << static_cast<const UDNode*>(node3_1) << static_cast<const UDNode*>(node3_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №4. Есть ошибка, второй тип, придаточная часть в Present Simple
-//     UDNode* node4_0 = new UDNode(7,"travel",VB,0,Root,Subj);
-//     UDNode* node4_1 = new UDNode(3,"have",VBP,7,Advcl,None);
-//     node4_0->addChild(node4_1);
-//     const UDNode* node4_2 = new UDNode(6,"would",MD,7,Aux,Ind);
-//     node4_0->addChild(node4_2);
-//     QTest::newRow("Test 4: Mistake 2nd Conditional, Present Simple")
-//         << static_cast<const UDNode*>(node4_1) << static_cast<const UDNode*>(node4_0)
-//         << false << mistakeSet2nd << false << "";
-
-//     // Тест №5. Есть ошибка, второй тип, придаточная часть в Future Simple
-//     UDNode* node5_0 = new UDNode(7,"travel",VB,0,Root,Subj);
-//     UDNode* node5_1 = new UDNode(4,"will",MD,7,Advcl,None);
-//     node5_0->addChild(node5_1);
-//     const UDNode* node5_2 = new UDNode(6,"would",MD,7,Aux,Ind);
-//     node5_0->addChild(node5_2);
-//     QTest::newRow("Test 5: Mistake 2nd Conditional, Future Simple")
-//         << static_cast<const UDNode*>(node5_1) << static_cast<const UDNode*>(node5_0)
-//         << false << mistakeSet2nd << false << "";
-
-//     /* Тесты для 3-го типа условных предложений */
-
-//     // Тест №6. Нет ошибки, третий тип, придаточная часть в Past Perfect
-//     UDNode* node6_0 = new UDNode(12,"passed",VBN,0,Root,Subj);
-//     UDNode* node6_1 = new UDNode(3,"had",VBD,12,Advcl,None);
-//     UDNode* node6_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
-//     node6_1->addChild(node6_2);
-//     node6_0->addChild(node6_1);
-//     const UDNode* node6_3 = new UDNode(5,"would",MD,12,Aux,Ind);
-//     node6_0->addChild(node6_3);
-//     const UDNode* node6_4 = new UDNode(6,"have",VB,12,Aux,None);
-//     node6_0->addChild(node6_4);
-//     QTest::newRow("Test 6: No mistake 3rd Conditional, Past Perfect")
-//         << static_cast<const UDNode*>(node6_1) << static_cast<const UDNode*>(node6_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №7. Нет ошибки, третий тип, придаточная часть в Past Simple
-//     UDNode* node7_0 = new UDNode(10,"ordered",VBN,0,Root,Subj);
-//     UDNode* node7_1 = new UDNode(3,"liked",VBD,10,Advcl,None);
-//     node7_0->addChild(node7_1);
-//     const UDNode* node7_2 = new UDNode(6,"would",MD,10,Aux,Ind);
-//     node7_0->addChild(node7_2);
-//     const UDNode* node7_3 = new UDNode(7,"have",VB,10,Aux,None);
-//     node7_0->addChild(node7_3);
-//     QTest::newRow("Test 7: No mistake 3rd Conditional, Past Simple")
-//         << static_cast<const UDNode*>(node7_1) << static_cast<const UDNode*>(node7_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №8. Нет ошибки, третий тип, придаточная часть в Past Continuous
-//     UDNode* node8_0 = new UDNode(10,"stayed",VBN,0,Root,Subj);
-//     UDNode* node8_1 = new UDNode(4,"had",VBD,10,Advcl,None);
-//     UDNode* node8_2 = new UDNode(5,"been",VBN,4,Aux,None);
-//     UDNode* node8_3 = new UDNode(6,"raining",VBG,5,Advcl,None);
-//     node8_1->addChild(node8_2);
-//     node8_2->addChild(node8_3);
-//     node8_0->addChild(node8_1);
-//     const UDNode* node8_4 = new UDNode(8,"would",MD,10,Aux,Ind);
-//     node8_0->addChild(node8_4);
-//     const UDNode* node8_5 = new UDNode(9,"have",VB,10,Aux,None);
-//     node8_0->addChild(node8_5);
-//     QTest::newRow("Test 8: No mistake 3rd Conditional, Past Continuous")
-//         << static_cast<const UDNode*>(node8_1) << static_cast<const UDNode*>(node8_0)
-//         << true << emptyMistakes << false << "";
-
-//     // Тест №9. Есть ошибка, третий тип, придаточная часть в Future Simple
-//     UDNode* node9_0 = new UDNode(12,"come",VBN,0,Root,Subj);
-//     UDNode* node9_1 = new UDNode(4,"will",MD,12,Advcl,None);
-//     node9_0->addChild(node9_1);
-//     const UDNode* node9_2 = new UDNode(8,"would",MD,12,Aux,Ind);
-//     node9_0->addChild(node9_2);
-//     const UDNode* node9_3 = new UDNode(9,"have",VB,12,Aux,None);
-//     node9_0->addChild(node9_3);
-//     QTest::newRow("Test 9: Mistake 3rd Conditional, Future Simple")
-//         << static_cast<const UDNode*>(node9_1) << static_cast<const UDNode*>(node9_0)
-//         << false << mistakeSet3rd << false << "";
-
-//     // Тест №10. Есть ошибка, третий тип, придаточная часть в Present Perfect
-//     UDNode* node10_0 = new UDNode(12,"joined",VBN,0,Root,Subj);
-//     UDNode* node10_1 = new UDNode(3,"has",VBZ,12,Advcl,None);
-//     UDNode* node10_2 = new UDNode(4,"finished",VBN,3,Advcl,None);
-//     node10_1->addChild(node10_2);
-//     node10_0->addChild(node10_1);
-//     const UDNode* node10_3 = new UDNode(7,"would",MD,12,Aux,Ind);
-//     node10_0->addChild(node10_3);
-//     const UDNode* node10_4 = new UDNode(8,"have",VB,12,Aux,None);
-//     node10_0->addChild(node10_4);
-//     QTest::newRow("Test 10: Mistake 3rd Conditional, Present Perfect")
-//         << static_cast<const UDNode*>(node10_1) << static_cast<const UDNode*>(node10_0)
-//         << false << mistakeSet3rd << false << "";
-
-//     /* Тесты на ошибочные вызовы */
-
-//     // Тест №11. Ошибочный вызов, в главной части не conditionals 2/3
-//     UDNode* node11_0 = new UDNode(5,"met",VBD,0,Root,Subj);
-//     UDNode* node11_1 = new UDNode(3,"man",NN,5,Obj,None);
-//     node11_0->addChild(node11_1);
-//     QTest::newRow("Test 11: Wrong call, not conditionals 2/3")
-//         << static_cast<const UDNode*>(node11_1) << static_cast<const UDNode*>(node11_0)
-//         << true << emptyMistakes << true << "Invalid main clause";
-
-//     // Тест №12. Ошибочный вызов, нулевой указатель depVerb
-//     UDNode* node12_0 = new UDNode(7,"travel",VB,0,Root,Subj);
-//     QTest::newRow("Test 12: Nullptr depVerb")
-//         << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(node12_0)
-//         << true << emptyMistakes << true << "node pointer is null";
-
-//     // Тест №13. Ошибочный вызов, нулевой указатель mainVerb
-//     UDNode* node13_0 = new UDNode(3,"had",VBD,7,Advcl,None);
-//     QTest::newRow("Test 13: Nullptr mainVerb")
-//         << static_cast<const UDNode*>(node13_0) << static_cast<const UDNode*>(nullptr)
-//         << true << emptyMistakes << true << "node pointer is null";
-//     }
+void Tests::testPassiveAgreement()
+{
+    QFETCH(const UDNode*, inputNode1);
+    QFETCH(const UDNode*, inputNode2);
+    QFETCH(bool, expAgreement);
+    QFETCH(QSet<Mistake>, expMistakes);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    QSet<Mistake> mistakes;
+    PassiveAgreement gRule;
+    bool agreement = false;
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+
+    try {
+        agreement = gRule.check(inputNode1, inputNode2, mistakes);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException) {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        // Сравнение результата
+        QCOMPARE(agreement, expAgreement);
+
+        // Подробное сравнение ошибок
+        if (mistakes != expMistakes) {
+            qDebug() << "Discrepancy found in mistakes:";
+
+            QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+            if (!unexpectedMistakes.isEmpty()) {
+                qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+                for (const Mistake& mistake : unexpectedMistakes) {
+                    qDebug() << "  -" << mistake.getMessage();
+                }
+            }
+
+            QSet<Mistake> missingMistakes = expMistakes - mistakes;
+            if (!missingMistakes.isEmpty()) {
+                qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+                for (const Mistake& mistake : missingMistakes) {
+                    qDebug() << "  +" << mistake.getMessage();
+                }
+            }
+        }
+        QCOMPARE(mistakes, expMistakes);
+    }
+}
+
+void Tests::testPassiveAgreement_data()
+{
+    // Добавляем столбцы
+
+    QTest::addColumn<const UDNode*>("inputNode1");
+    QTest::addColumn<const UDNode*>("inputNode2");
+    QTest::addColumn<bool>("expAgreement");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
+    QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
+
+    // Тест 1-8: Нет ошибки, правильные формы пассивного залога
+    // 1. Letters are delivered.
+    UDNode* node1_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node1_1 = new UDNode(1, "Letters", NNS, 3, Nsubj_Pass, None);
+    node1_0->addChild(node1_1);
+    const UDNode* node1_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node1_0->addChild(node1_2);
+    QTest::newRow("Test 1: are + delivered") << node1_2 << static_cast<const UDNode*>(node1_0) << true << emptyMistakes << false << "";
+
+    // 2.  letters were delivered.
+    UDNode* node2_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node2_2 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node2_0->addChild(node2_2);
+    const UDNode* node2_3 = new UDNode(2, "were", VBD, 3, Aux_Pass, Ind);
+    node2_0->addChild(node2_3);
+    QTest::newRow("Test 2: were + delivered") << node2_3 << static_cast<const UDNode*>(node2_0) << true << emptyMistakes << false << "";
+
+    // 3. letters have been delivered.
+    UDNode* node3_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node3_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node3_0->addChild(node3_2);
+    const UDNode* node3_3 = new UDNode(2, "have", VBP, 4, Aux, Ind);
+    const UDNode* node3_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
+    node3_0->addChild(node3_3);
+    node3_0->addChild(node3_4);
+    QTest::newRow("Test 3: have been + delivered") << node3_4 << static_cast<const UDNode*>(node3_0) << true << emptyMistakes << false << "";
+
+    // 4.  letters will be delivered.
+    UDNode* node4_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node4_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node4_0->addChild(node4_2);
+    const UDNode* node4_3 = new UDNode(2, "will", MD, 4, Aux, Ind);
+    const UDNode* node4_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node4_0->addChild(node4_3);
+    node4_0->addChild(node4_4);
+    QTest::newRow("Test 4: will be + delivered") << node4_4 << static_cast<const UDNode*>(node4_0) << true << emptyMistakes << false << "";
+
+    // 5.  letters had been delivered.
+    UDNode* node5_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node5_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node5_0->addChild(node5_2);
+    const UDNode* node5_3 = new UDNode(2, "had", VBD, 4, Aux, Ind);
+    const UDNode* node5_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
+    node5_0->addChild(node5_3);
+    node5_0->addChild(node5_4);
+    QTest::newRow("Test 5: had been + delivered") << node5_4 << static_cast<const UDNode*>(node5_0) << true << emptyMistakes << false << "";
+
+    // 6.  letters are being delivered.
+    UDNode* node6_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node6_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node6_0->addChild(node6_2);
+    const UDNode* node6_3 = new UDNode(2, "are", VBP, 4, Aux, Ind);
+    const UDNode* node6_4 = new UDNode(3, "being", VBG, 4, Aux_Pass, Ind);
+    node6_0->addChild(node6_3);
+    node6_0->addChild(node6_4);
+    QTest::newRow("Test 6: are being + delivered") << node6_4 << static_cast<const UDNode*>(node6_0) << true << emptyMistakes << false << "";
+
+    // 7.  letters were being delivered.
+    UDNode* node7_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node7_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node7_0->addChild(node7_2);
+    const UDNode* node7_3 = new UDNode(2, "were", VBD, 4, Aux, Ind);
+    const UDNode* node7_4 = new UDNode(3, "being", VBG, 4, Aux_Pass, Ind);
+    node7_0->addChild(node7_3);
+    node7_0->addChild(node7_4);
+    QTest::newRow("Test 7: were being + delivered") << node7_4 << static_cast<const UDNode*>(node7_0) << true << emptyMistakes << false << "";
+
+    // 8. letters may be delivered.
+    UDNode* node8_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node8_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node8_0->addChild(node8_2);
+    const UDNode* node8_3 = new UDNode(2, "may", MD, 4, Aux, Ind);
+    const UDNode* node8_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node8_0->addChild(node8_3);
+    node8_0->addChild(node8_4);
+    QTest::newRow("Test 8: may be + delivered") << node8_4 << static_cast<const UDNode*>(node8_0) << true << emptyMistakes << false << "";
+
+    // Тест 9-13: Есть ошибка, основной глагол не в форме причастия прошедшего времени
+    UDNode* node9_0 = new UDNode(3, "deliver", VB, 0, Root, Ind);
+    const UDNode* node9_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node9_0->addChild(node9_1);
+    const UDNode* node9_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node9_0->addChild(node9_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 9: are + deliver (VB)") << node9_2 << static_cast<const UDNode*>(node9_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    UDNode* node10_0 = new UDNode(3, "delivers", VBZ, 0, Root, Ind);
+    const UDNode* node10_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node10_0->addChild(node10_1);
+    const UDNode* node10_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node10_0->addChild(node10_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 10: are + delivers (VBZ)") << node10_2 << static_cast<const UDNode*>(node10_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    UDNode* node11_0 = new UDNode(3, "delivered", VBD, 0, Root, Ind);
+    const UDNode* node11_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node11_0->addChild(node11_1);
+    const UDNode* node11_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node11_0->addChild(node11_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 11: are + delivered (VBD)") << node11_2 << static_cast<const UDNode*>(node11_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    UDNode* node12_0 = new UDNode(3, "delivering", VBG, 0, Root, Ind);
+    const UDNode* node12_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node12_0->addChild(node12_1);
+    const UDNode* node12_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node12_0->addChild(node12_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 12: are + delivering (VBG)") << node12_2 << static_cast<const UDNode*>(node12_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    UDNode* node13_0 = new UDNode(3, "deliver", VBP, 0, Root, Ind);
+    const UDNode* node13_1 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node13_0->addChild(node13_1);
+    const UDNode* node13_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
+    node13_0->addChild(node13_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 13: are + deliver (VBP)") << node13_2 << static_cast<const UDNode*>(node13_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // Тест 14-21: Есть ошибка, неправильная форма глагола be
+    // 14. Letters be delivered. (вместо are)
+    UDNode* node14_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node14_1 = new UDNode(1, "Letters", NNS, 3, Nsubj_Pass, None);
+    node14_0->addChild(node14_1);
+    const UDNode* node14_2 = new UDNode(2, "be", VB, 3, Aux_Pass, Ind);
+    node14_0->addChild(node14_2);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 14: be + delivered (should be are)") << node14_2 << static_cast<const UDNode*>(node14_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 15.  letters have be delivered. (вместо been)
+    UDNode* node15_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node15_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node15_0->addChild(node15_2);
+    const UDNode* node15_3 = new UDNode(2, "have", VBP, 4, Aux, Ind);
+    const UDNode* node15_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node15_0->addChild(node15_3);
+    node15_0->addChild(node15_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 15: have be + delivered (should have been)") << node15_4 << static_cast<const UDNode*>(node15_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 16. letters are be delivered. (лишний be)
+    UDNode* node16_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node16_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node16_0->addChild(node16_2);
+    const UDNode* node16_3 = new UDNode(2, "are", VBP, 4, Aux, Ind);
+    const UDNode* node16_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node16_0->addChild(node16_3);
+    node16_0->addChild(node16_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 16: are be + delivered (should are)") << node16_4 << static_cast<const UDNode*>(node16_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 17. letters were be delivered. (вместо были being)
+    UDNode* node17_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node17_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node17_0->addChild(node17_2);
+    const UDNode* node17_3 = new UDNode(2, "were", VBD, 4, Aux, Ind);
+    const UDNode* node17_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node17_0->addChild(node17_3);
+    node17_0->addChild(node17_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 17: were be + delivered (should were being)") << node17_4 << static_cast<const UDNode*>(node17_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 18. letters may are delivered. (неправильное сочетание)
+    UDNode* node18_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node18_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node18_0->addChild(node18_2);
+    const UDNode* node18_3 = new UDNode(2, "may", MD, 4, Aux, Ind);
+    const UDNode* node18_4 = new UDNode(3, "are", VBP, 4, Aux_Pass, Ind);
+    node18_0->addChild(node18_3);
+    node18_0->addChild(node18_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 18: may are + delivered (should may be)") << node18_4 << static_cast<const UDNode*>(node18_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 19. letters been delivered. (неправильное сочетание)
+    UDNode* node19_0 = new UDNode(3, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node19_2 = new UDNode(1, "letters", NNS, 3, Nsubj_Pass, None);
+    node19_0->addChild(node19_2);
+    const UDNode* node19_3 = new UDNode(2, "been", VBP, 3, Aux_Pass, Ind);
+    node19_0->addChild(node19_3);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 19: been + delivered (should were)") << node19_3 << static_cast<const UDNode*>(node19_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+
+    // 20. letters will been delivered. (неправильное сочетание)
+    UDNode* node20_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node20_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node20_0->addChild(node20_2);
+    const UDNode* node20_3 = new UDNode(2, "will", MD, 4, Aux, Ind);
+    const UDNode* node20_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
+    node20_0->addChild(node20_3);
+    node20_0->addChild(node20_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 20: will been + delivered (should will be)") << node20_4 << static_cast<const UDNode*>(node20_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // 21. letters had be delivered. (неправильное сочетание)
+    UDNode* node21_0 = new UDNode(4, "delivered", VBN, 0, Root, Ind);
+    const UDNode* node21_2 = new UDNode(1, "letters", NNS, 4, Nsubj_Pass, None);
+    node21_0->addChild(node21_2);
+    const UDNode* node21_3 = new UDNode(2, "had", VBD, 4, Aux, Ind);
+    const UDNode* node21_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
+    node21_0->addChild(node21_3);
+    node21_0->addChild(node21_4);
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) несогласованы"));
+    QTest::newRow("Test 21: had be + delivered (should had been)") << node21_4 << static_cast<const UDNode*>(node21_0) << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // Тест 22: Ошибочный вызов, связь не aux:pass
+    UDNode* node22_0 = new UDNode(2, "gone", VBN, 0, Root, Ind);
+    const UDNode* node22_1 = new UDNode(1, "have", VBP, 2, Aux, Ind);
+    node22_0->addChild(node22_1);
+    QTest::newRow("Test 22: Invalid aux relation") << node22_1 << static_cast<const UDNode*>(node22_0) << true << emptyMistakes << true << "Invalid auxiliary verb relation (should be aux:pass)";
+
+    // Тест 23-24: Ошибочный вызов, нулевой указатель
+    QTest::newRow("Test 23: auxVerb is nullptr") << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(new UDNode("delivered", VBN, None) )<< true << emptyMistakes << true << "Auxiliary verb node pointer is null";
+    QTest::newRow("Test 24: mainVerb is nullptr") << static_cast<const UDNode*>(new UDNode("are", VBP, None) )<<static_cast<const UDNode*>( nullptr) << true << emptyMistakes << true << "Main verb node pointer is null";
+}
+
+void Tests::testComplexSentenceAgreement()
+{
+    QFETCH(const UDNode*, inputNode1);
+    QFETCH(const UDNode*, inputNode2);
+    QFETCH(bool, expAgreement);
+    QFETCH(QSet<Mistake>, expMistakes);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    QSet<Mistake> mistakes;
+    ComplexSentenceAgreement gRule;
+    bool agreement = false;
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+
+    try {
+        agreement = gRule.check(inputNode1, inputNode2, mistakes);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException) {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        // Сравнение результата
+        QCOMPARE(agreement, expAgreement);
+
+        // Подробное сравнение ошибок
+        if (mistakes != expMistakes) {
+            qDebug() << "Discrepancy found in mistakes:";
+
+            QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+            if (!unexpectedMistakes.isEmpty()) {
+                qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+                for (const Mistake& mistake : unexpectedMistakes) {
+                    qDebug() << "  -" << mistake.getMessage();
+                }
+            }
+
+            QSet<Mistake> missingMistakes = expMistakes - mistakes;
+            if (!missingMistakes.isEmpty()) {
+                qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+                for (const Mistake& mistake : missingMistakes) {
+                    qDebug() << "  +" << mistake.getMessage();
+                }
+            }
+        }
+        QCOMPARE(mistakes, expMistakes);
+    }
+}
+
+void Tests::testComplexSentenceAgreement_data()
+{
+    // Добавляем столбцы
+
+    QTest::addColumn<const UDNode*>("inputNode1");
+    QTest::addColumn<const UDNode*>("inputNode2");
+    QTest::addColumn<bool>("expAgreement");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
+    QSet<Mistake> mistakeSet;                // Множество для хранения ошибок
+
+    Mistake mistake("Несогласование времен в сложноподчиненном предложении");
+
+    // ==============================================
+    // Тесты 1-2: Главное предложение в будущем без условных/временных союзов
+    // ==============================================
+
+    // Тест 1: He will fail the exam because he never studies.
+    UDNode* node1_0 = new UDNode(3, "fail", VB, 0, Root, Ind);
+    const UDNode* node1_1 = new UDNode(1, "He", PRP, 3, Nsubj, None);
+    const UDNode* node1_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node1_3 = new UDNode(4, "exam", NN, 3, Obj, None);
+    const UDNode* node1_4 = new UDNode(5, "the", DT, 4, Det, None);
+    UDNode* node1_5 = new UDNode(9, "studies", VBZ, 3, Advcl, None);
+    const UDNode* node1_6 = new UDNode(6, "because", IN, 9, Mark, None);
+    const UDNode* node1_7 = new UDNode(7, "he", PRP, 9, Nsubj, None);
+    const UDNode* node1_8 = new UDNode(8, "never", RB, 9, Advmod, None);
+
+    node1_0->addChild(node1_1);
+    node1_0->addChild(node1_2);
+    node1_0->addChild(node1_3);
+    node1_3->addChild(node1_4);
+    node1_0->addChild(node1_5);
+    node1_5->addChild(node1_6);
+    node1_5->addChild(node1_7);
+    node1_5->addChild(node1_8);
+
+    QTest::newRow("Test 1: Future main + present dep (because)")
+        << static_cast<const UDNode*>(node1_5) << static_cast<const UDNode*>(node1_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 2: The doctor will examine the patient who was admitted yesterday
+    UDNode* node2_0 = new UDNode(3, "examine", VB, 0, Root, Ind);
+    UDNode* node2_1 = new UDNode(1, "doctor", NN, 3, Nsubj, None);
+    const UDNode* node2_2 = new UDNode(2, "The", DT, 1, Det, None);
+    UDNode* node2_3 = new UDNode(4, "patient", NN, 3, Obj, None);
+    const UDNode* node2_4 = new UDNode(5, "the", DT, 4, Det, None);
+    const UDNode* node2_5 = new UDNode(6, "will", MD, 3, Aux, Ind);
+    UDNode* node2_6 = new UDNode(9, "admitted", VBD, 4, Acl_Relcl, None);
+    const UDNode* node2_7 = new UDNode(7, "who", WP, 9, Nsubj_Pass, None);
+    const UDNode* node2_8 = new UDNode(8, "was", VBD, 9, Aux_Pass, None);
+    const UDNode* node2_9 = new UDNode(10, "yesterday", NN, 9, Nmod, None);
+
+    node2_0->addChild(node2_1);
+    node2_1->addChild(node2_2);
+    node2_0->addChild(node2_3);
+    node2_3->addChild(node2_4);
+    node2_0->addChild(node2_5);
+    node2_3->addChild(node2_6);
+    node2_6->addChild(node2_7);
+    node2_6->addChild(node2_8);
+    node2_6->addChild(node2_9);
+
+    QTest::newRow("Test 2: Future main + past dep (relative clause)")
+        << static_cast<const UDNode*>(node2_6) << static_cast<const UDNode*>(node2_0)
+        << true << emptyMistakes << false << "";
+
+    // ==============================================
+    // Тесты 3-14: Главное в будущем с временными/условными союзами
+    // ==============================================
+
+    // Тест 3: I will call you when I arrive
+    UDNode* node3_0 = new UDNode(3, "call", VB, 0, Root, Ind);
+    const UDNode* node3_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
+    const UDNode* node3_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    const UDNode* node3_3 = new UDNode(4, "you", PRP, 3, Obj, None);
+    UDNode* node3_4 = new UDNode(7, "arrive", VBP, 3, Advcl, None);
+    const UDNode* node3_5 = new UDNode(5, "when", WRB, 7, Mark, None);
+    const UDNode* node3_6 = new UDNode(6, "I", PRP, 7, Nsubj, None);
+
+    node3_0->addChild(node3_1);
+    node3_0->addChild(node3_2);
+    node3_0->addChild(node3_3);
+    node3_0->addChild(node3_4);
+    node3_4->addChild(node3_5);
+    node3_4->addChild(node3_6);
+
+    QTest::newRow("Test 3: Future + present with 'when'")
+        << static_cast<const UDNode*>(node3_4) << static_cast<const UDNode*>(node3_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 4: She will wait until the rain stops
+    UDNode* node4_0 = new UDNode(3, "wait", VB, 0, Root, Ind);
+    const UDNode* node4_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
+    const UDNode* node4_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node4_3 = new UDNode(7, "stops", VBZ, 3, Advcl, None);
+    const UDNode* node4_4 = new UDNode(4, "until", IN, 7, Mark, None);
+    UDNode* node4_5 = new UDNode(5, "rain", NN, 7, Nsubj, None);
+    const UDNode* node4_6 = new UDNode(6, "the", DT, 5, Det, None);
+
+    node4_0->addChild(node4_1);
+    node4_0->addChild(node4_2);
+    node4_0->addChild(node4_3);
+    node4_3->addChild(node4_4);
+    node4_3->addChild(node4_5);
+    node4_5->addChild(node4_6);
+
+    QTest::newRow("Test 4: Future + present with 'until'")
+        << static_cast<const UDNode*>(node4_3) << static_cast<const UDNode*>(node4_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 5: They will leave before the concert begins
+    UDNode* node5_0 = new UDNode(3, "leave", VB, 0, Root, Ind);
+    const UDNode* node5_1 = new UDNode(1, "They", PRP, 3, Nsubj, None);
+    const UDNode* node5_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node5_3 = new UDNode(7, "begins", VBZ, 3, Advcl, None);
+    UDNode* node5_4 = new UDNode(4, "before", IN, 7, Mark, None);
+    UDNode* node5_5 = new UDNode(5, "concert", NN, 7, Nsubj, None);
+    const UDNode* node5_6 = new UDNode(6, "the", DT, 5, Det, None);
+
+    node5_0->addChild(node5_1);
+    node5_0->addChild(node5_2);
+    node5_0->addChild(node5_3);
+    node5_3->addChild(node5_4);
+    node5_3->addChild(node5_5);
+    node5_5->addChild(node5_6);
+
+    QTest::newRow("Test 5: Future + present with 'before'")
+        << static_cast<const UDNode*>(node5_3) << static_cast<const UDNode*>(node5_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 6: He will forgive you if you apologize
+    UDNode* node6_0 = new UDNode(3, "forgive", VB, 0, Root, Ind);
+    const UDNode* node6_1 = new UDNode(1, "He", PRP, 3, Nsubj, None);
+    const UDNode* node6_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    const UDNode* node6_3 = new UDNode(4, "you", PRP, 3, Obj, None);
+    UDNode* node6_4 = new UDNode(7, "apologize", VBP, 3, Advcl, None);
+    const UDNode* node6_5 = new UDNode(5, "if", IN, 7, Mark, None);
+    const UDNode* node6_6 = new UDNode(6, "you", PRP, 7, Nsubj, None);
+
+    node6_0->addChild(node6_1);
+    node6_0->addChild(node6_2);
+    node6_0->addChild(node6_3);
+    node6_0->addChild(node6_4);
+    node6_4->addChild(node6_5);
+    node6_4->addChild(node6_6);
+
+    QTest::newRow("Test 6: Future + present with 'if'")
+        << static_cast<const UDNode*>(node6_4) << static_cast<const UDNode*>(node6_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 7: We won't start dinner unless everyone is here
+    UDNode* node7_0 = new UDNode(4, "start", VB, 0, Root, Ind);
+    const UDNode* node7_1 = new UDNode(1, "We", PRP, 4, Nsubj, None);
+    UDNode* node7_2 = new UDNode(2, "wo", MD, 4, Aux, Ind);
+    UDNode* node7_3 = new UDNode(3, "n't", RB, 2, Other, None);
+    const UDNode* node7_4 = new UDNode(5, "dinner", NN, 4, Obj, None);
+    UDNode* node7_5 = new UDNode(9, "is", VBZ, 4, Advcl, None);
+    const UDNode* node7_6 = new UDNode(6, "unless", IN, 9, Mark, None);
+    const UDNode* node7_7 = new UDNode(7, "everyone", NN, 9, Nsubj, None);
+    const UDNode* node7_8 = new UDNode(8, "here", RB, 9, Advmod, None);
+
+    node7_0->addChild(node7_1);
+    node7_0->addChild(node7_2);
+    node7_2->addChild(node7_3);
+    node7_0->addChild(node7_4);
+    node7_0->addChild(node7_5);
+    node7_5->addChild(node7_6);
+    node7_5->addChild(node7_7);
+    node7_5->addChild(node7_8);
+
+    QTest::newRow("Test 7: Future + present with 'unless'")
+        << static_cast<const UDNode*>(node7_5) << static_cast<const UDNode*>(node7_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 8: She will text you as soon as she lands
+    UDNode* node8_0 = new UDNode(3, "text", VB, 0, Root, Ind);
+    const UDNode* node8_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
+    const UDNode* node8_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    const UDNode* node8_3 = new UDNode(4, "you", PRP, 3, Obj, None);
+    UDNode* node8_4 = new UDNode(8, "lands", VBZ, 3, Advcl, None);
+    UDNode* node8_5 = new UDNode(5, "as", IN, 8, Mark, None);
+    const UDNode* node8_6 = new UDNode(6, "soon", RB, 5, Advmod, None);
+    const UDNode* node8_7 = new UDNode(7, "she", PRP, 8, Nsubj, None);
+
+    node8_0->addChild(node8_1);
+    node8_0->addChild(node8_2);
+    node8_0->addChild(node8_3);
+    node8_0->addChild(node8_4);
+    node8_4->addChild(node8_5);
+    node8_5->addChild(node8_6);
+    node8_4->addChild(node8_7);
+
+    QTest::newRow("Test 8: Future + present with 'as soon as'")
+        << static_cast<const UDNode*>(node8_4) << static_cast<const UDNode*>(node8_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 9: We will celebrate after we pass the exam
+    UDNode* node9_0 = new UDNode(3, "celebrate", VB, 0, Root, Ind);
+    const UDNode* node9_1 = new UDNode(1, "We", PRP, 3, Nsubj, None);
+    const UDNode* node9_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node9_3 = new UDNode(7, "pass", VBP, 3, Advcl, None);
+    const UDNode* node9_4 = new UDNode(4, "after", IN, 7, Mark, None);
+    const UDNode* node9_5 = new UDNode(5, "we", PRP, 7, Nsubj, None);
+    UDNode* node9_6 = new UDNode(6, "exam", NN, 7, Obj, None);
+    const UDNode* node9_7 = new UDNode(8, "the", DT, 6, Det, None);
+
+    node9_0->addChild(node9_1);
+    node9_0->addChild(node9_2);
+    node9_0->addChild(node9_3);
+    node9_3->addChild(node9_4);
+    node9_3->addChild(node9_5);
+    node9_3->addChild(node9_6);
+    node9_6->addChild(node9_7);
+
+    QTest::newRow("Test 9: Future + present with 'after'")
+        << static_cast<const UDNode*>(node9_3) << static_cast<const UDNode*>(node9_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 10: She will listen to music while she cooks dinner
+    UDNode* node10_0 = new UDNode(3, "listen", VB, 0, Root, Ind);
+    const UDNode* node10_1 = new UDNode(1, "She", PRP, 3, Nsubj, None);
+    const UDNode* node10_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node10_3 = new UDNode(4, "music", NN, 3, Obj, None);
+    const UDNode* node10_4 = new UDNode(5, "to", IN, 4, Case, None);
+    UDNode* node10_5 = new UDNode(9, "cooks", VBZ, 3, Advcl, None);
+    const UDNode* node10_6 = new UDNode(6, "while", IN, 9, Mark, None);
+    const UDNode* node10_7 = new UDNode(7, "she", PRP, 9, Nsubj, None);
+    const UDNode* node10_8 = new UDNode(8, "dinner", NN, 9, Obj, None);
+
+    node10_0->addChild(node10_1);
+    node10_0->addChild(node10_2);
+    node10_0->addChild(node10_3);
+    node10_3->addChild(node10_4);
+    node10_0->addChild(node10_5);
+    node10_5->addChild(node10_6);
+    node10_5->addChild(node10_7);
+    node10_5->addChild(node10_8);
+
+    QTest::newRow("Test 10: Future + present with 'while'")
+        << static_cast<const UDNode*>(node10_5) << static_cast<const UDNode*>(node10_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 11: Take an umbrella in case it rains
+    UDNode* node11_0 = new UDNode(1, "Take", VB, 0, Root, Imp);
+    UDNode* node11_1 = new UDNode(2, "umbrella", NN, 1, Obj, None);
+    const UDNode* node11_2 = new UDNode(3, "an", DT, 2, Det, None);
+    UDNode* node11_3 = new UDNode(6, "rains", VBZ, 1, Advcl, None);
+    UDNode* node11_4 = new UDNode(4, "in", IN, 6, Mark, None);
+    const UDNode* node11_5 = new UDNode(5, "case", NN, 4, Fixed, None);
+    const UDNode* node11_6 = new UDNode(7, "it", PRP, 6, Nsubj, None);
+
+    node11_0->addChild(node11_1);
+    node11_1->addChild(node11_2);
+    node11_0->addChild(node11_3);
+    node11_3->addChild(node11_4);
+    node11_4->addChild(node11_5);
+    node11_3->addChild(node11_6);
+
+    QTest::newRow("Test 11: Imperative + present with 'in case'")
+        << static_cast<const UDNode*>(node11_3) << static_cast<const UDNode*>(node11_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 12: Once you sign the contract, we'll start
+    UDNode* node12_0 = new UDNode(6, "start", VB, 0, Root, Ind);
+    const UDNode* node12_1 = new UDNode(4, "we", PRP, 6, Nsubj, None);
+    const UDNode* node12_2 = new UDNode(5, "'ll", MD, 6, Aux, Ind);
+    UDNode* node12_3 = new UDNode(3, "sign", VB, 6, Advcl, None);
+    const UDNode* node12_4 = new UDNode(1, "Once", IN, 3, Mark, None);
+    const UDNode* node12_5 = new UDNode(2, "you", PRP, 3, Nsubj, None);
+    UDNode* node12_6 = new UDNode(7, "contract", NN, 3, Obj, None);
+    const UDNode* node12_7 = new UDNode(8, "the", DT, 7, Det, None);
+
+    node12_0->addChild(node12_1);
+    node12_0->addChild(node12_2);
+    node12_0->addChild(node12_3);
+    node12_3->addChild(node12_4);
+    node12_3->addChild(node12_5);
+    node12_3->addChild(node12_6);
+    node12_6->addChild(node12_7);
+
+    QTest::newRow("Test 12: Future + present with 'once'")
+        << static_cast<const UDNode*>(node12_3) << static_cast<const UDNode*>(node12_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 13: By the time you arrive, we will have left
+    UDNode* node13_0 = new UDNode(6, "left", VBN, 0, Root, Ind);
+    const UDNode* node13_1 = new UDNode(4, "we", PRP, 6, Nsubj, None);
+    const UDNode* node13_2 = new UDNode(5, "will", MD, 6, Aux, Ind);
+    const UDNode* node13_3 = new UDNode(7, "have", VB, 6, Aux, None);
+    UDNode* node13_4 = new UDNode(3, "arrive", VB, 6, Advcl, None);
+    UDNode* node13_5 = new UDNode(1, "By", IN, 3, Mark, None);
+    UDNode* node13_6 = new UDNode(2, "time", NN, 1, Fixed, None);
+    const UDNode* node13_7 = new UDNode(8, "you", PRP, 3, Nsubj, None);
+    const UDNode* node13_8 = new UDNode(9, "the", DT, 2, Det, None);
+
+    node13_0->addChild(node13_1);
+    node13_0->addChild(node13_2);
+    node13_0->addChild(node13_3);
+    node13_0->addChild(node13_4);
+    node13_4->addChild(node13_5);
+    node13_5->addChild(node13_6);
+    node13_4->addChild(node13_7);
+    node13_6->addChild(node13_8);
+
+    QTest::newRow("Test 13: Future perfect + present with 'by the time'")
+        << static_cast<const UDNode*>(node13_4) << static_cast<const UDNode*>(node13_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест 14: I'll help you as long as you listen
+    UDNode* node14_0 = new UDNode(3, "help", VB, 0, Root, Ind);
+    const UDNode* node14_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
+    const UDNode* node14_2 = new UDNode(2, "'ll", MD, 3, Aux, Ind);
+    const UDNode* node14_3 = new UDNode(4, "you", PRP, 3, Obj, None);
+    UDNode* node14_4 = new UDNode(8, "listen", VB, 3, Advcl, None);
+    UDNode* node14_5 = new UDNode(5, "as", IN, 8, Mark, None);
+    const UDNode* node14_6 = new UDNode(6, "long", RB, 5, Fixed, None);
+    const UDNode* node14_7 = new UDNode(7, "you", PRP, 8, Nsubj, None);
+
+    node14_0->addChild(node14_1);
+    node14_0->addChild(node14_2);
+    node14_0->addChild(node14_3);
+    node14_0->addChild(node14_4);
+    node14_4->addChild(node14_5);
+    node14_5->addChild(node14_6);
+    node14_4->addChild(node14_7);
+
+    QTest::newRow("Test 14: Future + present with 'as long as'")
+        << static_cast<const UDNode*>(node14_4) << static_cast<const UDNode*>(node14_0)
+        << true << emptyMistakes << false << "";
+
+    // ==============================================
+    // Тест 15: Особый случай с before + future
+    // ==============================================
+
+    // Тест 15: We will establish the rules before the committee will convene next month
+    UDNode* node15_0 = new UDNode(3, "establish", VB, 0, Root, Ind);
+    const UDNode* node15_1 = new UDNode(1, "We", PRP, 3, Nsubj, None);
+    const UDNode* node15_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    UDNode* node15_3 = new UDNode(4, "rules", NNS, 3, Obj, None);
+    const UDNode* node15_4 = new UDNode(5, "the", DT, 4, Det, None);
+    UDNode* node15_5 = new UDNode(10, "convene", VB, 3, Advcl, None);
+    const UDNode* node15_6 = new UDNode(6, "before", IN, 10, Mark, None);
+    UDNode* node15_7 = new UDNode(7, "committee", NN, 10, Nsubj, None);
+    const UDNode* node15_8 = new UDNode(8, "the", DT, 7, Det, None);
+    const UDNode* node15_9 = new UDNode(9, "will", MD, 10, Aux, Ind);
+    UDNode* node15_10 = new UDNode(11, "month", NN, 10, Nmod, None);
+    const UDNode* node15_11 = new UDNode(12, "next", JJ, 11, Amod, None);
+
+    node15_0->addChild(node15_1);
+    node15_0->addChild(node15_2);
+    node15_0->addChild(node15_3);
+    node15_3->addChild(node15_4);
+    node15_0->addChild(node15_5);
+    node15_5->addChild(node15_6);
+    node15_5->addChild(node15_7);
+    node15_7->addChild(node15_8);
+    node15_5->addChild(node15_9);
+    node15_5->addChild(node15_10);
+    node15_10->addChild(node15_11);
+
+    QTest::newRow("Test 15: Future + future with 'before' (special case)")
+        << static_cast<const UDNode*>(node15_5) << static_cast<const UDNode*>(node15_0)
+        << true << emptyMistakes << false << "";
+
+    // ==============================================
+    // Тесты 16-17: Ошибки в согласовании времен
+    // ==============================================
+
+    // Тест 16: I will call you when I will arrive at the station
+    UDNode* node16_0 = new UDNode(3, "call", VB, 0, Root, Ind);
+    const UDNode* node16_1 = new UDNode(1, "I", PRP, 3, Nsubj, None);
+    const UDNode* node16_2 = new UDNode(2, "will", MD, 3, Aux, Ind);
+    const UDNode* node16_3 = new UDNode(4, "you", PRP, 3, Obj, None);
+    UDNode* node16_4 = new UDNode(8, "arrive", VB, 3, Advcl, None);
+    const UDNode* node16_5 = new UDNode(5, "when", WRB, 8, Mark, None);
+    const UDNode* node16_6 = new UDNode(6, "I", PRP, 8, Nsubj, None);
+    const UDNode* node16_7 = new UDNode(7, "will", MD, 8, Aux, Ind);
+    UDNode* node16_8 = new UDNode(9, "station", NN, 8, Obl, None);
+    const UDNode* node16_9 = new UDNode(10, "the", DT, 9, Det, None);
+    const UDNode* node16_10 = new UDNode(11, "at", IN, 9, Case, None);
+
+    node16_0->addChild(node16_1);
+    node16_0->addChild(node16_2);
+    node16_0->addChild(node16_3);
+    node16_0->addChild(node16_4);
+    node16_4->addChild(node16_5);
+    node16_4->addChild(node16_6);
+    node16_4->addChild(node16_7);
+    node16_4->addChild(node16_8);
+    node16_8->addChild(node16_9);
+    node16_8->addChild(node16_10);
+
+    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    QTest::newRow("Test 16: Future + future with 'when' - mistake")
+        << static_cast<const UDNode*>(node16_4) << static_cast<const UDNode*>(node16_0)
+        << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // Тест 17: I will be surprised when I heard the news
+    UDNode* node17_0 = new UDNode(4, "surprised", JJ, 0, Root, Ind);
+    const UDNode* node17_1 = new UDNode(1, "I", PRP, 4, Nsubj, None);
+    const UDNode* node17_2 = new UDNode(2, "will", MD, 4, Aux, Ind);
+    const UDNode* node17_3 = new UDNode(3, "be", VB, 4, Cop, None);
+    UDNode* node17_4 = new UDNode(8, "heard", VBD, 4, Advcl, None);
+    const UDNode* node17_5 = new UDNode(5, "when", WRB, 8, Mark, None);
+    const UDNode* node17_6 = new UDNode(6, "I", PRP, 8, Nsubj, None);
+    UDNode* node17_7 = new UDNode(7, "news", NN, 8, Obj, None);
+    const UDNode* node17_8 = new UDNode(9, "the", DT, 7, Det, None);
+
+    node17_0->addChild(node17_1);
+    node17_0->addChild(node17_2);
+    node17_0->addChild(node17_3);
+    node17_0->addChild(node17_4);
+    node17_4->addChild(node17_5);
+    node17_4->addChild(node17_6);
+    node17_4->addChild(node17_7);
+    node17_7->addChild(node17_8);
+
+    mistakeSet.insert(Mistake("Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    QTest::newRow("Test 17: Future + past with 'when' - mistake")
+        << static_cast<const UDNode*>(node17_4) << static_cast<const UDNode*>(node17_0)
+        << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // ==============================================
+    // Тест 18: Главное в прошедшем, придаточное в прошедшем
+    // ==============================================
+
+    // Тест 18: While I was cooking dinner, the phone rang
+    UDNode* node18_0 = new UDNode(5, "rang", VBD, 0, Root, Ind);
+    UDNode* node18_1 = new UDNode(3, "phone", NN, 5, Nsubj, None);
+    const UDNode* node18_2 = new UDNode(4, "the", DT, 3, Det, None);
+    UDNode* node18_3 = new UDNode(3, "cooking", VBG, 5, Advcl, None);
+    const UDNode* node18_4 = new UDNode(1, "While", IN, 3, Mark, None);
+    const UDNode* node18_5 = new UDNode(2, "I", PRP, 3, Nsubj, None);
+    const UDNode* node18_6 = new UDNode(6, "was", VBD, 3, Aux, None);
+    const UDNode* node18_7 = new UDNode(7, "dinner", NN, 3, Obj, None);
+
+    node18_0->addChild(node18_1);
+    node18_1->addChild(node18_2);
+    node18_0->addChild(node18_3);
+    node18_3->addChild(node18_4);
+    node18_3->addChild(node18_5);
+    node18_3->addChild(node18_6);
+    node18_3->addChild(node18_7);
+
+    QTest::newRow("Test 18: Past + past with 'while'")
+        << static_cast<const UDNode*>(node18_3) << static_cast<const UDNode*>(node18_0)
+        << true << emptyMistakes << false << "";
+
+    // ==============================================
+    // Тесты 19-20: Ошибки в прошедшем времени
+    // ==============================================
+
+    // Тест 19: She left because he will feel sick
+    UDNode* node19_0 = new UDNode(2, "left", VBD, 0, Root, Ind);
+    const UDNode* node19_1 = new UDNode(1, "She", PRP, 2, Nsubj, None);
+    UDNode* node19_2 = new UDNode(6, "feel", VB, 2, Advcl, None);
+    const UDNode* node19_3 = new UDNode(3, "because", IN, 6, Mark, None);
+    const UDNode* node19_4 = new UDNode(4, "he", PRP, 6, Nsubj, None);
+    const UDNode* node19_5 = new UDNode(5, "will", MD, 6, Aux, Ind);
+    const UDNode* node19_6 = new UDNode(7, "sick", JJ, 6, Ccomp, None);
+
+    node19_0->addChild(node19_1);
+    node19_0->addChild(node19_2);
+    node19_2->addChild(node19_3);
+    node19_2->addChild(node19_4);
+    node19_2->addChild(node19_5);
+    node19_2->addChild(node19_6);
+
+    mistakeSet.insert(Mistake("Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    QTest::newRow("Test 19: Past + future with 'because' - mistake")
+        << static_cast<const UDNode*>(node19_2) << static_cast<const UDNode*>(node19_0)
+        << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // Тест 20: She left because he feels sick
+    UDNode* node20_0 = new UDNode(2, "left", VBD, 0, Root, Ind);
+    const UDNode* node20_1 = new UDNode(1, "She", PRP, 2, Nsubj, None);
+    UDNode* node20_2 = new UDNode(5, "feels", VBZ, 2, Advcl, None);
+    const UDNode* node20_3 = new UDNode(3, "because", IN, 5, Mark, None);
+    const UDNode* node20_4 = new UDNode(4, "he", PRP, 5, Nsubj, None);
+    const UDNode* node20_5 = new UDNode(6, "sick", JJ, 5, Ccomp, None);
+
+    node20_0->addChild(node20_1);
+    node20_0->addChild(node20_2);
+    node20_2->addChild(node20_3);
+    node20_2->addChild(node20_4);
+    node20_2->addChild(node20_5);
+
+    mistakeSet.insert(Mistake("Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    QTest::newRow("Test 20: Past + present with 'because' - mistake")
+        << static_cast<const UDNode*>(node20_2) << static_cast<const UDNode*>(node20_0)
+        << false << mistakeSet << false << "";
+    mistakeSet.clear();
+
+    // ==============================================
+    // Тесты 21-23: Ошибочные вызовы
+    // ==============================================
+
+    // Тест 21: Неверная связь (have gone)
+    UDNode* node21_0 = new UDNode(2, "gone", VBN, 0, Root, Ind);
+    const UDNode* node21_1 = new UDNode(1, "have", VBP, 2, Aux, Ind);
+    node21_0->addChild(node21_1);
+    QTest::newRow("Test 21: Invalid clause relation")
+        << node21_1 << static_cast<const UDNode*>(node21_0)
+        << true << emptyMistakes << true << "Invalid clause relation";
+
+    // Тест 22: depVerb is nullptr
+    QTest::newRow("Test 22: depVerb is nullptr")
+        << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(new UDNode("call", VB, None))
+        << true << emptyMistakes << true << "Dependent verb node pointer is null";
+
+    // Тест 23: mainVerb is nullptr
+    QTest::newRow("Test 23: mainVerb is nullptr")
+        << static_cast<const UDNode*>(new UDNode("arrive", VB, None)) << static_cast<const UDNode*>(nullptr)
+        << true << emptyMistakes << true << "Main verb node pointer is null";
+}
+
+void Tests::testConditionalsAgreement()
+{
+    QFETCH(const UDNode*, inputNode1);
+    QFETCH(const UDNode*, inputNode2);
+    QFETCH(bool, expAgreement);
+    QFETCH(QSet<Mistake>, expMistakes);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    QSet<Mistake> mistakes;
+    ConditionalsAgreement gRule;
+    bool agreement = false;
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+
+    try {
+        agreement = gRule.check(inputNode1, inputNode2, mistakes);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException) {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        // Сравнение результата
+        QCOMPARE(agreement, expAgreement);
+
+        // Подробное сравнение ошибок
+        if (mistakes != expMistakes) {
+            qDebug() << "Discrepancy found in mistakes:";
+
+            QSet<Mistake> unexpectedMistakes = mistakes - expMistakes;
+            if (!unexpectedMistakes.isEmpty()) {
+                qDebug() << "Unexpected mistakes found (" << unexpectedMistakes.size() << "):";
+                for (const Mistake& mistake : unexpectedMistakes) {
+                    qDebug() << "  -" << mistake.getMessage();
+                }
+            }
+
+            QSet<Mistake> missingMistakes = expMistakes - mistakes;
+            if (!missingMistakes.isEmpty()) {
+                qDebug() << "Missing expected mistakes (" << missingMistakes.size() << "):";
+                for (const Mistake& mistake : missingMistakes) {
+                    qDebug() << "  +" << mistake.getMessage();
+                }
+            }
+        }
+        QCOMPARE(mistakes, expMistakes);
+    }
+}
+void Tests::testConditionalsAgreement_data()
+{
+    // Добавляем столбцы
+
+    QTest::addColumn<const UDNode*>("inputNode1");
+    QTest::addColumn<const UDNode*>("inputNode2");
+    QTest::addColumn<bool>("expAgreement");
+    QTest::addColumn<QSet<Mistake>>("expMistakes");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    QSet<Mistake> emptyMistakes;         // Множество ошибок для тестов, где слова согласованы
+    QSet<Mistake> mistakeSet2nd;         // Множество ошибок для 2-го типа условных
+    QSet<Mistake> mistakeSet3rd;         // Множество ошибок для 3-го типа условных
+
+    // Сообщения об ошибках
+    mistakeSet2nd.insert(Mistake("придаточная часть несогласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1."));
+    mistakeSet3rd.insert(Mistake("придаточная часть несогласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3."));
+
+    /* Тесты для 2-го типа условных предложений */
+
+    // Тест №1. Нет ошибки, второй тип, придаточная часть в Past Simple
+    UDNode* node1_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    UDNode* node1_1 = new UDNode(3,"had",VBD,7,Advcl,None);
+    node1_0->addChild(node1_1);
+    const UDNode* node1_2 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node1_0->addChild(node1_2);
+    QTest::newRow("Test 1: No mistake 2nd Conditional, Past Simple")
+        << static_cast<const UDNode*>(node1_1) << static_cast<const UDNode*>(node1_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №2. Нет ошибки, второй тип, придаточная часть в Past Continuous
+    UDNode* node2_0 = new UDNode(7,"go",VB,0,Root,Subj);
+    UDNode* node2_1 = new UDNode(4,"were",VBD,7,Advcl,None);
+    UDNode* node2_2 = new UDNode(5,"shining",VBG,4,Advcl,None);
+    node2_1->addChild(node2_2);
+    node2_0->addChild(node2_1);
+    const UDNode* node2_3 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node2_0->addChild(node2_3);
+    QTest::newRow("Test 2: No mistake 2nd Conditional, Past Continuous")
+        << static_cast<const UDNode*>(node2_1) << static_cast<const UDNode*>(node2_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №3. Нет ошибки, второй тип, придаточная часть в Past Perfect
+    UDNode* node3_0 = new UDNode(7,"be",VB,0,Root,Subj);
+    UDNode* node3_1 = new UDNode(3,"had",VBD,7,Advcl,None);
+    UDNode* node3_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
+    node3_1->addChild(node3_2);
+    node3_0->addChild(node3_1);
+    const UDNode* node3_3 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node3_0->addChild(node3_3);
+    QTest::newRow("Test 3: No mistake 2nd Conditional, Past Perfect")
+        << static_cast<const UDNode*>(node3_1) << static_cast<const UDNode*>(node3_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №4. Есть ошибка, второй тип, придаточная часть в Present Simple
+    UDNode* node4_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    UDNode* node4_1 = new UDNode(3,"have",VBP,7,Advcl,None);
+    node4_0->addChild(node4_1);
+    const UDNode* node4_2 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node4_0->addChild(node4_2);
+    QTest::newRow("Test 4: Mistake 2nd Conditional, Present Simple")
+        << static_cast<const UDNode*>(node4_1) << static_cast<const UDNode*>(node4_0)
+        << false << mistakeSet2nd << false << "";
+
+    // Тест №5. Есть ошибка, второй тип, придаточная часть в Future Simple
+    UDNode* node5_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    UDNode* node5_1 = new UDNode(4,"will",MD,5,Aux,None);
+    node5_0->addChild(node5_1);
+    const UDNode* node5_2 = new UDNode(6,"would",MD,7,Aux,Ind);
+    node5_0->addChild(node5_2);
+    UDNode* node5_3 = new UDNode(5,"have",VB,7,Advcl,None);
+    node5_3->addChild(node5_1);
+    node5_0->addChild(node5_3);
+    QTest::newRow("Test 5: Mistake 2nd Conditional, Future Simple")
+        << static_cast<const UDNode*>(node5_3) << static_cast<const UDNode*>(node5_0)
+        << false << mistakeSet2nd << false << "";
+
+    /* Тесты для 3-го типа условных предложений */
+
+    // Тест №6. Нет ошибки, третий тип, придаточная часть в Past Perfect
+    UDNode* node6_0 = new UDNode(12,"passed",VBN,0,Root,Subj);
+    UDNode* node6_1 = new UDNode(3,"had",VBD,12,Advcl,None);
+    UDNode* node6_2 = new UDNode(4,"studied",VBN,3,Advcl,None);
+    node6_1->addChild(node6_2);
+    node6_0->addChild(node6_1);
+    const UDNode* node6_3 = new UDNode(5,"would",MD,12,Aux,Ind);
+    node6_0->addChild(node6_3);
+    const UDNode* node6_4 = new UDNode(6,"have",VB,12,Aux,None);
+    node6_0->addChild(node6_4);
+    QTest::newRow("Test 6: No mistake 3rd Conditional, Past Perfect")
+        << static_cast<const UDNode*>(node6_1) << static_cast<const UDNode*>(node6_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №7. Нет ошибки, третий тип, придаточная часть в Past Simple
+    UDNode* node7_0 = new UDNode(10,"ordered",VBN,0,Root,Subj);
+    UDNode* node7_1 = new UDNode(3,"liked",VBD,10,Advcl,None);
+    node7_0->addChild(node7_1);
+    const UDNode* node7_2 = new UDNode(6,"would",MD,10,Aux,Ind);
+    node7_0->addChild(node7_2);
+    const UDNode* node7_3 = new UDNode(7,"have",VB,10,Aux,None);
+    node7_0->addChild(node7_3);
+    QTest::newRow("Test 7: No mistake 3rd Conditional, Past Simple")
+        << static_cast<const UDNode*>(node7_1) << static_cast<const UDNode*>(node7_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №8. Нет ошибки, третий тип, придаточная часть в Past Continuous
+    UDNode* node8_0 = new UDNode(10,"stayed",VBN,0,Root,Subj);
+    UDNode* node8_1 = new UDNode(4,"had",VBD,10,Advcl,None);
+    UDNode* node8_2 = new UDNode(5,"been",VBN,4,Aux,None);
+    UDNode* node8_3 = new UDNode(6,"raining",VBG,5,Advcl,None);
+    node8_1->addChild(node8_2);
+    node8_2->addChild(node8_3);
+    node8_0->addChild(node8_1);
+    const UDNode* node8_4 = new UDNode(8,"would",MD,10,Aux,Ind);
+    node8_0->addChild(node8_4);
+    const UDNode* node8_5 = new UDNode(9,"have",VB,10,Aux,None);
+    node8_0->addChild(node8_5);
+    QTest::newRow("Test 8: No mistake 3rd Conditional, Past Continuous")
+        << static_cast<const UDNode*>(node8_1) << static_cast<const UDNode*>(node8_0)
+        << true << emptyMistakes << false << "";
+
+    // Тест №9. Есть ошибка, третий тип, придаточная часть в Future Simple
+    UDNode* node9_0 = new UDNode(12,"come",VBN,0,Root,Subj);
+    UDNode* node9_1 = new UDNode(4,"will",MD,12,Advcl,None);
+    node9_0->addChild(node9_1);
+    const UDNode* node9_2 = new UDNode(8,"would",MD,12,Aux,Ind);
+    node9_0->addChild(node9_2);
+    const UDNode* node9_3 = new UDNode(9,"have",VB,12,Aux,None);
+    node9_0->addChild(node9_3);
+    QTest::newRow("Test 9: Mistake 3rd Conditional, Future Simple")
+        << static_cast<const UDNode*>(node9_1) << static_cast<const UDNode*>(node9_0)
+        << false << mistakeSet3rd << false << "";
+
+    // Тест №10. Есть ошибка, третий тип, придаточная часть в Present Perfect
+    UDNode* node10_0 = new UDNode(12,"joined",VBN,0,Root,Subj);
+    UDNode* node10_1 = new UDNode(3,"has",VBZ,12,Advcl,None);
+    UDNode* node10_2 = new UDNode(4,"finished",VBN,3,Advcl,None);
+    node10_1->addChild(node10_2);
+    node10_0->addChild(node10_1);
+    const UDNode* node10_3 = new UDNode(7,"would",MD,12,Aux,Ind);
+    node10_0->addChild(node10_3);
+    const UDNode* node10_4 = new UDNode(8,"have",VB,12,Aux,None);
+    node10_0->addChild(node10_4);
+    QTest::newRow("Test 10: Mistake 3rd Conditional, Present Perfect")
+        << static_cast<const UDNode*>(node10_1) << static_cast<const UDNode*>(node10_0)
+        << false << mistakeSet3rd << false << "";
+
+    /* Тесты на ошибочные вызовы */
+
+    // Тест №11. Ошибочный вызов, в главной части не conditionals 2/3
+    UDNode* node11_0 = new UDNode(5,"met",VBD,0,Root,Subj);
+    UDNode* node11_1 = new UDNode(3,"man",NN,5,Obj,None);
+    node11_0->addChild(node11_1);
+    QTest::newRow("Test 11: Wrong call, not conditionals 2/3")
+        << static_cast<const UDNode*>(node11_1) << static_cast<const UDNode*>(node11_0)
+        << true << emptyMistakes << true << "Invalid clause relation";
+
+    // Тест №12. Ошибочный вызов, нулевой указатель depVerb
+    UDNode* node12_0 = new UDNode(7,"travel",VB,0,Root,Subj);
+    QTest::newRow("Test 12: Nullptr depVerb")
+        << static_cast<const UDNode*>(nullptr) << static_cast<const UDNode*>(node12_0)
+        << true << emptyMistakes << true << "node pointer is null";
+
+    // Тест №13. Ошибочный вызов, нулевой указатель mainVerb
+    UDNode* node13_0 = new UDNode(3,"had",VBD,7,Advcl,None);
+    QTest::newRow("Test 13: Nullptr mainVerb")
+        << static_cast<const UDNode*>(node13_0) << static_cast<const UDNode*>(nullptr)
+        << true << emptyMistakes << true << "node pointer is null";
+    }
 
 void Tests::testCreateNodesFromLines()
 {
@@ -3569,507 +3572,507 @@ void Tests::testAddChildren_data()
     }
 }
 
-// void Tests::testGetNodesChild()
-// {
-//     QFETCH(ChildChild*, rel);
-//     QFETCH(const UDNode*, mainNode);
-//     QFETCH(UDNode*, expSearchNode);
-//     QFETCH(const UDNode*, parent);
-//     QFETCH(bool, expectException);
-//     QFETCH(QString, exceptionMessage);
-
-//     bool exceptionThrown = false;
-//     QString actualExceptionMessage;
-//     UDNode* actNode = NULL;
-
-//     try {
-//         rel->getNodes(mainNode,&actNode,parent);
-//     }
-//     catch (const QString& e) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = e;
-//     }
-//     catch (...) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = "Unexpected exception type";
-//     }
-
-//     // Проверка исключений
-//     if (expectException)
-//     {
-//         QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
-//         QCOMPARE(actualExceptionMessage, exceptionMessage);
-//     } else
-//     {
-//         QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
-
-//         if (actNode != NULL)
-//         {
-//             QCOMPARE(actNode->getId(),expSearchNode->getId());
-//         }
-//         else
-//         {
-//             QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
-//         }
-//     }
-
-// }
-// void Tests::testGetNodesChild_data()
-// {
-//     QTest::addColumn<ChildChild*>("rel");
-//     QTest::addColumn<const UDNode*>("mainNode");
-//     QTest::addColumn<UDNode*>("expSearchNode");
-//     QTest::addColumn<const UDNode*>("parent");
-//     QTest::addColumn<bool>("expectException");
-//     QTest::addColumn<QString>("exceptionMessage");
-
-//     // Общие узлы для тестов 1-6
-//     UDNode* nodeShe = new UDNode(1, "she", PRP, 3, Nsubj, None);
-//     UDNode* nodeIs = new UDNode(2, "is", VBZ, 3, Aux, None);
-//     UDNode* nodeSinging = new UDNode(3, "singing", VBG, 0, Root, None);
-//     nodeSinging->addChild(nodeShe);
-//     nodeSinging->addChild(nodeIs);
-
-//     // Узлы для теста 7-8
-//     UDNode* nodeI = new UDNode(1, "I", PRP, 2, Nsubj, None);
-//     UDNode* nodeHave = new UDNode(2, "have", VBP, 4, Aux, None);
-//     UDNode* nodeBeen = new UDNode(3, "been", VBN, 4, Aux, None);
-//     UDNode* nodeWaiting = new UDNode(4, "waiting", VBG, 0, Root, None);
-//     nodeWaiting->addChild(nodeI);
-//     nodeWaiting->addChild(nodeHave);
-//     nodeWaiting->addChild(nodeBeen);
-
-//     // Тест 1: У родителя всего 2 ребенка (без фильтров)
-//     {
-//         ChildChild* rel1 = new ChildChild;
-//         rel1->setValidWords({});
-//         rel1->setValidTags({});
-//         rel1->setRelatedRel(Other);
-
-//         QTest::newRow("Test 1: Two children, no filters")
-//             << rel1 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging) << false <<"";
-//     }
-
-//     // Тест 2: Указан тег VBZ
-//     {
-//         ChildChild* rel2 = new ChildChild;
-//         rel2->setValidWords({});
-//         rel2->setValidTags({VBZ});
-//         rel2->setRelatedRel(Other);
-
-//         QTest::newRow("Test 2: Filter by tag VBZ")
-//             << rel2 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging)<< false <<"";
-//     }
-
-//     // Тест 3: Указано слово "is"
-//     {
-//         ChildChild* rel3 = new ChildChild;
-//         rel3->setValidWords({"is"});
-//         rel3->setValidTags({});
-//         rel3->setRelatedRel(Other);
-
-//         QTest::newRow("Test 3: Filter by word 'is'")
-//             << rel3 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging)<< false <<"";
-//     }
-
-//     // Тест 4: Указано слово "is" и тег VBZ
-//     {
-//         ChildChild* rel4 = new ChildChild;
-//         rel4->setValidWords({"is"});
-//         rel4->setValidTags({VBZ});
-//         rel4->setRelatedRel(Other);
-
-//         QTest::newRow("Test 4: Filter by word 'is' and tag VBZ")
-//             << rel4 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging)<< false <<"";
-//     }
-
-//     // Тест 5: Указано несколько слов и тегов
-//     {
-//         ChildChild* rel5 = new ChildChild;
-//         rel5->setValidWords({"am", "is", "are"});
-//         rel5->setValidTags({VB, VBZ, VBP});
-//         rel5->setRelatedRel(Other);
-
-//         QTest::newRow("Test 5: Multiple words and tags")
-//             << rel5 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging)<< false <<"";
-//     }
-
-//     // Тест 6: Указана связь aux
-//     {
-//         ChildChild* rel6 = new ChildChild;
-//         rel6->setValidWords({"am", "is", "are"});
-//         rel6->setValidTags({VB, VBZ, VBP});
-//         rel6->setRelatedRel(Aux);
-
-//         QTest::newRow("Test 6: Filter by depRel aux")
-//             << rel6 << static_cast<const UDNode*>(nodeShe) << nodeIs
-//             << static_cast<const UDNode*>(nodeSinging)<< false <<"";
-//     }
-
-//     // Тест 7: Несколько детей у родителя с одной связью
-//     {
-//         ChildChild* rel7 = new ChildChild;
-//         rel7->setValidWords({"been"});
-//         rel7->setValidTags({VBN});
-//         rel7->setRelatedRel(Aux);
-
-//         QTest::newRow("Test 7: Multiple children with one matching relation")
-//             << rel7 << static_cast<const UDNode*>(nodeI) << nodeBeen
-//             << static_cast<const UDNode*>(nodeWaiting)<< false <<"";
-//     }
-
-//     // Тест 8: Несколько подходящих детей
-//     {
-//         ChildChild* rel8 = new ChildChild;
-//         rel8->setValidWords({});
-//         rel8->setValidTags({});
-//         rel8->setRelatedRel(Aux);
-
-
-//         QTest::newRow("Test 8: Several matching children")
-//             << rel8 << static_cast<const UDNode*>(nodeHave) << nodeBeen
-//             << static_cast<const UDNode*>(nodeWaiting)<< true <<"Several matching children";
-//     }
-
-//     // Тест 9: Всего один ребенок у родителя
-//     {
-//         ChildChild* rel8 = new ChildChild;
-//         rel8->setValidWords({});
-//         rel8->setValidTags({});
-//         rel8->setRelatedRel(Aux);
-//         UDNode* node9 = new UDNode(1, "he", PRP, 1, Nsubj, None);
-//         UDNode* node9_2 = new UDNode(2, "goes", VBZ, 0, Root, None);
-
-//         QTest::newRow("Test 9: Not enough children or no match")
-//             << rel8 << static_cast<const UDNode*>(node9) << nodeBeen
-//             << static_cast<const UDNode*>(node9_2)<< true <<"Not enough children or no match";
-//     }
-// }
-
-// void Tests::testGetNodesParent()
-// {
-//     QFETCH(ParentChild*, rel);
-//     QFETCH(const UDNode*, mainNode);
-//     QFETCH(UDNode*, expSearchNode);
-//     QFETCH(const UDNode*, parent);
-//     QFETCH(bool, expectException);
-//     QFETCH(QString, exceptionMessage);
-
-//     bool exceptionThrown = false;
-//     QString actualExceptionMessage;
-//     UDNode* actNode = NULL;
-
-//     try {
-//         rel->getNodes(mainNode,&actNode,parent);
-//     }
-//     catch (const QString& e) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = e;
-//     }
-//     catch (...) {
-//         exceptionThrown = true;
-//         actualExceptionMessage = "Unexpected exception type";
-//     }
-
-//     // Проверка исключений
-//     if (expectException)
-//     {
-//         QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
-//         QCOMPARE(actualExceptionMessage, exceptionMessage);
-//     } else
-//     {
-//         QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
-
-//         if (actNode != NULL)
-//         {
-//             QCOMPARE(actNode->getId(),expSearchNode->getId());
-//         }
-//         else
-//         {
-//             QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
-//         }
-//     }
-// }
-
-// void Tests::testGetNodesParent_data()
-// {
-//     QTest::addColumn<ParentChild*>("rel");
-//     QTest::addColumn<const UDNode*>("mainNode");
-//     QTest::addColumn<UDNode*>("expSearchNode");
-//     QTest::addColumn<const UDNode*>("parent");
-//     QTest::addColumn<bool>("expectException");
-//     QTest::addColumn<QString>("exceptionMessage");
-
-//     // Тест 1: Родитель есть и является словом
-//     {
-//         ParentChild* rel1 = new ParentChild;
-//         UDNode* nodeMain = new UDNode(1, "He", PRP, 3, Nsubj, None);
-//         UDNode* nodeParent = new UDNode(2, "goes", VBZ, 3, Root, None);
-//         QTest::newRow("Test 1: Type test")
-//             << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
-//             << static_cast<const UDNode*>(nodeParent) << false<< "";
-//     }
-
-//     // Тест 2: Родителя нет(является корнем)
-//     {
-//         ParentChild* rel1 = new ParentChild;
-//         UDNode* nodeMain = new UDNode(1, "He", PRP, 3, Nsubj, None);
-//         UDNode* nodeParent = new UDNode(2, "goes", VBZ, 3, Root, None);
-//         QTest::newRow("Test 1: No parent(root)")
-//             << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
-//             << static_cast<const UDNode*>(nodeParent) << true<< "mainNode is root";
-//     }
-// }
-
-// void Tests::testMatchesPattern()
-// {
-//     QFETCH(const UDNode*, inputNode);
-//     QFETCH(Pattern*, pat);
-//     QFETCH(Pattern*, expPat);
-//     QFETCH(bool, expMatch);
-
-//     QSet<const UDNode*> actualUsedChildren;
-//     bool exceptionThrown = false;
-//     bool actualMatch = false;
-
-//     try {
-//         actualMatch = pat->matchesPattern(inputNode, actualUsedChildren);
-//     } catch (const std::exception& e) {
-//         exceptionThrown = true;
-//         // For test 7, we expect an exception
-//         if (QTest::currentTestFunction() == QLatin1String("Test 7: Multiple matching children")) {
-//             QVERIFY(exceptionThrown);
-//             return;
-//         }
-//     }
-
-//     // For other tests, no exception should be thrown
-//     QVERIFY(!exceptionThrown);
-//     QCOMPARE(actualMatch, expMatch);
-
-//     if (actualMatch)
-//     {
-//         qDebug() << "Test data before fail:" << inputNode << pat << expPat;
-//         QStringList mismatchErrors;
-//         pat->compareMatches(expPat, mismatchErrors, "root");
-
-//         if (!mismatchErrors.isEmpty()) {
-//             QString errorReport = "Pattern structure mismatch details:\n";
-//             errorReport += "================================\n";
-//             errorReport += mismatchErrors.join("\n--------------------------------\n");
-//             errorReport += "\n================================\n";
-//             QFAIL(qPrintable(errorReport));
-//         }
-//     }
-
-// }
-
-// void Tests::testMatchesPattern_data()
-// {
-
-//     QTest::addColumn<const UDNode*>("inputNode");
-//     QTest::addColumn<Pattern*>("pat");
-//     QTest::addColumn<Pattern*>("expPat");
-//     QTest::addColumn<bool>("expMatch");
-
-
-//     // Тест №1. Узел без детей.
-//     QMap<int, UDNode*> tree1;
-//     UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
-//     tree1.insert(1,node1_0);
-//     Pattern* pattern1 = new Pattern({},{});
-//     Pattern* pattern1s = new Pattern({},{});
-//     pattern1s->setMatch(node1_0);
-//     QTest::newRow("Test 1: One word, Any pattern") << static_cast<const UDNode*>(node1_0) << pattern1 << pattern1s << true;
-
-//     // Тест №2. Узел без детей. Заданы допустимые тети.
-//     Pattern* pattern2 = new Pattern({}, {UH, CC});
-//     Pattern* pattern2s = new Pattern({}, {UH, CC});
-//     pattern2s->setMatch(node1_0);
-//     QTest::newRow("Test 2: Node with valid tag") << static_cast<const UDNode*>(node1_0) << pattern2 << pattern2s << true;
-
-//     // Тест №3. Узел без детей. Заданы допустимые слова.
-//     Pattern* pattern3 = new Pattern({"Hello"}, {});
-//     Pattern* pattern3s = new Pattern({"Hello"}, {});
-//     pattern3s->setMatch(node1_0);
-//     QTest::newRow("Test 3: Node with valid word") << static_cast<const UDNode*>(node1_0) << pattern3 << pattern3s << true;
-
-//     // Тест №4. Узел без детей. Тег совпадает, слово - нет.
-//     Pattern* pattern4 = new Pattern({"World"}, {UH});
-//     QTest::newRow("Test 4: Tag matches, word doesn't") << static_cast<const UDNode*>(node1_0) << pattern4 << new Pattern() << false;
-
-//     // Тест №5. Узел без детей. Теu не совпадает, слово - да.
-//     Pattern* pattern5 = new Pattern({"Hello"}, {UH});
-//     UDNode* node5_0 = new UDNode(1,"Hello",CC,0,Root,None);
-//     QTest::newRow("Test 5: Word matches, tag doesn't") << static_cast<const UDNode*>(node5_0) << pattern5 << new Pattern() << false;
-
-//     // Тест №6. Шаблон с одним любым ребенком.
-//     QMap<int, UDNode*> tree6;
-//     UDNode* node6_0 = new UDNode(1,"he",PRP,0,Root,None);
-//     UDNode* node6_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
-//     tree6.insert(1,node6_0);
-//     tree6.insert(2,node6_1);
-//     node6_0->addChild(node6_1);
-//     Pattern* pattern6 = new Pattern();
-//     pattern6->addChildPattern(Nsubj, new Pattern());
-//     Pattern* pattern6s = new Pattern();
-//     pattern6s->setMatch(node6_0);
-//     Pattern* child6 = new Pattern();
-//     child6->setMatch(node6_1);
-//     pattern6s->addChildPattern(Nsubj, child6);
-//     QTest::newRow("Test 6: Pattern with any child") << static_cast<const UDNode*>(node6_0) << pattern6 << pattern6s << true;
-
-//     // Тест №7. Неверный вызов. У узла есть несколько подходящих детей.
-//     QMap<int, UDNode*> tree7;
-//     UDNode* node7_0 = new UDNode(1,"he",PRP,0,Root,None);
-//     UDNode* node7_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
-//     UDNode* node7_2 = new UDNode(3,"fast",RB,1,Amod,None);
-//     tree7.insert(1,node7_0);
-//     tree7.insert(2,node7_1);
-//     tree7.insert(3,node7_2);
-//     Pattern* pattern7 = new Pattern();
-//     pattern7->addChildPattern(Other, new Pattern());
-//     QTest::newRow("Test 7: Multiple matching children") << static_cast<const UDNode*>(node7_0) << pattern7 << new Pattern() << false;
-
-//     // Тест №8. Шаблон с конкретным ребенком, такой есть
-//     QMap<int, UDNode*> tree8;
-//     UDNode* node8_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
-//     UDNode* node8_1 = new UDNode(2,"runs",VBZ,0,Root,None);
-//     UDNode* node8_2 = new UDNode(3,"fast",RB,2,Advmod,None);
-//     tree8.insert(1,node8_0);
-//     tree8.insert(2,node8_1);
-//     tree8.insert(3,node8_2);
-//     node8_0->addChild(node8_1);
-//     node8_0->addChild(node8_2);
-//     Pattern* pattern8 = new Pattern();
-//     pattern8->addChildPattern(Nsubj, new Pattern({}, {PRP}));
-//     Pattern* pattern8s = new Pattern();
-//     pattern8s->setMatch(node8_1);
-//     Pattern* child8 = new Pattern({}, {PRP});
-//     child8->setMatch(node8_0);
-//     pattern8s->addChildPattern(Nsubj, child8);
-//     QTest::newRow("Test 8: Pattern with specific child") << static_cast<const UDNode*>(node8_1) << pattern8 << pattern8s << true;
-
-//     // Тест №9. Шаблон с конкретным ребенком, такого нет
-//     Pattern* pattern9 = new Pattern();
-//     pattern9->addChildPattern(Nsubj, new Pattern({}, {NNP}));
-//     QTest::newRow("Test 9: Pattern with specific child that doesn't exist") << static_cast<const UDNode*>(node8_1) << pattern9 << new Pattern() << false;
-
-//     // Тест №10. Есть подходящий ребенок, но родитель не соответствует
-//     Pattern* pattern11 = new Pattern({"she"}, {});
-//     pattern11->addChildPattern(Nsubj, new Pattern({}, {PRP}));
-//     QTest::newRow("Test 10: Parent doesn't match") << static_cast<const UDNode*>(node8_1) << pattern11 << new Pattern() << false;
-
-//     // Тест №11. У узла нет детей, в шаблоне есть
-//     QTest::newRow("Test 11: Node has no children but pattern expects some") << static_cast<const UDNode*>(node1_0) << pattern6 << new Pattern() << false;
-
-//     // Тест №12. Шаблон с несколькими детьми, у узла оба есть
-//     Pattern* pattern13 = new Pattern();
-//     pattern13->addChildPattern(Nsubj, new Pattern({}, {PRP}));
-//     pattern13->addChildPattern(Other, new Pattern({}, {}));
-//     Pattern* pattern13s = new Pattern();
-//     pattern13s->setMatch(node8_1);
-//     Pattern* child13_1 = new Pattern({}, {PRP});
-//     child13_1->setMatch(node8_0);
-//     Pattern* child13_2 = new Pattern({}, {});
-//     child13_2->setMatch(node8_2);
-//     pattern13s->addChildPattern(Nsubj, child13_1);
-//     pattern13s->addChildPattern(Other, child13_2);
-//     QTest::newRow("Test 12: Multiple children pattern") << static_cast<const UDNode*>(node8_1) << pattern13 << pattern13s << true;
-
-//     // Тест №13. Шаблон с несколькими детьми, у узла нет одного подходящего
-//     Pattern* pattern14 = new Pattern();
-//     pattern14->addChildPattern(Nsubj, new Pattern({}, {PRP}));
-//     pattern14->addChildPattern(Aux, new Pattern({}, {}));
-//     QTest::newRow("Test 13: Missing one child") << static_cast<const UDNode*>(node8_1) << pattern14 << new Pattern() << false;
-
-//     // Тест №14. Шаблон требует нескольких детей, у узла один
-//     QMap<int, UDNode*> tree15;
-//     UDNode* node15_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
-//     UDNode* node15_1 = new UDNode(2,"runs",VBZ,0,Root,None);
-//     node15_1->addChild(node15_0);
-//     tree15.insert(1,node15_0);
-//     tree15.insert(2,node15_1);
-//     QTest::newRow("Test 14: Not enough children") << static_cast<const UDNode*>(node15_1) << pattern13 << new Pattern() << false;
-
-//     // Тест №15. Шаблон с несколькими детьми, у узла много детей
-//     QMap<int, UDNode*> tree16;
-//     UDNode* node16_0 = new UDNode(1,"He",PRP,3,Nsubj,None);
-//     UDNode* node16_1 = new UDNode(2,"will",MD,3,Aux,None);
-//     UDNode* node16_2 = new UDNode(3,"go",VB,0,Root,None);
-//     UDNode* node16_3 = new UDNode(4,"to",IN,5,Case,None);
-//     UDNode* node16_4 = new UDNode(5,"London",NNP,3,Obl,None);
-//     UDNode* node16_5 = new UDNode(6,"next",JJ,7,Amod,None);
-//     UDNode* node16_6 = new UDNode(7,"week",NN,3,Obl_Tmod,None);
-//     tree16.insert(1,node16_0);
-//     tree16.insert(2,node16_1);
-//     tree16.insert(3,node16_2);
-//     tree16.insert(4,node16_3);
-//     tree16.insert(5,node16_4);
-//     tree16.insert(6,node16_5);
-//     tree16.insert(7,node16_6);
-//     node16_2->addChild(node16_0);
-//     node16_2->addChild(node16_1);
-//     node16_2->addChild(node16_4);
-//     node16_2->addChild(node16_6);
-//     node16_4->addChild(node16_3);
-//     node16_6->addChild(node16_5);
-
-//     Pattern* pattern15 = new Pattern({}, {VB});
-//     pattern15->addChildPattern(Nsubj, new Pattern({}, {PRP,NN,NNS}));
-//     pattern15->addChildPattern(Aux, new Pattern({"will"}, {}));
-//     Pattern* pattern15s = new Pattern({}, {VB});
-//     pattern15s->setMatch(node16_2);
-//     Pattern* child15_1 = new Pattern({}, {PRP,NN,NNS});
-//     child15_1->setMatch(node16_0);
-//     Pattern* child15_2 = new Pattern({"will"}, {});
-//     child15_2->setMatch(node16_1);
-//     pattern15s->addChildPattern(Nsubj, child15_1);
-//     pattern15s->addChildPattern(Aux, child15_2);
-
-//     QTest::newRow("Test 15: Too many children") << static_cast<const UDNode*>(node16_2) << pattern15 << pattern15s << true;
-
-//     // Тест №16. Шаблон с внуком
-//     QMap<int, UDNode*> tree17;
-//     UDNode* node17_0 = new UDNode(2,"wants",VBZ,0,Root,None);
-//     UDNode* node17_1 = new UDNode(1,"she",PRP,2,Nsubj,None);
-//     UDNode* node17_2 = new UDNode(4,"travel",VB,2,Xcomp,None);
-//     UDNode* node17_3 = new UDNode(3,"to",TO,4,Mark,None);
-//     tree17.insert(1,node17_0);
-//     tree17.insert(2,node17_1);
-//     tree17.insert(3,node17_2);
-//     tree17.insert(4,node17_3);
-//     node17_0->addChild(node17_1);
-//     node17_0->addChild(node17_2);
-//     node17_2->addChild(node17_3);
-
-//     Pattern* pattern17 = new Pattern({}, {VBZ, VBP});
-//     Pattern* child17_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
-//     child17_1->addChildPattern(Mark, new Pattern({"to"}, {}));
-//     pattern17->addChildPattern(Nsubj, new Pattern({}, {}));
-//     pattern17->addChildPattern(Xcomp, child17_1);
-
-//     Pattern* pattern17s = new Pattern({}, {VBZ, VBP});
-//     pattern17s->setMatch(node17_0);
-//     Pattern* child17s_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
-//     child17s_1->setMatch(node17_2);
-//     Pattern* child17s_2 = new Pattern({}, {});
-//     child17s_2->setMatch(node17_1);
-//     Pattern* grandchild17s = new Pattern({"to"}, {});
-//     grandchild17s->setMatch(node17_3);
-
-//     child17s_1->addChildPattern(Mark, grandchild17s);
-//     pattern17s->addChildPattern(Xcomp, child17s_1);
-//     pattern17s->addChildPattern(Nsubj, child17s_2);
-
-//     QTest::newRow("Test 16: Pattern with grandchild") << static_cast<const UDNode*>(node17_0) << pattern17 << pattern17s << true;
-
-// }
+void Tests::testGetNodesChild()
+{
+    QFETCH(ChildChild*, rel);
+    QFETCH(const UDNode*, mainNode);
+    QFETCH(UDNode*, expSearchNode);
+    QFETCH(const UDNode*, parent);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+    UDNode* actNode = NULL;
+
+    try {
+        rel->getNodes(mainNode,&actNode,parent);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException)
+    {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else
+    {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        if (actNode != NULL)
+        {
+            QCOMPARE(actNode->getId(),expSearchNode->getId());
+        }
+        else
+        {
+            QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
+        }
+    }
+
+}
+void Tests::testGetNodesChild_data()
+{
+    QTest::addColumn<ChildChild*>("rel");
+    QTest::addColumn<const UDNode*>("mainNode");
+    QTest::addColumn<UDNode*>("expSearchNode");
+    QTest::addColumn<const UDNode*>("parent");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    // Общие узлы для тестов 1-6
+    UDNode* nodeShe = new UDNode(1, "she", PRP, 3, Nsubj, None);
+    UDNode* nodeIs = new UDNode(2, "is", VBZ, 3, Aux, None);
+    UDNode* nodeSinging = new UDNode(3, "singing", VBG, 0, Root, None);
+    nodeSinging->addChild(nodeShe);
+    nodeSinging->addChild(nodeIs);
+
+    // Узлы для теста 7-8
+    UDNode* nodeI = new UDNode(1, "I", PRP, 2, Nsubj, None);
+    UDNode* nodeHave = new UDNode(2, "have", VBP, 4, Aux, None);
+    UDNode* nodeBeen = new UDNode(3, "been", VBN, 4, Aux, None);
+    UDNode* nodeWaiting = new UDNode(4, "waiting", VBG, 0, Root, None);
+    nodeWaiting->addChild(nodeI);
+    nodeWaiting->addChild(nodeHave);
+    nodeWaiting->addChild(nodeBeen);
+
+    // Тест 1: У родителя всего 2 ребенка (без фильтров)
+    {
+        ChildChild* rel1 = new ChildChild;
+        rel1->setValidWords({});
+        rel1->setValidTags({});
+        rel1->setRelatedRel(Other);
+
+        QTest::newRow("Test 1: Two children, no filters")
+            << rel1 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging) << false <<"";
+    }
+
+    // Тест 2: Указан тег VBZ
+    {
+        ChildChild* rel2 = new ChildChild;
+        rel2->setValidWords({});
+        rel2->setValidTags({VBZ});
+        rel2->setRelatedRel(Other);
+
+        QTest::newRow("Test 2: Filter by tag VBZ")
+            << rel2 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
+    }
+
+    // Тест 3: Указано слово "is"
+    {
+        ChildChild* rel3 = new ChildChild;
+        rel3->setValidWords({"is"});
+        rel3->setValidTags({});
+        rel3->setRelatedRel(Other);
+
+        QTest::newRow("Test 3: Filter by word 'is'")
+            << rel3 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
+    }
+
+    // Тест 4: Указано слово "is" и тег VBZ
+    {
+        ChildChild* rel4 = new ChildChild;
+        rel4->setValidWords({"is"});
+        rel4->setValidTags({VBZ});
+        rel4->setRelatedRel(Other);
+
+        QTest::newRow("Test 4: Filter by word 'is' and tag VBZ")
+            << rel4 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
+    }
+
+    // Тест 5: Указано несколько слов и тегов
+    {
+        ChildChild* rel5 = new ChildChild;
+        rel5->setValidWords({"am", "is", "are"});
+        rel5->setValidTags({VB, VBZ, VBP});
+        rel5->setRelatedRel(Other);
+
+        QTest::newRow("Test 5: Multiple words and tags")
+            << rel5 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
+    }
+
+    // Тест 6: Указана связь aux
+    {
+        ChildChild* rel6 = new ChildChild;
+        rel6->setValidWords({"am", "is", "are"});
+        rel6->setValidTags({VB, VBZ, VBP});
+        rel6->setRelatedRel(Aux);
+
+        QTest::newRow("Test 6: Filter by depRel aux")
+            << rel6 << static_cast<const UDNode*>(nodeShe) << nodeIs
+            << static_cast<const UDNode*>(nodeSinging)<< false <<"";
+    }
+
+    // Тест 7: Несколько детей у родителя с одной связью
+    {
+        ChildChild* rel7 = new ChildChild;
+        rel7->setValidWords({"been"});
+        rel7->setValidTags({VBN});
+        rel7->setRelatedRel(Aux);
+
+        QTest::newRow("Test 7: Multiple children with one matching relation")
+            << rel7 << static_cast<const UDNode*>(nodeI) << nodeBeen
+            << static_cast<const UDNode*>(nodeWaiting)<< false <<"";
+    }
+
+    // Тест 8: Несколько подходящих детей
+    {
+        ChildChild* rel8 = new ChildChild;
+        rel8->setValidWords({});
+        rel8->setValidTags({});
+        rel8->setRelatedRel(Aux);
+
+
+        QTest::newRow("Test 8: Several matching children")
+            << rel8 << static_cast<const UDNode*>(nodeI) << nodeBeen
+            << static_cast<const UDNode*>(nodeWaiting)<< true <<"Several matching children";
+    }
+
+    // Тест 9: Всего один ребенок у родителя
+    {
+        ChildChild* rel8 = new ChildChild;
+        rel8->setValidWords({});
+        rel8->setValidTags({});
+        rel8->setRelatedRel(Aux);
+        UDNode* node9 = new UDNode(1, "he", PRP, 1, Nsubj, None);
+        UDNode* node9_2 = new UDNode(2, "goes", VBZ, 0, Root, None);
+
+        QTest::newRow("Test 9: Not enough children or no match")
+            << rel8 << static_cast<const UDNode*>(node9) << nodeBeen
+            << static_cast<const UDNode*>(node9_2)<< true <<"Not enough children or no match";
+    }
+}
+
+void Tests::testGetNodesParent()
+{
+    QFETCH(ParentChild*, rel);
+    QFETCH(const UDNode*, mainNode);
+    QFETCH(UDNode*, expSearchNode);
+    QFETCH(const UDNode*, parent);
+    QFETCH(bool, expectException);
+    QFETCH(QString, exceptionMessage);
+
+    bool exceptionThrown = false;
+    QString actualExceptionMessage;
+    UDNode* actNode = NULL;
+
+    try {
+        rel->getNodes(mainNode,&actNode,parent);
+    }
+    catch (const QString& e) {
+        exceptionThrown = true;
+        actualExceptionMessage = e;
+    }
+    catch (...) {
+        exceptionThrown = true;
+        actualExceptionMessage = "Unexpected exception type";
+    }
+
+    // Проверка исключений
+    if (expectException)
+    {
+        QVERIFY2(exceptionThrown, "Expected an exception, but none was thrown");
+        QCOMPARE(actualExceptionMessage, exceptionMessage);
+    } else
+    {
+        QVERIFY2(!exceptionThrown, QString("Unexpected exception thrown: %1").arg(actualExceptionMessage).toUtf8());
+
+        if (actNode != NULL)
+        {
+            QCOMPARE(actNode->getId(),expSearchNode->getId());
+        }
+        else
+        {
+            QVERIFY2(false, (QString(" actual Node is NULL")).toUtf8());
+        }
+    }
+}
+
+void Tests::testGetNodesParent_data()
+{
+    QTest::addColumn<ParentChild*>("rel");
+    QTest::addColumn<const UDNode*>("mainNode");
+    QTest::addColumn<UDNode*>("expSearchNode");
+    QTest::addColumn<const UDNode*>("parent");
+    QTest::addColumn<bool>("expectException");
+    QTest::addColumn<QString>("exceptionMessage");
+
+    // Тест 1: Родитель есть и является словом
+    {
+        ParentChild* rel1 = new ParentChild;
+        UDNode* nodeMain = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        UDNode* nodeParent = new UDNode(2, "goes", VBZ, 0, Root, None);
+        QTest::newRow("Test 1: Type test")
+            << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
+            << static_cast<const UDNode*>(nodeParent) << false<< "";
+    }
+
+    // Тест 2: Родителя нет(является корнем)
+    {
+        ParentChild* rel1 = new ParentChild;
+        UDNode* nodeMain = new UDNode(2, "goes", VBZ, 0, Root, None);
+        UDNode* nodeParent = new UDNode(1, "He", PRP, 3, Nsubj, None);
+        QTest::newRow("Test 2: No parent(root)")
+            << rel1 << static_cast<const UDNode*>(nodeMain) << nodeParent
+            << static_cast<const UDNode*>(nodeParent) << true<< "mainNode is root";
+    }
+}
+
+void Tests::testMatchesPattern()
+{
+    QFETCH(const UDNode*, inputNode);
+    QFETCH(Pattern*, pat);
+    QFETCH(Pattern*, expPat);
+    QFETCH(bool, expMatch);
+
+    QSet<const UDNode*> actualUsedChildren;
+    bool exceptionThrown = false;
+    bool actualMatch = false;
+
+    try {
+        actualMatch = pat->matchesPattern(inputNode, actualUsedChildren);
+    } catch (const std::exception& e) {
+        exceptionThrown = true;
+        // For test 7, we expect an exception
+        if (QTest::currentTestFunction() == QLatin1String("Test 7: Multiple matching children")) {
+            QVERIFY(exceptionThrown);
+            return;
+        }
+    }
+
+    // For other tests, no exception should be thrown
+    QVERIFY(!exceptionThrown);
+    QCOMPARE(actualMatch, expMatch);
+
+    if (actualMatch)
+    {
+        QStringList mismatchErrors;
+        pat->compareMatches(expPat, mismatchErrors, "root");
+
+        if (!mismatchErrors.isEmpty()) {
+            QString errorReport = "Pattern structure mismatch details:\n";
+            errorReport += "================================\n";
+            errorReport += mismatchErrors.join("\n--------------------------------\n");
+            errorReport += "\n================================\n";
+            QFAIL(qPrintable(errorReport));
+        }
+    }
+
+}
+
+void Tests::testMatchesPattern_data()
+{
+
+    QTest::addColumn<const UDNode*>("inputNode");
+    QTest::addColumn<Pattern*>("pat");
+    QTest::addColumn<Pattern*>("expPat");
+    QTest::addColumn<bool>("expMatch");
+
+
+    // Тест №1. Узел без детей.
+    QMap<int, UDNode*> tree1;
+    UDNode* node1_0 = new UDNode(1,"Hello",UH,0,Root,None);
+    tree1.insert(1,node1_0);
+    Pattern* pattern1 = new Pattern({},{});
+    Pattern* pattern1s = new Pattern({},{});
+    pattern1s->setMatch(node1_0);
+    QTest::newRow("Test 1: One word, Any pattern") << static_cast<const UDNode*>(node1_0) << pattern1 << pattern1s << true;
+
+    // Тест №2. Узел без детей. Заданы допустимые тети.
+    Pattern* pattern2 = new Pattern({}, {UH, CC});
+    Pattern* pattern2s = new Pattern({}, {UH, CC});
+    pattern2s->setMatch(node1_0);
+    QTest::newRow("Test 2: Node with valid tag") << static_cast<const UDNode*>(node1_0) << pattern2 << pattern2s << true;
+
+    // Тест №3. Узел без детей. Заданы допустимые слова.
+    Pattern* pattern3 = new Pattern({"Hello"}, {});
+    Pattern* pattern3s = new Pattern({"Hello"}, {});
+    pattern3s->setMatch(node1_0);
+    QTest::newRow("Test 3: Node with valid word") << static_cast<const UDNode*>(node1_0) << pattern3 << pattern3s << true;
+
+    // Тест №4. Узел без детей. Тег совпадает, слово - нет.
+    Pattern* pattern4 = new Pattern({"World"}, {UH});
+    QTest::newRow("Test 4: Tag matches, word doesn't") << static_cast<const UDNode*>(node1_0) << pattern4 << new Pattern() << false;
+
+    // Тест №5. Узел без детей. Теu не совпадает, слово - да.
+    Pattern* pattern5 = new Pattern({"Hello"}, {UH});
+    UDNode* node5_0 = new UDNode(1,"Hello",CC,0,Root,None);
+    QTest::newRow("Test 5: Word matches, tag doesn't") << static_cast<const UDNode*>(node5_0) << pattern5 << new Pattern() << false;
+
+    // Тест №6. Шаблон с одним любым ребенком.
+    QMap<int, UDNode*> tree6;
+    UDNode* node6_0 = new UDNode(1,"he",PRP,0,Root,None);
+    UDNode* node6_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
+    tree6.insert(1,node6_0);
+    tree6.insert(2,node6_1);
+    node6_0->addChild(node6_1);
+    Pattern* pattern6 = new Pattern();
+    pattern6->addChildPattern(Nsubj, new Pattern());
+    Pattern* pattern6s = new Pattern();
+    pattern6s->setMatch(node6_0);
+    Pattern* child6 = new Pattern();
+    child6->setMatch(node6_1);
+    pattern6s->addChildPattern(Nsubj, child6);
+    QTest::newRow("Test 6: Pattern with any child") << static_cast<const UDNode*>(node6_0) << pattern6 << pattern6s << true;
+
+    // Тест №7. Неверный вызов. У узла есть несколько подходящих детей.
+    QMap<int, UDNode*> tree7;
+    UDNode* node7_0 = new UDNode(1,"he",PRP,0,Root,None);
+    UDNode* node7_1 = new UDNode(2,"runs",VBZ,1,Nsubj,None);
+    UDNode* node7_2 = new UDNode(3,"fast",RB,1,Amod,None);
+    tree7.insert(1,node7_0);
+    tree7.insert(2,node7_1);
+    tree7.insert(3,node7_2);
+    Pattern* pattern7 = new Pattern();
+    pattern7->addChildPattern(Other, new Pattern());
+    QTest::newRow("Test 7: Multiple matching children") << static_cast<const UDNode*>(node7_0) << pattern7 << new Pattern() << false;
+
+    // Тест №8. Шаблон с конкретным ребенком, такой есть
+    QMap<int, UDNode*> tree8;
+    UDNode* node8_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
+    UDNode* node8_1 = new UDNode(2,"runs",VBZ,0,Root,None);
+    UDNode* node8_2 = new UDNode(3,"fast",RB,2,Advmod,None);
+    tree8.insert(1,node8_0);
+    tree8.insert(2,node8_1);
+    tree8.insert(3,node8_2);
+    node8_1->addChild(node8_0);
+    node8_1->addChild(node8_2);
+
+    Pattern* pattern8 = new Pattern();
+    pattern8->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    Pattern* pattern8s = new Pattern();
+    pattern8s->setMatch(node8_1);
+    Pattern* child8 = new Pattern({}, {PRP});
+    child8->setMatch(node8_0);
+    pattern8s->addChildPattern(Nsubj, child8);
+    QTest::newRow("Test 8: Pattern with specific child") << static_cast<const UDNode*>(node8_1) << pattern8 << pattern8s << true;
+
+    // Тест №9. Шаблон с конкретным ребенком, такого нет
+    Pattern* pattern9 = new Pattern();
+    pattern9->addChildPattern(Nsubj, new Pattern({}, {NNP}));
+    QTest::newRow("Test 9: Pattern with specific child that doesn't exist") << static_cast<const UDNode*>(node8_1) << pattern9 << new Pattern() << false;
+
+    // Тест №10. Есть подходящий ребенок, но родитель не соответствует
+    Pattern* pattern11 = new Pattern({"she"}, {});
+    pattern11->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    QTest::newRow("Test 10: Parent doesn't match") << static_cast<const UDNode*>(node8_1) << pattern11 << new Pattern() << false;
+
+    // Тест №11. У узла нет детей, в шаблоне есть
+    QTest::newRow("Test 11: Node has no children but pattern expects some") << static_cast<const UDNode*>(node1_0) << pattern6 << new Pattern() << false;
+
+    // Тест №12. Шаблон с несколькими детьми, у узла оба есть
+    Pattern* pattern13 = new Pattern();
+    pattern13->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    pattern13->addChildPattern(Other, new Pattern({}, {}));
+    Pattern* pattern13s = new Pattern();
+    pattern13s->setMatch(node8_1);
+    Pattern* child13_1 = new Pattern({}, {PRP});
+    child13_1->setMatch(node8_0);
+    Pattern* child13_2 = new Pattern({}, {});
+    child13_2->setMatch(node8_2);
+    pattern13s->addChildPattern(Nsubj, child13_1);
+    pattern13s->addChildPattern(Other, child13_2);
+    QTest::newRow("Test 12: Multiple children pattern") << static_cast<const UDNode*>(node8_1) << pattern13 << pattern13s << true;
+
+    // Тест №13. Шаблон с несколькими детьми, у узла нет одного подходящего
+    Pattern* pattern14 = new Pattern();
+    pattern14->addChildPattern(Nsubj, new Pattern({}, {PRP}));
+    pattern14->addChildPattern(Aux, new Pattern({}, {}));
+    QTest::newRow("Test 13: Missing one child") << static_cast<const UDNode*>(node8_1) << pattern14 << new Pattern() << false;
+
+    // Тест №14. Шаблон требует нескольких детей, у узла один
+    QMap<int, UDNode*> tree15;
+    UDNode* node15_0 = new UDNode(1,"he",PRP,2,Nsubj,None);
+    UDNode* node15_1 = new UDNode(2,"runs",VBZ,0,Root,None);
+    node15_1->addChild(node15_0);
+    tree15.insert(1,node15_0);
+    tree15.insert(2,node15_1);
+    QTest::newRow("Test 14: Not enough children") << static_cast<const UDNode*>(node15_1) << pattern13 << new Pattern() << false;
+
+    // Тест №15. Шаблон с несколькими детьми, у узла много детей
+    QMap<int, UDNode*> tree16;
+    UDNode* node16_0 = new UDNode(1,"He",PRP,3,Nsubj,None);
+    UDNode* node16_1 = new UDNode(2,"will",MD,3,Aux,None);
+    UDNode* node16_2 = new UDNode(3,"go",VB,0,Root,None);
+    UDNode* node16_3 = new UDNode(4,"to",IN,5,Case,None);
+    UDNode* node16_4 = new UDNode(5,"London",NNP,3,Obl,None);
+    UDNode* node16_5 = new UDNode(6,"next",JJ,7,Amod,None);
+    UDNode* node16_6 = new UDNode(7,"week",NN,3,Obl_Tmod,None);
+    tree16.insert(1,node16_0);
+    tree16.insert(2,node16_1);
+    tree16.insert(3,node16_2);
+    tree16.insert(4,node16_3);
+    tree16.insert(5,node16_4);
+    tree16.insert(6,node16_5);
+    tree16.insert(7,node16_6);
+    node16_2->addChild(node16_0);
+    node16_2->addChild(node16_1);
+    node16_2->addChild(node16_4);
+    node16_2->addChild(node16_6);
+    node16_4->addChild(node16_3);
+    node16_6->addChild(node16_5);
+
+    Pattern* pattern15 = new Pattern({}, {VB});
+    pattern15->addChildPattern(Nsubj, new Pattern({}, {PRP,NN,NNS}));
+    pattern15->addChildPattern(Aux, new Pattern({"will"}, {}));
+    Pattern* pattern15s = new Pattern({}, {VB});
+    pattern15s->setMatch(node16_2);
+    Pattern* child15_1 = new Pattern({}, {PRP,NN,NNS});
+    child15_1->setMatch(node16_0);
+    Pattern* child15_2 = new Pattern({"will"}, {});
+    child15_2->setMatch(node16_1);
+    pattern15s->addChildPattern(Nsubj, child15_1);
+    pattern15s->addChildPattern(Aux, child15_2);
+
+    QTest::newRow("Test 15: Too many children") << static_cast<const UDNode*>(node16_2) << pattern15 << pattern15s << true;
+
+    // Тест №16. Шаблон с внуком
+    QMap<int, UDNode*> tree17;
+    UDNode* node17_0 = new UDNode(2,"wants",VBZ,0,Root,None);
+    UDNode* node17_1 = new UDNode(1,"she",PRP,2,Nsubj,None);
+    UDNode* node17_2 = new UDNode(4,"travel",VB,2,Xcomp,None);
+    UDNode* node17_3 = new UDNode(3,"to",TO,4,Mark,None);
+    tree17.insert(1,node17_0);
+    tree17.insert(2,node17_1);
+    tree17.insert(3,node17_2);
+    tree17.insert(4,node17_3);
+    node17_0->addChild(node17_1);
+    node17_0->addChild(node17_2);
+    node17_2->addChild(node17_3);
+
+    Pattern* pattern17 = new Pattern({}, {VBZ, VBP});
+    Pattern* child17_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
+    child17_1->addChildPattern(Mark, new Pattern({"to"}, {}));
+    pattern17->addChildPattern(Nsubj, new Pattern({}, {}));
+    pattern17->addChildPattern(Xcomp, child17_1);
+
+    Pattern* pattern17s = new Pattern({}, {VBZ, VBP});
+    pattern17s->setMatch(node17_0);
+    Pattern* child17s_1 = new Pattern({}, {VB, VBD, VBP, VBZ});
+    child17s_1->setMatch(node17_2);
+    Pattern* child17s_2 = new Pattern({}, {});
+    child17s_2->setMatch(node17_1);
+    Pattern* grandchild17s = new Pattern({"to"}, {});
+    grandchild17s->setMatch(node17_3);
+
+    child17s_1->addChildPattern(Mark, grandchild17s);
+    pattern17s->addChildPattern(Xcomp, child17s_1);
+    pattern17s->addChildPattern(Nsubj, child17s_2);
+
+    QTest::newRow("Test 16: Pattern with grandchild") << static_cast<const UDNode*>(node17_0) << pattern17 << pattern17s << true;
+
+}
 
 // void Tests::testCheckPattern()
 // {

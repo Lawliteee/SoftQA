@@ -22,14 +22,14 @@ private slots:
     void testAuxAuxAgreement();
     void testAuxAuxAgreement_data();
 
-    // void testPassiveAgreement();
-    // void testPassiveAgreement_data();
+    void testPassiveAgreement();
+    void testPassiveAgreement_data();
 
-    // void testComplexSentenceAgreement();
-    // void testComplexSentenceAgreement_data();
+    void testComplexSentenceAgreement();
+    void testComplexSentenceAgreement_data();
 
-    // void testConditionalsAgreement();
-    // void testConditionalsAgreement_data();
+    void testConditionalsAgreement();
+    void testConditionalsAgreement_data();
 
     void testCreateNodesFromLines();
     void testCreateNodesFromLines_data();
@@ -40,14 +40,14 @@ private slots:
     void testAddChildren();
     void testAddChildren_data();
 
-    // void testGetNodesChild();
-    // void testGetNodesChild_data();
+    void testGetNodesChild();
+    void testGetNodesChild_data();
 
-    // void testGetNodesParent();
-    // void testGetNodesParent_data();
+    void testGetNodesParent();
+    void testGetNodesParent_data();
 
-    // void testMatchesPattern();
-    // void testMatchesPattern_data();
+    void testMatchesPattern();
+    void testMatchesPattern_data();
 
     // void testCheckPattern();
     // void testCheckPattern_data();

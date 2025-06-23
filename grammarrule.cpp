@@ -41,7 +41,7 @@ bool PersonNumberAgreement::check(const UDNode* nsubj, const UDNode* verb, QSet<
         if (verb->getUpos() == VBP) {
             return true;
         } else {
-            mistakes.insert(Mistake("Глагол " + verb->getlemma() + " в неправильной форме. В Present Subjunctive используется базовая форма"));
+            mistakes.insert(Mistake("Глагол " + verb->getlemma() + " в неправильной форме. В Present Subjunctive используется базовая форма", nsubj->getId(), verb->getId()));
             return false;
         }
     }
@@ -49,10 +49,22 @@ bool PersonNumberAgreement::check(const UDNode* nsubj, const UDNode* verb, QSet<
     // Проверка для будущего времени (особый случай с have)
     if (verb->isHaveForm() && hasSibling(verb, "will")) {
         if (verb->getlemma() != "have") {
-            mistakes.insert(Mistake("Неправильная форма глагола have. В будущем времени употребляется только форма have"));
+            mistakes.insert(Mistake("Неправильная форма глагола have. В будущем времени употребляется только форма have", nsubj->getId(), verb->getId()));
             return false;
         }
         return true;
+    }
+
+    if (nsubj->getlemma() == "I" && verb->isBeForm())
+    {
+        if (verb->getlemma().toLower() != "am")
+        {
+            QString message = "Вспомогательный глагол " + verb->getlemma() + " не согласован с подлежащим " +
+                              nsubj->getlemma() + ". Глагол должен быть в форме 1-го лица ед. числа";;
+            mistakes.insert(Mistake(message, nsubj->getId(), verb->getId()));
+            return false;
+        }
+        else return true;
     }
 
     // 2. Проверка 3 лица единственного числа
@@ -68,7 +80,7 @@ bool PersonNumberAgreement::check(const UDNode* nsubj, const UDNode* verb, QSet<
                 message = "Основной глагол " + verb->getlemma() + " не согласован с подлежащим " +
                           nsubj->getlemma() + ". Глагол должен быть в форме 3-го лица ед. числа";
             }
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, nsubj->getId(), verb->getId()));
             return false;
         }
     }
@@ -85,7 +97,7 @@ bool PersonNumberAgreement::check(const UDNode* nsubj, const UDNode* verb, QSet<
                 message = "Основной глагол " + verb->getlemma() + " не согласован с подлежащим " +
                           nsubj->getlemma() + ". Глагол должен быть в начальной форме";
             }
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, nsubj->getId(), verb->getId()));
             return false;
         }
     }
@@ -142,7 +154,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
         } else {
             mistakes.insert(Mistake("глагол " + word2->getlemma() +
                                     " не используется в Past Subjunctive. "
-                                    "Используется were для всех лиц (даже с he/she/it)."));
+                                    "Используется were для всех лиц (даже с he/she/it).", word1->getId(),word2->getId()));
             return false;
         }
     }
@@ -167,7 +179,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
                                   .arg(word1->getlemma())
                                   .arg(word2->getlemma())
                                   .arg(correctForm);
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, word1->getId(),word2->getId()));
             return false;
         }
     }
@@ -179,7 +191,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
                                       "Нельзя использовать с существительным %2 в единственном числе")
                                   .arg(word1->getlemma())
                                   .arg(word2->getlemma());
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, word1->getId(),word2->getId()));
             return false;
         }
     }
@@ -191,7 +203,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
                                       "Требуется артикль the или нулевой артикль.")
                                   .arg(word1->getlemma())
                                   .arg(word2->getlemma());
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, word1->getId(),word2->getId()));
             return false;
         }
     }
@@ -209,7 +221,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
                                   .arg(word1->getlemma())
                                   .arg(word2->getlemma())
                                   .arg(correctForm);
-            mistakes.insert(Mistake(message));
+            mistakes.insert(Mistake(message, word1->getId(),word2->getId()));
             return false;
         }
     }
@@ -243,7 +255,7 @@ bool NumberAgreement::check(const UDNode* word1, const UDNode* word2, QSet<Mista
 
     if (message != "")
     {
-        mistakes.insert(Mistake(message));
+        mistakes.insert(Mistake(message, word1->getId(),word2->getId()));
         return false;
     }
     else return true;
@@ -280,14 +292,14 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
             if (mainTag == VB) {
                 return true;
             } else {
-                mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом 'd").arg(mainVerb->getlemma())));
+                mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом 'd").arg(mainVerb->getlemma()), auxVerb->getId(),mainVerb->getId()));
                 return false;
             }
         } else if (auxTag == VBD) { // had
             if (mainTag == VBN) {
                 return true;
             } else {
-                mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом 'd").arg(mainVerb->getlemma())));
+                mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом 'd").arg(mainVerb->getlemma()), auxVerb->getId(),mainVerb->getId()));
                 return false;
             }
         }
@@ -300,7 +312,7 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
         } else {
             mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом %2. Требуется начальная форма глагола")
                                         .arg(mainVerb->getlemma())
-                                        .arg(auxVerb->getlemma())));
+                                        .arg(auxVerb->getlemma()), auxVerb->getId(),mainVerb->getId()));
             return false;
         }
     }
@@ -312,7 +324,7 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
         } else {
             mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом %2")
                                         .arg(mainVerb->getlemma())
-                                        .arg(auxVerb->getlemma())));
+                                        .arg(auxVerb->getlemma()), auxVerb->getId(),mainVerb->getId()));
             return false;
         }
     }
@@ -325,7 +337,7 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
         } else {
             mistakes.insert(Mistake(QString("Глагол %1 не согласован по времени с вспомогательным глаголом %2")
                                         .arg(mainVerb->getlemma())
-                                        .arg(auxVerb->getlemma())));
+                                        .arg(auxVerb->getlemma()), auxVerb->getId(),mainVerb->getId()));
             return false;
         }
     }
@@ -336,6 +348,7 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
 
 bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet<Mistake>& mistakes )
 {
+    qDebug() << "AuxAux";
     // Проверка на нулевые указатели
     if (!auxVerb) {
         throw QString("Auxiliary verb node pointer is null");
@@ -370,7 +383,7 @@ bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet
                 return true;
             } else {
                 mistakes.insert(Mistake("неправильная форма глагола " + mainAuxVerb->getlemma() +
-                                        ". После would/have может быть been/be/have"));
+                                        ". После would/have может быть been/be/have", auxVerb->getId(),mainAuxVerb->getId()));
                 return false;
             }
         }
@@ -382,7 +395,7 @@ bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet
             mistakes.insert(Mistake("Глагол " + mainAuxVerb->getlemma() +
                                     " не согласован по времени с модальным глаголом " +
                                     auxVerb->getlemma() +
-                                    ". После модального глагола следует в начальной форме"));
+                                    ". После модального глагола следует в начальной форме", auxVerb->getId(),mainAuxVerb->getId()));
             return false;
         }
     }
@@ -395,7 +408,7 @@ bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet
             mistakes.insert(Mistake("Глагол " + mainAuxVerb->getlemma() +
                                     " не согласован по времени с вспомогательным глаголом " +
                                     auxVerb->getlemma() +
-                                    ". Требуется форма Past Participle/V3(been)."));
+                                    ". Требуется форма Past Participle/V3(been).", auxVerb->getId(),mainAuxVerb->getId()));
             return false;
         }
     }
@@ -417,7 +430,7 @@ bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet
 
     // 3. Основной глагол должен быть причастием прошедшего времени (VBN)
     if (mainVerb->getUpos() != VBN) {
-        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
         return false;
     }
 
@@ -430,7 +443,7 @@ bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet
     if (auxLemma == "am" || auxLemma == "is" || auxLemma == "are" || auxLemma == "was" || auxLemma == "were") {
         if (mainVerb->hasChildWithRel(Aux))
         {
-            mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+            mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
             return false;
         }
         else return true;
@@ -446,7 +459,7 @@ bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet
                 return true;
             }
         }
-        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
         return false;
     }
 
@@ -461,7 +474,7 @@ bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet
                 return true;
             }
         }
-        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
         return false;
     }
 
@@ -473,12 +486,12 @@ bool PassiveAgreement::check(const UDNode* auxVerb, const UDNode* mainVerb, QSet
                 return true;
             }
         }
-        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
         return false;
     }
 
     // Если ни одна конструкция не подошла
-    mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы", auxVerb->getId(),mainVerb->getId()));
     return false;
 }
 
@@ -502,12 +515,11 @@ bool ComplexSentenceAgreement::check(const UDNode* depVerb,const UDNode* mainVer
         // 2.1. Проверяем временные/условные союзы
         if (depVerb->hasTemporalConditionalConjunction()) {
             // 2.1.1. Придаточная должна быть в настоящем
-            qDebug() << depVerb->getlemma();
             if (isPresentClause(depVerb)) {
                 return true;
             }
             else {
-                mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+                mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен.", depVerb->getId(),mainVerb->getId()));
                 return false;
             }
         }
@@ -521,7 +533,7 @@ bool ComplexSentenceAgreement::check(const UDNode* depVerb,const UDNode* mainVer
             return true;
         }
         else {
-            mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+            mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах.", depVerb->getId(),mainVerb->getId()));
             return false;
         }
     }
@@ -548,7 +560,7 @@ bool ConditionalsAgreement::check(const UDNode* depVerb,const UDNode* mainVerb,Q
             return true;
         }
         else {
-            mistakes.insert(Mistake("придаточная часть не согласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1."));
+            mistakes.insert(Mistake("придаточная часть не согласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1.", depVerb->getId(),mainVerb->getId()));
             return false;
         }
     }
@@ -559,7 +571,7 @@ bool ConditionalsAgreement::check(const UDNode* depVerb,const UDNode* mainVerb,Q
             return true;
         }
         else {
-            mistakes.insert(Mistake("придаточная часть не согласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3."));
+            mistakes.insert(Mistake("придаточная часть не согласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3.", depVerb->getId(),mainVerb->getId()));
             return false;
         }
     }

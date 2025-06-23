@@ -413,3 +413,84 @@ QString depRelToString(DepRel rel)
     default: return QString("unknown(%1)").arg(static_cast<int>(rel));
     }
 }
+
+void formOutput( QSet<Mistake> & mistakes, QStringList & out, QMap<int,UDNode*> & nodes)
+{
+    for (const Mistake &mistake : mistakes)
+    {
+        QPair<int, int> ids = mistake.getNodeIds();
+        int id1 = ids.first;
+        int id2 = ids.second;
+
+        // Получаем леммы для обоих узлов
+        QString lemma1 = nodes.contains(id1) ? nodes.value(id1)->getlemma() : "UNKNOWN";
+        QString lemma2 = nodes.contains(id2) ? nodes.value(id2)->getlemma() : "UNKNOWN";
+
+        // Формируем строку вывода
+        QString outputLine = QString("Ошибка для слов : %1 %2 и %3 %4. Сообщение: %5")
+                                 .arg(id1)
+                                 .arg(lemma1)
+                                 .arg(id2)
+                                 .arg(lemma2)
+                                 .arg(mistake.getMessage());
+
+        out.append(outputLine);
+    }
+}
+
+void readFile(const QString & fileName, QStringList & lines, QSet <Error> &errors)
+{
+    QFile file(fileName);
+
+    // если нельзя считывать из файла
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        errors.insert(Error(InputFile,"Неверно указан файл с входными данными. Возможно, файл не существует."));
+        return;
+    }
+
+    QTextStream in(&file);
+
+    // Пока не конец файла
+    while (!in.atEnd())
+    {
+        // Считать одну строку из файла
+        QString line = in.readLine();
+
+        // Добавить строку в массив строк
+        lines.append(line);
+    }
+
+    // если файл пуст
+    if (lines.isEmpty())
+    {
+        errors.insert(Error(InputFile,"Пустой входной файл"));
+        return;
+    }
+
+    // Закрыть файл
+    file.close();
+}
+
+void writeFile(const QString & fileName, const QStringList &lines, QSet <Error> &errors)
+{
+    QFile file(fileName);
+
+    // если нельзя записывать в файл
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        errors.insert(Error(OutputFile,"Неверно указан файл для выходных данных. Указанного расположения не существует или нет прав на запись."));
+        return;
+    }
+
+    QTextStream out(&file);
+
+    // Записать строки в файл
+    for (const QString & line : lines)
+    {
+        out <<line<<"\n";
+    }
+
+    // Закрыть файл
+    file.close();
+}

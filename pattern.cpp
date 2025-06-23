@@ -164,7 +164,6 @@ void Pattern::check(const UDNode* node, QSet<Mistake>& mistakes) const {
                 try {
                     check->getNodes(childPattern->currentMatch, &relatedNode, currentMatch);
                     if (relatedNode) {
-                        qDebug() << childPattern->currentMatch->getlemma() << relatedNode->getlemma();
                         check->callCheck(childPattern->currentMatch, relatedNode, mistakes);
                     }
                 } catch (const QString& error) {
@@ -286,18 +285,33 @@ void getPatterns(QSet <Pattern*> & s)
 
     // 10 Согласование 2х Вспомогательных
     Pattern* pat10 = new Pattern({},{VB,VBP,VBZ,VBD,VBN,VBG});
-    Pattern* pat10_1 = new Pattern({"have","has","had","will","would", "'d"},{});
-    Pattern* pat10_2 = new Pattern({"be","am","is","are","was","were","been","have","has","had","'d" },{});
+    Pattern* pat10_1 = new Pattern({"have","has","had"},{});
+    Pattern* pat10_2 = new Pattern({"be","am","is","are","was","were","been"},{});
     pat10->addChildPattern(Aux,pat10_1);
     pat10->addChildPattern(Aux,pat10_2);
 
     ChildChild* check10 = new ChildChild;
     check10->setRule(new AuxAuxAgreement);
-    check10->setValidWords({"be","am","is","are","was","were","been","have","has","had","'d" });
+    check10->setValidWords({"be","am","is","are","was","were","been"});
     check10->setValidTags({});
     check10->setRelatedRel(Aux);
     pat10_1->addСheck(check10);
     s.insert(pat10);
+
+    // 10 Согласование 2х Вспомогательных
+    Pattern* pat120 = new Pattern({},{VB,VBP,VBZ,VBD,VBN,VBG});
+    Pattern* pat120_1 = new Pattern({"will","would", "'d"},{MD});
+    Pattern* pat120_2 = new Pattern({"have","has","had"},{});
+    pat120->addChildPattern(Aux,pat120_1);
+    pat120->addChildPattern(Aux,pat120_2);
+
+    ChildChild* check120 = new ChildChild;
+    check120->setRule(new AuxAuxAgreement);
+    check120->setValidWords({"have","has","had","'d" });
+    check120->setValidTags({});
+    check120->setRelatedRel(Aux);
+    pat120_1->addСheck(check120);
+    s.insert(pat120);
 
     // 11 Настоящее в Passive подлежащее и вспомогательный
     Pattern* pat11 = new Pattern({},{VB,VBP,VBZ,VBD,VBN,VBG});
@@ -358,5 +372,18 @@ void getPatterns(QSet <Pattern*> & s)
     check15->setRule(new ComplexSentenceAgreement);
     pat15_1->addСheck(check15);
     s.insert(pat15);
+
+    // 16 Conditionals 2-3
+    Pattern* pat16 = new Pattern({},{VB});
+    Pattern* pat16_1 = new Pattern({},{});
+    Pattern* pat16_2 = new Pattern({"would"},{});
+    pat16->addChildPattern(Advcl,pat16_1);
+    pat16->addChildPattern(Aux,pat16_2);
+
+    ParentChild* check16 = new ParentChild;
+    check16->setRule(new ConditionalsAgreement);
+    pat16_1->addСheck(check16);
+    s.insert(pat16);
 }
+
 

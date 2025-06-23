@@ -1,20 +1,64 @@
+/**
+ * @file  Header.h
+ * @brief Заголовочный файл с объявлениями классов и функций для обработки деревьев зависимостей
+ */
+
 #ifndef HEADER_H
 #define HEADER_H
-
-#endif // HEADER_H
 
 #include <QObject>
 #include <QMultiMap>
 #include <error.h>
 #include <QDebug>
+#include <QIODevice>
+#include <QFile>
 
+// Предварительные объявления классов
 class UDNode;
 class Pattern;
 class Mistake;
 
+/**
+ * @brief Основная функция запуска программы
+ * @param inputFilePath Путь к входному файлу
+ * @param outputFilePath Путь к выходному файлу
+ */
+void runProgramm(const QString& inputFilePath, const QString& outputFilePath);
 
-void getPatterns(QSet <Pattern*> & s);
+/**
+ * @brief Получение набора шаблонов для анализа
+ * @param s Ссылка на набор шаблонов
+ */
+void getPatterns(QSet<Pattern*>& s);
 
+/**
+ * @brief Формирование выходных данных на основе найденных ошибок
+ * @param mistakes Набор найденных ошибок
+ * @param out Список выходных строк
+ * @param nodes Карта узлов дерева
+ */
+void formOutput(QSet<Mistake>& mistakes, QStringList& out, QMap<int, UDNode*>& nodes);
+
+/**
+ * @brief Чтение данных из файла
+ * @param inputFilePath Путь к входному файлу
+ * @param lines Список прочитанных строк
+ * @param errors Набор ошибок чтения
+ */
+void readFile(const QString& inputFilePath, QStringList& lines, QSet<Error>& errors);
+
+/**
+ * @brief Запись данных в файл
+ * @param outputFilePath Путь к выходному файлу
+ * @param lines Список строк для записи
+ * @param errors Набор ошибок записи
+ */
+void writeFile(const QString& outputFilePath, const QStringList& lines, QSet<Error>& errors);
+
+/**
+ * @enum DepRel
+ * @brief Перечисление типов зависимостей в дереве
+ */
 enum DepRel
 {
     Acl, Acl_Relcl, Advcl, Advcl_Relcl, Advmod, Advmod_Emph, Advmod_Lmod, Amod, Appos, Aux, Aux_Pass, Case, Cc, Cc_Preconj, Ccomp, Clf,
@@ -24,59 +68,98 @@ enum DepRel
     Orphan, Parataxis, Punct, Reparandum, Root, Vocative, Xcomp, Other
 };
 
+/**
+ * @brief Преобразование типа зависимости в строку
+ * @param rel Тип зависимости
+ * @return Строковое представление зависимости
+ */
 QString depRelToString(DepRel rel);
 
-
+/**
+ * @enum VerbMood
+ * @brief Перечисление наклонений глагола
+ */
 enum VerbMood
 {
-    None, Ind, Imp, Subj
+    None,   ///< Нет наклонения
+    Ind,    ///< Изъявительное
+    Imp,    ///< Повелительное
+    Subj    ///< Сослагательное
 };
 
+/**
+ * @enum PosTag
+ * @brief Перечисление частей речи (POS-тегов)
+ */
 enum PosTag
 {
     CC, CD, DT, EX, FW, IN, JJ, JJR, JJS, LS, MD, NN, NNS,
-    NNP, NNPS, VB, VBD, VBG, VBN, VBP, VBZ, PRP, PRP_,WP,WP_ ,
+    NNP, NNPS, VB, VBD, VBG, VBN, VBP, VBZ, PRP, PRP_, WP, WP_,
     WRB, RB, RBR, RBS, RP, SYM, TO, UH, WDT, PDT, ANY
 };
 
+/**
+ * @brief Преобразование строки в тип зависимости
+ * @param relStr Строка с типом зависимости
+ * @return Тип зависимости
+ */
 DepRel stringToDepRel(const QString& relStr);
 
-PosTag stringToPosTag(const QString& tagStr) ;
+/**
+ * @brief Преобразование строки в POS-тег
+ * @param tagStr Строка с тегом
+ * @return POS-тег
+ */
+PosTag stringToPosTag(const QString& tagStr);
 
+/**
+ * @brief Преобразование строки в наклонение глагола
+ * @param moodStr Строка с наклонением
+ * @return Наклонение глагола
+ */
 VerbMood stringToVerbMood(const QString& moodStr);
 
-/*!
-* \brief Функция для считывания данных о слове из строк в объекты класса
-* \param [in] lines – строки с данными о слове и его связях
-* \param [out] nodes – ассоциативный контейнер связей по идентификатору
-* \param [in,out]  errors- множество ошибок
-*/
-void createNodesFromLines(const QStringList& lines, QMap<int, UDNode*>&nodes, QSet<Error>& errors);
+/**
+ * @brief Создание узлов дерева из строк входных данных
+ * @param lines Список строк с данными
+ * @param nodes Карта для хранения узлов
+ * @param errors Набор ошибок
+ */
+void createNodesFromLines(const QStringList& lines, QMap<int, UDNode*>& nodes, QSet<Error>& errors);
 
+/**
+ * @brief Создание одного узла UDNode из строки данных
+ * @param line Строка с данными
+ * @param lineNumber Номер строки
+ * @param node Ссылка на указатель создаваемого узла
+ * @param errors Набор ошибок
+ * @return true, если узел успешно создан, иначе false
+ */
 bool createUdNodeFromLine(const QString& line, int lineNumber, UDNode*& node, QSet<Error>& errors);
-/*!
-* \brief Функция проверки корректности дерева
-* \param [in] root – корень дерева
-* \param [in,out] nodes – ассоциативный контейнер связей по идентификатору
-* \param [in,out]  errors- множество ошибок
-* \return узлы являются связанными в дерево
-*/
-bool checkTreeConnectivity(UDNode* root, QMap<int, UDNode*>& nodes, QSet<Error>&errors);
 
-/*!
-* \brief Функция для построения дерева из связей
-* \param [in,out] nodes – ассоциативный контейнер связей по идентификатору
-* \param [in,out]  errors- множество ошибок
-* \return указатель на корень дерева
-*/
+/**
+ * @brief Проверка связности дерева
+ * @param root Корень дерева
+ * @param nodes Карта узлов
+ * @param errors Набор ошибок
+ * @return true, если дерево связное, иначе false
+ */
+bool checkTreeConnectivity(UDNode* root, QMap<int, UDNode*>& nodes, QSet<Error>& errors);
+
+/**
+ * @brief Построение дерева зависимостей
+ * @param nodes Карта узлов
+ * @param errors Набор ошибок
+ * @return Указатель на корень дерева
+ */
 UDNode* addChildren(QMap<int, UDNode*>& nodes, QSet<Error>& errors);
 
-/*!
-* \brief Функция, которая проверяет все узлы на совпадение шаблонам и вызывает необходимые проверки для них
-* \param [in] nodes – ассоциативный контейнер связей по идентификатору
-* \param [in] patterns – шаблоны правил
-* \param [in,out] mistakes – ошибки согласования
-*/
-void checkAllPatterns(const QMap<int, UDNode*>& nodes, const QSet<Pattern*> & patterns, QSet<Mistake> &mistakes);
+/**
+ * @brief Проверка всех узлов на соответствие шаблонам
+ * @param nodes Карта узлов
+ * @param patterns Набор шаблонов
+ * @param mistakes Набор найденных ошибок
+ */
+void checkAllPatterns(const QMap<int, UDNode*>& nodes, const QSet<Pattern*>& patterns, QSet<Mistake>& mistakes);
 
-
+#endif // HEADER_H

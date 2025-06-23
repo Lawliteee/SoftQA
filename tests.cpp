@@ -1,5 +1,13 @@
 #include "tests.h"
 #include <QDebug>
+
+void runTests()
+{
+    Tests tests;
+
+    QTest::qExec(&tests);
+}
+
 void Tests::testPersonNumberCheck()
 {
     QFETCH(const UDNode*, inputNode1);
@@ -294,7 +302,7 @@ void Tests::testPersonNumberCheck_data()
     node30_0->addChild(node30_1);
     node30_0->addChild(node30_2);
     mistakeSet.clear();
-    mistakeSet.insert(Mistake(QString("Неправильная форма глагола have. В будущем времени употребляется только форма have")));
+    mistakeSet.insert(Mistake(QString("Неправильная форма глагола have. В будущем времени употребляется только форма have"),1,3));
     QTest::newRow("Test 29: mistake he + has in future")
         << node30_1 << node30_2 << false << mistakeSet<< false << "";
 
@@ -1505,7 +1513,7 @@ void Tests::testPassiveAgreement_data()
     node9_0->addChild(node9_1);
     const UDNode* node9_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node9_0->addChild(node9_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 9: are + deliver (VB)") << node9_2 << static_cast<const UDNode*>(node9_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1514,7 +1522,7 @@ void Tests::testPassiveAgreement_data()
     node10_0->addChild(node10_1);
     const UDNode* node10_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node10_0->addChild(node10_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 10: are + delivers (VBZ)") << node10_2 << static_cast<const UDNode*>(node10_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1523,7 +1531,7 @@ void Tests::testPassiveAgreement_data()
     node11_0->addChild(node11_1);
     const UDNode* node11_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node11_0->addChild(node11_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 11: are + delivered (VBD)") << node11_2 << static_cast<const UDNode*>(node11_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1532,7 +1540,7 @@ void Tests::testPassiveAgreement_data()
     node12_0->addChild(node12_1);
     const UDNode* node12_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node12_0->addChild(node12_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 12: are + delivering (VBG)") << node12_2 << static_cast<const UDNode*>(node12_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1541,7 +1549,7 @@ void Tests::testPassiveAgreement_data()
     node13_0->addChild(node13_1);
     const UDNode* node13_2 = new UDNode(2, "are", VBP, 3, Aux_Pass, Ind);
     node13_0->addChild(node13_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 13: are + deliver (VBP)") << node13_2 << static_cast<const UDNode*>(node13_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1552,7 +1560,7 @@ void Tests::testPassiveAgreement_data()
     node14_0->addChild(node14_1);
     const UDNode* node14_2 = new UDNode(2, "be", VB, 3, Aux_Pass, Ind);
     node14_0->addChild(node14_2);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 14: be + delivered (should be are)") << node14_2 << static_cast<const UDNode*>(node14_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1564,7 +1572,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node15_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node15_0->addChild(node15_3);
     node15_0->addChild(node15_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 15: have be + delivered (should have been)") << node15_4 << static_cast<const UDNode*>(node15_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1576,7 +1584,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node16_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node16_0->addChild(node16_3);
     node16_0->addChild(node16_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 16: are be + delivered (should are)") << node16_4 << static_cast<const UDNode*>(node16_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1588,7 +1596,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node17_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node17_0->addChild(node17_3);
     node17_0->addChild(node17_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 17: were be + delivered (should were being)") << node17_4 << static_cast<const UDNode*>(node17_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1600,7 +1608,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node18_4 = new UDNode(3, "are", VBP, 4, Aux_Pass, Ind);
     node18_0->addChild(node18_3);
     node18_0->addChild(node18_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 18: may are + delivered (should may be)") << node18_4 << static_cast<const UDNode*>(node18_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1610,7 +1618,7 @@ void Tests::testPassiveAgreement_data()
     node19_0->addChild(node19_2);
     const UDNode* node19_3 = new UDNode(2, "been", VBP, 3, Aux_Pass, Ind);
     node19_0->addChild(node19_3);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",2,3));
     QTest::newRow("Test 19: been + delivered (should were)") << node19_3 << static_cast<const UDNode*>(node19_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1623,7 +1631,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node20_4 = new UDNode(3, "been", VBN, 4, Aux_Pass, Ind);
     node20_0->addChild(node20_3);
     node20_0->addChild(node20_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 20: will been + delivered (should will be)") << node20_4 << static_cast<const UDNode*>(node20_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -1635,7 +1643,7 @@ void Tests::testPassiveAgreement_data()
     const UDNode* node21_4 = new UDNode(3, "be", VB, 4, Aux_Pass, Ind);
     node21_0->addChild(node21_3);
     node21_0->addChild(node21_4);
-    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+    mistakeSet.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
     QTest::newRow("Test 21: had be + delivered (should had been)") << node21_4 << static_cast<const UDNode*>(node21_0) << false << mistakeSet << false << "";
     mistakeSet.clear();
 
@@ -2107,7 +2115,7 @@ void Tests::testComplexSentenceAgreement_data()
     node16_8->addChild(node16_9);
     node16_8->addChild(node16_10);
 
-    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен.",8,3));
     QTest::newRow("Test 16: Future + future with 'when' - mistake")
         << static_cast<const UDNode*>(node16_4) << static_cast<const UDNode*>(node16_0)
         << false << mistakeSet << false << "";
@@ -2133,7 +2141,7 @@ void Tests::testComplexSentenceAgreement_data()
     node17_4->addChild(node17_7);
     node17_7->addChild(node17_8);
 
-    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен.",8,4));
     QTest::newRow("Test 17: Future + past with 'when' - mistake")
         << static_cast<const UDNode*>(node17_4) << static_cast<const UDNode*>(node17_0)
         << false << mistakeSet << false << "";
@@ -2185,7 +2193,7 @@ void Tests::testComplexSentenceAgreement_data()
     node19_2->addChild(node19_5);
     node19_2->addChild(node19_6);
 
-    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах.",6,2));
     QTest::newRow("Test 19: Past + future with 'because' - mistake")
         << static_cast<const UDNode*>(node19_2) << static_cast<const UDNode*>(node19_0)
         << false << mistakeSet << false << "";
@@ -2205,7 +2213,7 @@ void Tests::testComplexSentenceAgreement_data()
     node20_2->addChild(node20_4);
     node20_2->addChild(node20_5);
 
-    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+    mistakeSet.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах.",5,2));
     QTest::newRow("Test 20: Past + present with 'because' - mistake")
         << static_cast<const UDNode*>(node20_2) << static_cast<const UDNode*>(node20_0)
         << false << mistakeSet << false << "";
@@ -2355,6 +2363,8 @@ void Tests::testConditionalsAgreement_data()
     node4_0->addChild(node4_1);
     const UDNode* node4_2 = new UDNode(6,"would",MD,7,Aux,Ind);
     node4_0->addChild(node4_2);
+    mistakeSet2nd.clear();
+    mistakeSet2nd.insert(Mistake("придаточная часть не согласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1.",3,7));
     QTest::newRow("Test 4: Mistake 2nd Conditional, Present Simple")
         << static_cast<const UDNode*>(node4_1) << static_cast<const UDNode*>(node4_0)
         << false << mistakeSet2nd << false << "";
@@ -2368,6 +2378,8 @@ void Tests::testConditionalsAgreement_data()
     UDNode* node5_3 = new UDNode(5,"have",VB,7,Advcl,None);
     node5_3->addChild(node5_1);
     node5_0->addChild(node5_3);
+    mistakeSet2nd.clear();
+    mistakeSet2nd.insert(Mistake("придаточная часть не согласована с главной по времени. Во втором типе условных предложений(Second Conditional) следующая формула: If + Past Simple, would + V1.",5,7));
     QTest::newRow("Test 5: Mistake 2nd Conditional, Future Simple")
         << static_cast<const UDNode*>(node5_3) << static_cast<const UDNode*>(node5_0)
         << false << mistakeSet2nd << false << "";
@@ -2424,6 +2436,8 @@ void Tests::testConditionalsAgreement_data()
     node9_0->addChild(node9_2);
     const UDNode* node9_3 = new UDNode(9,"have",VB,12,Aux,None);
     node9_0->addChild(node9_3);
+    mistakeSet3rd.clear();
+    mistakeSet3rd.insert(Mistake("придаточная часть не согласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3.",4,12));
     QTest::newRow("Test 9: Mistake 3rd Conditional, Future Simple")
         << static_cast<const UDNode*>(node9_1) << static_cast<const UDNode*>(node9_0)
         << false << mistakeSet3rd << false << "";
@@ -2438,6 +2452,8 @@ void Tests::testConditionalsAgreement_data()
     node10_0->addChild(node10_3);
     const UDNode* node10_4 = new UDNode(8,"have",VB,12,Aux,None);
     node10_0->addChild(node10_4);
+    mistakeSet3rd.clear();
+    mistakeSet3rd.insert(Mistake("придаточная часть не согласована с главной по времени. В третьем типе условных предложений(Third Conditional) следующая формула: If + Past Perfect, would have + V3.",3,12));
     QTest::newRow("Test 10: Mistake 3rd Conditional, Present Perfect")
         << static_cast<const UDNode*>(node10_1) << static_cast<const UDNode*>(node10_0)
         << false << mistakeSet3rd << false << "";
@@ -4246,6 +4262,7 @@ void Tests::testCheckAllPatterns()
             for (const Mistake& mistake : unexpectedMistakes)
             {
                 qDebug() << "  -" << mistake.getMessage();
+                qDebug() << mistake.getNodeIds();
             }
         }
 
@@ -4257,6 +4274,7 @@ void Tests::testCheckAllPatterns()
             for (const Mistake& mistake : missingMistakes)
             {
                 qDebug() << "  +" << mistake.getMessage();
+                qDebug() << mistake.getNodeIds();
             }
         }
     }
@@ -4305,8 +4323,8 @@ void Tests::testCheckAllPatterns_data()
             tree2.insert(6, stop);
 
             QSet<Mistake> expectedMistakes;
-            expectedMistakes.insert(Mistake("Глагол waiting не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола"));
-            expectedMistakes.insert(Mistake("Основной глагол stop не согласован с подлежащим rain. Глагол должен быть в форме 3-го лица ед. числа"));
+            expectedMistakes.insert(Mistake("Глагол waiting не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола",2,3));
+            expectedMistakes.insert(Mistake("Основной глагол stop не согласован с подлежащим rain. Глагол должен быть в форме 3-го лица ед. числа",5,6));
 
             QTest::newRow("Test 2: Multiple patterns with mistakes") << tree2 << pats << expectedMistakes;
         }
@@ -4358,7 +4376,7 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(5, day);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Основной глагол write не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа"));
+        mistakes.insert(Mistake("Основной глагол write не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа",1,2));
 
         QTest::newRow("Test 4: Present Simple mistakes") << tree << pats << mistakes;
     }
@@ -4381,7 +4399,7 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(4, yesterday);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("глагол was не согласован с подлежащим They. Глагол должен быть в форме множественного числа."));
+        mistakes.insert(Mistake("глагол was не согласован с подлежащим They. Глагол должен быть в форме множественного числа.",1,2));
 
         QTest::newRow("Test 5: Past Simple mistakes") << tree << pats << mistakes;
     }
@@ -4404,8 +4422,8 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(4, book);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Вспомогательный глагол has не согласован с подлежащим I. Глагол должен быть в начальной форме"));
-        mistakes.insert(Mistake("Числительное three не согласовано по числу с существительным book."));
+        mistakes.insert(Mistake("Вспомогательный глагол has не согласован с подлежащим I. Глагол должен быть в начальной форме",1,2));
+        mistakes.insert(Mistake("Числительное three не согласовано по числу с существительным book.",3,4));
 
         QTest::newRow("Test 6: Numeral-noun agreement mistakes") << tree << pats << mistakes;
     }
@@ -4437,8 +4455,8 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(7, rooms);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Квантификатор many некорректно использован. Нельзя использовать с существительным book в единственном числе"));
-        mistakes.insert(Mistake("Артикль a не согласован по числу с существительным rooms. Требуется артикль the или нулевой артикль."));
+        mistakes.insert(Mistake("Квантификатор many некорректно использован. Нельзя использовать с существительным book в единственном числе",3,4));
+        mistakes.insert(Mistake("Артикль a не согласован по числу с существительным rooms. Требуется артикль the или нулевой артикль.",6,7));
 
         QTest::newRow("Test 7: Quantifier mistakes") << tree << pats << mistakes;
     }
@@ -4466,8 +4484,8 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(5, cream);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Глагол likes не согласован по времени с вспомогательным глаголом Do. Требуется начальная форма глагола"));
-        mistakes.insert(Mistake("Вспомогательный глагол Do не согласован с подлежащим she. Глагол должен быть в форме 3-го лица ед. числа"));
+        mistakes.insert(Mistake("Глагол likes не согласован по времени с вспомогательным глаголом Do. Требуется начальная форма глагола",1,3));
+        mistakes.insert(Mistake("Вспомогательный глагол Do не согласован с подлежащим she. Глагол должен быть в форме 3-го лица ед. числа",2,1));
         QTest::newRow("Test 8: Auxiliary verbs mistakes") << tree << pats << mistakes;
     }
 
@@ -4489,7 +4507,7 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(4, work);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Вспомогательный глагол have не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа"));
+        mistakes.insert(Mistake("Вспомогательный глагол have не согласован с подлежащим She. Глагол должен быть в форме 3-го лица ед. числа",1,2));
 
         QTest::newRow("Test 9: Present Perfect mistakes") << tree << pats << mistakes;
     }
@@ -4515,7 +4533,7 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(5, school);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола"));
+        mistakes.insert(Mistake("Глагол goes не согласован по времени с вспомогательным глаголом will. Требуется начальная форма глагола",2,3));
 
         QTest::newRow("Test 10: Future tense mistakes") << tree << pats << mistakes;
     }
@@ -4538,8 +4556,8 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(4, write);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("глагол were не согласован с подлежащим book. Глагол должен быть в форме единственного числа."));
-        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы"));
+        mistakes.insert(Mistake("глагол were не согласован с подлежащим book. Глагол должен быть в форме единственного числа.",2,3));
+        mistakes.insert(Mistake("Глаголы при построении пассивного залога (Passive Voice) не согласованы",3,4));
 
         QTest::newRow("Test 11: Passive voice mistakes") << tree << pats << mistakes;
     }
@@ -4550,7 +4568,7 @@ void Tests::testCheckAllPatterns_data()
         UDNode* iff = new UDNode(1, "If", IN, 4, Mark, None);
         UDNode* i = new UDNode(2, "I", PRP, 4, Nsubj, None);
         UDNode* will = new UDNode(3, "will", MD, 4, Aux, None);
-        UDNode* have = new UDNode(4, "have", VB, 7, Advcl, None);
+        UDNode* have = new UDNode(4, "have", VB, 8, Advcl, None);
         UDNode* time = new UDNode(5, "time", NN, 4, Obj, None);
         UDNode* I = new UDNode(6, "I", PRP, 8, Nsubj, None);
         UDNode* ill = new UDNode(7, "'ll", MD, 8, Aux, None);
@@ -4577,7 +4595,7 @@ void Tests::testCheckAllPatterns_data()
         tree.insert(9, you);
 
         QSet<Mistake> mistakes;
-        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен."));
+        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в будущем времени, а придаточное начинается с условного или временного союза, то в нем используется одно из настоящих времен.", 4,8));
 
         QTest::newRow("Test 12: Conditional sentences mistakes") << tree << pats << mistakes;
     }
@@ -4613,7 +4631,7 @@ void Tests::testCheckAllPatterns_data()
 
         QSet<Mistake> mistakes;
         // Добавляем возможные ошибки:
-        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах."));
+        mistakes.insert(Mistake("Придаточная часть не согласована с главной по времени. Если главное предложение стоит в прошедшем времени, то и придаточное будет стоять в одном из прошедших времен, если речь не идет о непреложной истине, о фактах.",7,3));
 
         QTest::newRow("Past Continuous + Past Simple with mistakes") << tree << pats << mistakes;
     }

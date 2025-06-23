@@ -5,6 +5,12 @@
 #include <pattern.h>
 #include <QtTest/QtTest>
 
+
+/*!
+ * \brief Запускает тестирование всех функций
+ */
+void runTests();
+
 class Tests : public QObject
 {
     Q_OBJECT

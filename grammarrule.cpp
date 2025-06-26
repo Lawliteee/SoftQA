@@ -273,7 +273,7 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
 
     // Проверка допустимых частей речи
     const QSet<PosTag> allowedAuxTags = {MD, VBP, VBZ, VBD, VB, VBN};
-    const QSet<PosTag> allowedMainTags = {VB, VBZ, VBD, VBG, VBN};
+    const QSet<PosTag> allowedMainTags = {VB, VBZ, VBD, VBG, VBN, VBP};
 
     if (!allowedAuxTags.contains(auxVerb->getUpos())) {
         throw QString("Invalid auxiliary verb part of speech");
@@ -348,7 +348,6 @@ bool MainAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainVerb,QSet<M
 
 bool AuxAuxAgreement::check(const UDNode* auxVerb,const UDNode* mainAuxVerb,QSet<Mistake>& mistakes )
 {
-    qDebug() << "AuxAux";
     // Проверка на нулевые указатели
     if (!auxVerb) {
         throw QString("Auxiliary verb node pointer is null");
@@ -637,4 +636,48 @@ bool GrammarRule::isPresentClause(const UDNode* main) const {
 
 bool GrammarRule::isPastClause(const UDNode* main) const {
     return main && main->isPastTense();
+}
+
+bool GenderAgreement::check(const UDNode* word1,const UDNode* word2,QSet<Mistake>& mistakes )
+{
+    QString word1Lemma = word1->getlemma().toLower();
+    QString word2Lemma = word2->getlemma().toLower();
+    QSet <QString> male = {"himself"};
+    QSet <QString> female = {"herself"};
+    QSet <QString> itMale = {"itself"};
+
+
+    if (word1Lemma == "he")
+    {
+        if (!male.contains(word2Lemma))
+        {
+            mistakes.insert(Mistake("Местоимение " + word2Lemma +
+                                        " не согласованно по роду с местоимением " + word1Lemma, word1->getId(),word2->getId()));
+            return false;
+        }
+        else return true;
+    }
+    else if (word1Lemma == "she")
+    {
+        if (!female.contains(word2Lemma))
+        {
+            mistakes.insert(Mistake("Местоимение " + word2Lemma +
+                                        " не согласованно по роду с местоимением " + word1Lemma, word1->getId(),word2->getId()));
+            return false;
+        }
+        else return true;
+    }
+    else if (word1Lemma == "it")
+    {
+        if (!itMale.contains(word2Lemma))
+        {
+            mistakes.insert(Mistake("Местоимение " + word2Lemma +
+                                        " не согласованно по роду с местоимением " + word1Lemma, word1->getId(),word2->getId()));
+            return false;
+        }
+        else return true;
+    }
+
+
+
 }

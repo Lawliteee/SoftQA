@@ -104,9 +104,10 @@ int main(int argc, char *argv[])
 
         // Найти ошибки согласования
         QSet<Pattern*> patterns;
-        getPatterns(patterns);
+        getPatternsNew(patterns, nodes);
         QSet<Mistake> mistakes;
         checkAllPatterns(nodes, patterns, mistakes);
+
 
         // Сформировать выходные строки с ошибками
         QStringList output;

@@ -278,4 +278,18 @@ private:
     }
 };
 
+
+/**
+ * @class NumberAgreement
+ * @brief Класс для проверки согласования по роду
+ */
+class GenderAgreement : public GrammarRule
+{
+public:
+    /**
+     * @brief Проверяет согласование по роду
+     * @inheritDoc GrammarRule::check
+     */
+    bool check(const UDNode*, const UDNode*, QSet<Mistake>& mistakes) override;
+};
 #endif // GRAMMARRULE_H

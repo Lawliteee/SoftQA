@@ -4299,6 +4299,33 @@ void Tests::testCheckAllPatterns_data()
             QTest::newRow("Test 1: Single word tree") << tree1 << pats << noMistakes;
         }
 
+    // Тест Вылета
+    // {
+    //     QMap<int, UDNode*> tree2;
+    //     UDNode* He = new UDNode(1, "he", PRP, 3, Nsubj, None);
+    //     UDNode* have = new UDNode(2, "have", VBP, 3, Aux, None);
+    //     UDNode* do_ = new UDNode(3, "do", VBP, 0, Root, None);
+    //     UDNode* it = new UDNode(4, "it", PRP, 3, Obj,  None);
+    //     UDNode* herself = new UDNode(5, "himself", PRP, 3, Obl, None);
+
+
+    //     do_->addChild(He);
+    //     do_->addChild(have);
+    //     do_->addChild(it);
+    //     do_->addChild(herself);
+
+    //     tree2.insert(1, He);
+    //     tree2.insert(2, have);
+    //     tree2.insert(3, do_);
+    //     tree2.insert(4, it);
+    //     tree2.insert(5, herself);
+
+    //     QSet<Mistake> expectedMistakes;
+    //     expectedMistakes.insert(Mistake("Вспомогательный глагол have не согласован с подлежащим he. Глагол должен быть в форме 3-го лица ед. числа",1,2));
+    //     expectedMistakes.insert(Mistake("Глагол do не согласован по времени с вспомогательным глаголом have",2,3));
+
+    //     QTest::newRow("Test 2: baaam") << tree2 << pats << expectedMistakes;
+    // }
         // Тест 2: Несколько шаблонов с ошибками
         {
             QMap<int, UDNode*> tree2;

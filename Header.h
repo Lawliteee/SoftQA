@@ -32,6 +32,12 @@ void runProgramm(const QString& inputFilePath, const QString& outputFilePath);
 void getPatterns(QSet<Pattern*>& s);
 
 /**
+ * @brief Получение набора шаблонов для анализа
+ * @param s Ссылка на набор шаблонов
+ */
+void getPatternsNew(QSet <Pattern*> & s, const QMap<int, UDNode*>& nodes);
+
+/**
  * @brief Формирование выходных данных на основе найденных ошибок
  * @param mistakes Набор найденных ошибок
  * @param out Список выходных строк
